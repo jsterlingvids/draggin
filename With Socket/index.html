@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      .p0 {padding:0 !important;}
+      .grid {
+        position: relative;
+      }
+      .item {
+        position: absolute;
+        margin: 5px;
+        z-index: 1;
+      }
+      .item2 {
+        position: absolute;
+        margin: 0;
+        z-index: 1;
+      }
+
+      .item.muuri-item-hidden {
+        z-index: 0;
+      }
+      .item.muuri-item-releasing {
+        z-index: 2;
+      }
+      .item.muuri-item-dragging {
+        z-index: 3;
+      }
+      .item-content2 {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: #ccc;
+        font-size: 50px;
+        color: white;
+        cursor: pointer;
+      }
+      .item-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: turquoise;
+        font-size: 10px;
+        color: white;
+        cursor: pointer;
+      }
+      .item.muuri-item-dragging .item-content {
+        background: blue;
+      }
+      .item.muuri-item-releasing .item-content {
+        background: blueViolet;
+        size: 1px;
+      }
+    </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-mhpbKVUOPCSocLzx2ElRISIORFRwr1ZbO9bAlowgM5kO7hnpRBe+brVj8NNPUiFs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    
+    
+    <title>Muuri Test</title>
+</head>
+<body>
+  
+  <button type="button" class="btn btn-primary btn-lg" id="new-gif">Add New Gif!</button>
+  <button type="button" class="btn btn-primary btn-lg" id="json">Add to JSON</button>
+
+    <div class="grid">
+
+        <div class="item">
+          <div class="item-content" id="gif">
+            <!-- Safe zone, enter your custom markup -->
+            <h4>1</h4>
+            <!-- Safe zone ends -->
+          </div>
+        </div>
+      
+        <div class="item">
+          <div class="item-content" id="gif2">
+            <!-- Safe zone, enter your custom markup -->
+            <h4>2</h4>
+            <!-- Safe zone ends -->
+          </div>
+        </div>
+
+        <div class="item">
+            <div class="item-content" id="gif3">
+              <!-- Safe zone, enter your custom markup -->
+              <h4>3</h4>
+              <!-- Safe zone ends -->
+            </div>
+          </div>
+
+
+          <div class="item">
+            <div class="item-content" id="gif4">
+              <!-- Safe zone, enter your custom markup -->
+              <h4>4</h4>
+              <!-- Safe zone ends -->
+            </div>
+          </div>
+
+      </div>
+
+    <!-- Socket Scripts -->
+    <script src="/socket.io/socket.io.js"></script>  
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <!-- Muuri Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/muuri@0.9.0/dist/muuri.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web-animations-js@2.3.2/web-animations.min.js"></script>
+    <script src="/test.js"></script>
+
+   
+    
+    
+    <script>
+      var socket = io();
+
+      var grid = new Muuri('.grid', {
+      dragEnabled: true,
+      });
+    
+
+
+      //Generate Gif Content
+
+      const apiKey = 'K4MR2L3zPWENog4Ureog4PPv6rAeZSTB'
+
+
+      function innerGif(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            //const gif = document.querySelector('item-content');
+            let gif = document.getElementById('gif')
+            let randomGif = json.data.images.fixed_height.url;
+            console.log(randomGif);
+            gif.innerHTML = `
+            <img src="${randomGif}"></img>`;
+            grid.refreshItems().layout()
+          }
+        )};
+
+        function innerGif2(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            //const gif = document.querySelector('item-content');
+            let gif = document.getElementById('gif2')
+            let randomGif = json.data.images.fixed_height.url;
+            console.log(randomGif);
+            gif.innerHTML = `
+            <img src="${randomGif}"></img>`;
+            grid.refreshItems().layout()
+          }
+        )};
+
+        function innerGif3(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            //const gif = document.querySelector('item-content');
+            let gif = document.getElementById('gif3')
+            let randomGif = json.data.images.fixed_height.url;
+            console.log(randomGif);
+            gif.innerHTML = `
+            <img src="${randomGif}"></img>`;
+            grid.refreshItems().layout()
+          }
+        )};
+
+        function innerGif4(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            //const gif = document.querySelector('item-content');
+            let gif = document.getElementById('gif4')
+            let randomGif = json.data.images.fixed_height.url;
+            console.log(randomGif);
+            gif.innerHTML = `
+            <img src="${randomGif}"></img>`;
+            grid.refreshItems().layout()
+          }
+        )};
+
+
+        innerGif();
+        innerGif2();
+        innerGif3();
+        innerGif4();
+
+        //Get positions and via WebSockets on Mouseup event
+
+        document.addEventListener('mouseup', function(e){
+          // console.log(e.target.parentElement);
+          // console.log(document.querySelector('muuri-item-positioning'))
+
+          //Get Array with all of the instances of .muuri-item
+          var divs = document.querySelectorAll(".muuri-item");
+          console.log(divs);
+
+          //CAUTION - THE ATTRIBUTES TAG MAY CHANGE NUMBERS
+          var newPositions = divs[0].attributes[1].nodeValue;
+
+          //Gets all new positions, loops through them and puts them into an arry to send via WebSocket
+          function seeTransform(){
+
+            // console.log(divs[0].attributes[1].nodeValue)
+            //This is the array that will hold all of the new position data
+            var newTransform = new Array();
+
+            //Loops through the .muuri-items and grabs the transform data of each
+            var i;
+            for (i = 0; i < divs.length; i++) {
+              // console.log(divs[i].style)
+
+              //Changes the looped positions to match
+              divs[i].attributes[1].nodeValue = divs[i].attributes[1].nodeValue;
+              // console.log(divs[i].attributes[1].nodeValue);
+
+              //Pushes each loop onto the array
+              newTransform.push(divs[i].attributes[1].nodeValue = divs[i].attributes[1].nodeValue);
+            }
+            // console.log(newTransform);
+
+            //Array renamed to data for sending
+            data = newTransform;
+            // console.log(data);
+
+            //Emit Data
+            e.preventDefault();
+            socket.emit('box move', data)
+            grid.refreshItems().layout();
+            // grid.synchronize();
+          };
+
+          //Function is sent with a timeout because it takes a little time for the boxes to settle into their new positions
+          setTimeout(
+          seeTransform, 600);
+        })
+
+           //Receive Data and Function
+          socket.on('box move', function(data){
+        
+          // console.log(data[0]);
+
+          //Select/identify all muuri-items that need positions transformed
+          var moveDivs = document.querySelectorAll(".muuri-item");
+          // console.log(moveDivs);
+
+          //Loop through the new positions and set them equal to the incoming data
+          for (i = 0; i < data.length; i++){
+            moveDivs[i].attributes[1].nodeValue = data[i];
+          }
+          
+          });
+
+          //Add New Gif Button
+          button = document.getElementById("new-gif");
+
+          button.addEventListener('click', addNewGif);
+
+          //Function that adds new Gif
+          function addNewGif(e){
+            console.log('It worked!')
+            e.preventDefault;
+
+            //Fetch Gif
+            function innerGif5(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+            .then(response => response.json())
+            .then(json => {
+            // console.log(json)
+            let randomGif = json.data.images.fixed_height.url;
+            console.log(randomGif);
+
+            //Create Element to Add
+            var wrapper = document.createElement('div');
+            var columnHTML = ` <div class="item">
+            <div class="item-content" id="gif5">
+              <!-- Safe zone, enter your custom markup -->
+              <img src="${randomGif}"></img>
+              <!-- Safe zone ends -->
+              </div>
+            </div>
+            `;
+            wrapper.innerHTML = columnHTML;
+            var columnElem = wrapper.children[0];
+            grid.add([columnElem]);
+            // grid.refreshItems().layout()
+              }
+            )};
+
+            innerGif5();
+   
+          };
+
+          //JSON Testing
+          jsonButton = document.getElementById("json");
+
+          
+
+
+
+
+    </script>
+
+</body>
+</html>
