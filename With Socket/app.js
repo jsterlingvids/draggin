@@ -6,12 +6,28 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 const { json } = require('express');
+const bodyParser = require("body-parser");
+const router = express.Router();
+const MongoClient = require('mongodb').MongoClient
+
+
+
+//This Code works from here on down
+
+app.use(bodyParser.json())
 
 app.use(express.static(__dirname))
+
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// app.post('/quotes', (req, res) => {
+//   console.log(req.body)
+// })
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
+
 
 io.on('connection', (socket) => {
   console.log('a user connected');
@@ -24,31 +40,26 @@ io.on('connection', (socket) => {
   });
 });
 
+//Mongo DB Stuff
+MongoClient.connect("mongodb+srv://jsvids:ymXOHeGaV921vaqk@cluster0-elfsq.gcp.mongodb.net/test?retryWrites=true&w=majority", {useUnifiedTopology: true}) 
+  .then(client => {
+  console.log('Connected to Database')
+  const collection = client.db("test").collection("test_collect");
+  app.put('/newgif', (req, res) => {
+    console.log(req.body)
+    
+  })
+
+})
+.catch(error => console.error(error))
+
+
 http.listen(3000, () => {
   console.log('listening on *:3000');
 });
 
 
 
-
-
-// JSON TESTING
-// fs.readFile('/Users/apple/Desktop/Udemy:Blender:Testing/Muuri_Test/With Socket/users.json', 'utf-8', function(err, data) {
-//   if (err) throw err
-
-//   var arrayOfObjects = JSON.parse(data)
-//   arrayOfObjects.users.push({
-//     name: "Mikhail",
-//     age: 24
-//   });
-
-//   console.log(arrayOfObjects);
-
-//   fs.writeFile('/Users/apple/Desktop/Udemy:Blender:Testing/Muuri_Test/With Socket/users.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
-//     if (err) throw err
-//     console.log('Done!')
-//   })
-// })
 
 
 

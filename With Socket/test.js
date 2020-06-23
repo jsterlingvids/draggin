@@ -3,22 +3,20 @@ let button = document.getElementById('json');
 
 button.addEventListener('click', doSomething);
 
-function doSomething(){
-console.log('Hi World!')};
+const user = {
+    name: 'John',
+    surname: 'Smith'
+  };
 
-// fs.readFile('/Users/apple/Desktop/Udemy:Blender:Testing/Muuri_Test/With Socket/users.json', 'utf-8', function(err, data) {
-//     if (err) throw err
+    function doSomething(){
+      fetch('/newgif', {
+        method: 'put',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Darth Vadar',
+          quote: 'I find your lack of faith disturbing.'
+        })
+      })
+    }
+
   
-//     var arrayOfObjects = JSON.parse(data)
-//     arrayOfObjects.users.push({
-//       name: "Mikhail",
-//       age: 24
-//     });
-  
-//     console.log(arrayOfObjects);
-  
-//     fs.writeFile('/Users/apple/Desktop/Udemy:Blender:Testing/Muuri_Test/With Socket/users.json', JSON.stringify(arrayOfObjects), 'utf-8', function(err) {
-//       if (err) throw err
-//       console.log('Done!')
-//     })
-//   })
