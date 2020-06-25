@@ -65,42 +65,10 @@
 <body>
   
   <button type="button" class="btn btn-primary btn-lg" id="new-gif">Add New Gif!</button>
-  <button type="button" class="btn btn-primary btn-lg" id="json">Add to JSON</button>
 
-    <div class="grid">
-
-        <div class="item">
-          <div class="item-content" id="gif">
-            <!-- Safe zone, enter your custom markup -->
-            <h4>1</h4>
-            <!-- Safe zone ends -->
-          </div>
-        </div>
+    <div id = "main-grid" class="grid">
       
-        <div class="item">
-          <div class="item-content" id="gif2">
-            <!-- Safe zone, enter your custom markup -->
-            <h4>2</h4>
-            <!-- Safe zone ends -->
-          </div>
-        </div>
-
-        <div class="item">
-            <div class="item-content" id="gif3">
-              <!-- Safe zone, enter your custom markup -->
-              <h4>3</h4>
-              <!-- Safe zone ends -->
-            </div>
-          </div>
-
-
-          <div class="item">
-            <div class="item-content" id="gif4">
-              <!-- Safe zone, enter your custom markup -->
-              <h4>4</h4>
-              <!-- Safe zone ends -->
-            </div>
-          </div>
+ 
 
       </div>
 
@@ -122,6 +90,47 @@
       var grid = new Muuri('.grid', {
       dragEnabled: true,
       });
+
+      //Receive Initial Data and build
+      socket.on('initial', function(newData){
+      console.log(newData);
+      let initialGifs = Array.from(newData);
+      // console.log(initialGifs)
+      //Loop through array from database
+      let i;
+      for(i = 0; i < initialGifs.length; i++){
+        //Create div to hold looped items
+        var wrapper = document.createElement('div');
+        var columnHTML = `
+        <div class="item">
+            <div class="item-content" id="gif5">
+              <!-- Safe zone, enter your custom markup -->
+              <img src="${initialGifs[i].URL}"></img>
+              <!-- Safe zone ends -->
+              </div>
+            </div>
+        `
+        //Grid.add function to properly add to grid
+        wrapper.innerHTML = columnHTML;
+        var columnElem = wrapper.children[0];
+        grid.add([columnElem]);
+        
+      }
+      // grid.refreshItems();
+      // grid.synchronize();
+      })
+
+      //Receive initial positons
+      socket.on('newPositions', function(newPositionData){
+        console.log(newPositionData[0].field1);
+        var divs = document.querySelectorAll(".muuri-item");
+          console.log(divs);
+        // var newPositions = divs[0].attributes[1].nodeValue;
+        let i;
+        for(i= 0; i < divs.length; i++){
+          console.log(divs[i].attributes[1].nodeValue)
+        }
+      })
     
 
 
@@ -130,67 +139,67 @@
       const apiKey = 'K4MR2L3zPWENog4Ureog4PPv6rAeZSTB'
 
 
-      function innerGif(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
-        .then(response => response.json())
-        .then(json => {
-            console.log(json)
-            //const gif = document.querySelector('item-content');
-            let gif = document.getElementById('gif')
-            let randomGif = json.data.images.fixed_height.url;
-            console.log(randomGif);
-            gif.innerHTML = `
-            <img src="${randomGif}"></img>`;
-            grid.refreshItems().layout()
-          }
-        )};
+      // function innerGif(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+      //   .then(response => response.json())
+      //   .then(json => {
+      //       console.log(json)
+      //       //const gif = document.querySelector('item-content');
+      //       let gif = document.getElementById('gif')
+      //       let randomGif = json.data.images.fixed_height.url;
+      //       console.log(randomGif);
+      //       gif.innerHTML = `
+      //       <img src="${randomGif}"></img>`;
+      //       grid.refreshItems().layout()
+      //     }
+      //   )};
 
-        function innerGif2(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
-        .then(response => response.json())
-        .then(json => {
-            console.log(json)
-            //const gif = document.querySelector('item-content');
-            let gif = document.getElementById('gif2')
-            let randomGif = json.data.images.fixed_height.url;
-            console.log(randomGif);
-            gif.innerHTML = `
-            <img src="${randomGif}"></img>`;
-            grid.refreshItems().layout()
-          }
-        )};
+      //   function innerGif2(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+      //   .then(response => response.json())
+      //   .then(json => {
+      //       console.log(json)
+      //       //const gif = document.querySelector('item-content');
+      //       let gif = document.getElementById('gif2')
+      //       let randomGif = json.data.images.fixed_height.url;
+      //       console.log(randomGif);
+      //       gif.innerHTML = `
+      //       <img src="${randomGif}"></img>`;
+      //       grid.refreshItems().layout()
+      //     }
+      //   )};
 
-        function innerGif3(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
-        .then(response => response.json())
-        .then(json => {
-            console.log(json)
-            //const gif = document.querySelector('item-content');
-            let gif = document.getElementById('gif3')
-            let randomGif = json.data.images.fixed_height.url;
-            console.log(randomGif);
-            gif.innerHTML = `
-            <img src="${randomGif}"></img>`;
-            grid.refreshItems().layout()
-          }
-        )};
+      //   function innerGif3(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+      //   .then(response => response.json())
+      //   .then(json => {
+      //       console.log(json)
+      //       //const gif = document.querySelector('item-content');
+      //       let gif = document.getElementById('gif3')
+      //       let randomGif = json.data.images.fixed_height.url;
+      //       console.log(randomGif);
+      //       gif.innerHTML = `
+      //       <img src="${randomGif}"></img>`;
+      //       grid.refreshItems().layout()
+      //     }
+      //   )};
 
-        function innerGif4(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
-        .then(response => response.json())
-        .then(json => {
-            console.log(json)
-            //const gif = document.querySelector('item-content');
-            let gif = document.getElementById('gif4')
-            let randomGif = json.data.images.fixed_height.url;
-            console.log(randomGif);
-            gif.innerHTML = `
-            <img src="${randomGif}"></img>`;
-            grid.refreshItems().layout()
-          }
-        )};
+      //   function innerGif4(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+      //   .then(response => response.json())
+      //   .then(json => {
+      //       console.log(json)
+      //       //const gif = document.querySelector('item-content');
+      //       let gif = document.getElementById('gif4')
+      //       let randomGif = json.data.images.fixed_height.url;
+      //       console.log(randomGif);
+      //       gif.innerHTML = `
+      //       <img src="${randomGif}"></img>`;
+      //       grid.refreshItems().layout()
+      //     }
+      //   )};
 
 
-        innerGif();
-        innerGif2();
-        innerGif3();
-        innerGif4();
+      //   innerGif();
+      //   innerGif2();
+      //   innerGif3();
+      //   innerGif4();
 
         //Get positions and via WebSockets on Mouseup event
 
@@ -200,7 +209,7 @@
 
           //Get Array with all of the instances of .muuri-item
           var divs = document.querySelectorAll(".muuri-item");
-          console.log(divs);
+          // console.log(divs);
 
           //CAUTION - THE ATTRIBUTES TAG MAY CHANGE NUMBERS
           var newPositions = divs[0].attributes[1].nodeValue;
@@ -228,12 +237,13 @@
 
             //Array renamed to data for sending
             data = newTransform;
+            console.log(newTransform);
             // console.log(data);
 
             //Emit Data
             e.preventDefault();
             socket.emit('box move', data)
-            grid.refreshItems().layout();
+            // grid.refreshItems().layout();
             // grid.synchronize();
           };
 
@@ -242,7 +252,7 @@
           seeTransform, 600);
         })
 
-           //Receive Data and Function
+           //Receive Moved Box Data and Function
           socket.on('box move', function(data){
         
           // console.log(data[0]);
@@ -272,8 +282,8 @@
             function innerGif5(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
             .then(response => response.json())
             .then(json => {
-            // console.log(json)
-            let randomGif = json.data.images.fixed_height.url;
+            console.log(json)
+            let randomGif = json.data.images.fixed_width.url;
             console.log(randomGif);
 
             //Create Element to Add
@@ -289,9 +299,19 @@
             wrapper.innerHTML = columnHTML;
             var columnElem = wrapper.children[0];
             grid.add([columnElem]);
-            // grid.refreshItems().layout()
+            console.log([columnElem]);
+            grid.refreshItems()
+            //This is the image location to capture
+            // [columnElem][0].lastElementChild.children[0].src
+            //.layout()
+            // grid.synchronize();
+
+            //Emit Gif URL
+            socket.emit('mongo', randomGif);
               }
             )};
+
+
 
             innerGif5();
    

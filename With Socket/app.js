@@ -33,22 +33,65 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 });
 
-io.on('connection', (socket) => {
-  socket.on('box move', function(data){
-    console.log('It moved')
-    io.emit('box move', data);;
-  });
-});
+// io.on('connection', (socket) => {
+//   socket.on('box move', function(data){
+//     console.log('Someone is moving a box....')
+//     io.emit('box move', data);
+//   });
+// });
 
 //Mongo DB Stuff
-MongoClient.connect("mongodb+srv://jsvids:ymXOHeGaV921vaqk@cluster0-elfsq.gcp.mongodb.net/test?retryWrites=true&w=majority", {useUnifiedTopology: true}) 
+MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mongodb.net/test?retryWrites=true&w=majority", {useUnifiedTopology: true}) 
   .then(client => {
   console.log('Connected to Database')
-  const collection = client.db("test").collection("test_collect");
-  app.put('/newgif', (req, res) => {
-    console.log(req.body)
-    
+  const collection = client.db("test").collection("test");
+  const position = client.db("test").collection("position");
+
+  //On load get gif data
+  io.on('connection', (socket) => {
+    console.log('Grabbing Initial Gif Data...');
+    return collection.find().toArray()
+    .then(res => {
+      // console.log(res);
+      let newData = res;
+      io.emit('initial', newData);
+    })
+    .catch(error => console.error(error))
+  });
+
+    //On load get gif positions
+    io.on('connection', (socket) => {
+      return position.find().toArray().then(res =>{
+        // console.log(res)
+        let newPositionData = res;
+        io.emit('newPositions', newPositionData)
+        })
+    })
+
+    //Sending positions to database  after move
+    io.on('connection', (socket) => {
+      socket.on('box move', function(data){
+        console.log('Sending new positions to Database')
+        position.updateOne({'_id':'position'},{$set:{field1:data}},{upsert:true})
+        io.emit('box move', data);
+      });
+    });
+
+  //Socket sends new data to server after "Add Gif" button is clicked
+  io.on('connection', (socket) => {
+    socket.on('mongo', function(data){
+      //Add data to database
+      console.log('Mongo!');
+      // console.log(data);
+      collection.insertOne({URL: data}, {upsert: true}).then(res =>{
+        // console.log(res);
+      }).catch(err => 
+        console.log(err));
+      io.emit('mongo', data);
+    })
   })
+
+
 
 })
 .catch(error => console.error(error))

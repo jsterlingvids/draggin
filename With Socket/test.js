@@ -1,22 +1,16 @@
 // var fs = require('fs');
-let button = document.getElementById('json');
+// let button = document.getElementById('json');
+// var socket = io();
 
-button.addEventListener('click', doSomething);
+// button.addEventListener('click', doSomething);
 
-const user = {
-    name: 'John',
-    surname: 'Smith'
-  };
+// const user = {
+//     name: 'John',
+//     surname: 'Smith'
+//   };
 
-    function doSomething(){
-      fetch('/newgif', {
-        method: 'put',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: 'Darth Vadar',
-          quote: 'I find your lack of faith disturbing.'
-        })
-      })
-    }
+//     // function doSomething(){
+//     //   socket.emit('mongo');
+//     // }
 
   
