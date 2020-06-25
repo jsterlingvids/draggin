@@ -7,3 +7,5 @@ For syncing the positions on initial load — I think I need to capture the pos
 Then I can update from there once both of those positions are captured.
 
 I need to find out how I can make an array with two corresponding objects 
+
+When an object is moved, I need to capture position and URL — then update the position in the database to match the corresponding URL. 
