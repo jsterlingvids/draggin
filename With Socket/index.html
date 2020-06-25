@@ -94,18 +94,18 @@
       //Receive Initial Data and build
       socket.on('initial', function(newData){
       console.log(newData);
-      let initialGifs = Array.from(newData);
-      // console.log(initialGifs)
+      // let initialGifs = Array.from(newData);
+      // // console.log(initialGifs)
       //Loop through array from database
       let i;
-      for(i = 0; i < initialGifs.length; i++){
+      for(i = 0; i < newData.length; i++){
         //Create div to hold looped items
         var wrapper = document.createElement('div');
         var columnHTML = `
         <div class="item">
             <div class="item-content" id="gif5">
               <!-- Safe zone, enter your custom markup -->
-              <img src="${initialGifs[i].URL}"></img>
+              <img src="${newData[i].data[0].url}"></img>
               <!-- Safe zone ends -->
               </div>
             </div>
@@ -114,23 +114,36 @@
         wrapper.innerHTML = columnHTML;
         var columnElem = wrapper.children[0];
         grid.add([columnElem]);
-        
-      }
-      // grid.refreshItems();
-      // grid.synchronize();
-      })
-
-      //Receive initial positons
-      socket.on('newPositions', function(newPositionData){
-        console.log(newPositionData[0].field1);
+          }
+          
+        //Now add new positions
         var divs = document.querySelectorAll(".muuri-item");
           console.log(divs);
-        // var newPositions = divs[0].attributes[1].nodeValue;
-        let i;
-        for(i= 0; i < divs.length; i++){
-          console.log(divs[i].attributes[1].nodeValue)
-        }
-      })
+          let j;
+        for(j = 0; j < newData.length; j++){
+          // console.log(divs[j].attributes[1].nodeValue)
+          divs[j].attributes[1].nodeValue = newData[j].data[0].position
+          // grid.refreshItems();
+        
+      }
+        
+
+
+      grid.refreshItems();
+      // grid.synchronize();
+    })
+
+      //Receive initial positons
+      // socket.on('newPositions', function(newPositionData){
+      //   console.log(newPositionData[0].field1);
+      //   var divs = document.querySelectorAll(".muuri-item");
+      //     console.log(divs);
+      //   // var newPositions = divs[0].attributes[1].nodeValue;
+      //   let i;
+      //   for(i= 0; i < divs.length; i++){
+      //     console.log(divs[i].attributes[1].nodeValue)
+      //   }
+      // })
     
 
 
@@ -209,10 +222,11 @@
 
           //Get Array with all of the instances of .muuri-item
           var divs = document.querySelectorAll(".muuri-item");
-          // console.log(divs);
+          console.log(divs);
 
           //CAUTION - THE ATTRIBUTES TAG MAY CHANGE NUMBERS
           var newPositions = divs[0].attributes[1].nodeValue;
+          console.log(newPositions);
 
           //Gets all new positions, loops through them and puts them into an arry to send via WebSocket
           function seeTransform(){
@@ -265,6 +279,7 @@
           for (i = 0; i < data.length; i++){
             moveDivs[i].attributes[1].nodeValue = data[i];
           }
+          grid.refreshItems();
           
           });
 
@@ -299,15 +314,22 @@
             wrapper.innerHTML = columnHTML;
             var columnElem = wrapper.children[0];
             grid.add([columnElem]);
-            console.log([columnElem]);
             grid.refreshItems()
-            //This is the image location to capture
-            // [columnElem][0].lastElementChild.children[0].src
+            // console.log([columnElem][0].attributes[1].nodeValue);
+
+            let urlAndPositionArray = [];
+            urlAndPositionArray.push({url: [columnElem][0].lastElementChild.children[0].src, position: [columnElem][0].attributes[1].nodeValue })
+            console.log(urlAndPositionArray);
+            data = urlAndPositionArray;
+            // [columnElem][0].attributes[1].nodeValue
+
+          
             //.layout()
             // grid.synchronize();
 
             //Emit Gif URL
-            socket.emit('mongo', randomGif);
+            // socket.emit('mongo', randomGif);
+            socket.emit('mongo', data);
               }
             )};
 

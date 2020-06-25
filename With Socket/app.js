@@ -54,6 +54,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     .then(res => {
       // console.log(res);
       let newData = res;
+      console.log(newData);
       io.emit('initial', newData);
     })
     .catch(error => console.error(error))
@@ -81,9 +82,9 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   io.on('connection', (socket) => {
     socket.on('mongo', function(data){
       //Add data to database
-      console.log('Mongo!');
-      // console.log(data);
-      collection.insertOne({URL: data}, {upsert: true}).then(res =>{
+      console.log('Got a new gif!');
+      console.log(data)
+      collection.insertOne({data}, {upsert: true}).then(res =>{
         // console.log(res);
       }).catch(err => 
         console.log(err));
