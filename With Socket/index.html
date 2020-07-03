@@ -94,18 +94,22 @@
       //Receive Initial Data and build
       socket.on('initial', function(newData){
       console.log(newData);
+
       // let initialGifs = Array.from(newData);
       // // console.log(initialGifs)
       //Loop through array from database
+
+        
       let i;
       for(i = 0; i < newData.length; i++){
+
         //Create div to hold looped items
         var wrapper = document.createElement('div');
         var columnHTML = `
         <div class="item">
             <div class="item-content" id="gif5">
               <!-- Safe zone, enter your custom markup -->
-              <img src="${newData[i].data[0].url}"></img>
+              <img src="${newData[i].url}"></img>
               <!-- Safe zone ends -->
               </div>
             </div>
@@ -114,37 +118,12 @@
         wrapper.innerHTML = columnHTML;
         var columnElem = wrapper.children[0];
         grid.add([columnElem]);
+        grid.refreshItems();
           }
-          
-        //Now add new positions
-        var divs = document.querySelectorAll(".muuri-item");
-          console.log(divs);
-          let j;
-        for(j = 0; j < newData.length; j++){
-          // console.log(divs[j].attributes[1].nodeValue)
-          divs[j].attributes[1].nodeValue = newData[j].data[0].position
-          // grid.refreshItems();
         
-      }
-        
-
-
-      grid.refreshItems();
+      // grid.refreshItems();
       // grid.synchronize();
     })
-
-      //Receive initial positons
-      // socket.on('newPositions', function(newPositionData){
-      //   console.log(newPositionData[0].field1);
-      //   var divs = document.querySelectorAll(".muuri-item");
-      //     console.log(divs);
-      //   // var newPositions = divs[0].attributes[1].nodeValue;
-      //   let i;
-      //   for(i= 0; i < divs.length; i++){
-      //     console.log(divs[i].attributes[1].nodeValue)
-      //   }
-      // })
-    
 
 
       //Generate Gif Content
@@ -228,6 +207,10 @@
           var newPositions = divs[0].attributes[1].nodeValue;
           console.log(newPositions);
 
+          //Grab URL Along with Position
+          var urlMatch = divs[0].childNodes[1].childNodes[0].nextElementSibling.attributes[0].nodeValue
+          console.log(urlMatch);
+
           //Gets all new positions, loops through them and puts them into an arry to send via WebSocket
           function seeTransform(){
 
@@ -244,15 +227,14 @@
               divs[i].attributes[1].nodeValue = divs[i].attributes[1].nodeValue;
               // console.log(divs[i].attributes[1].nodeValue);
 
-              //Pushes each loop onto the array
-              newTransform.push(divs[i].attributes[1].nodeValue = divs[i].attributes[1].nodeValue);
+              //Pushes each loop onto the array - both URL, Position
+              newTransform.push([divs[i].childNodes[1].childNodes[0].nextElementSibling.attributes[0].nodeValue, divs[i].attributes[1].nodeValue]);
             }
             // console.log(newTransform);
 
             //Array renamed to data for sending
             data = newTransform;
-            console.log(newTransform);
-            // console.log(data);
+            console.log(data);
 
             //Emit Data
             e.preventDefault();

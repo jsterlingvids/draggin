@@ -50,30 +50,43 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   //On load get gif data
   io.on('connection', (socket) => {
     console.log('Grabbing Initial Gif Data...');
-    return collection.find().toArray()
-    .then(res => {
-      // console.log(res);
+    //Sort the database based on position
+    collection.find().sort( {"position": 1} ).toArray().then(res => {
+      // console.log(res)
       let newData = res;
-      console.log(newData);
-      io.emit('initial', newData);
+      socket.emit('initial', newData);
     })
-    .catch(error => console.error(error))
+      .catch(err => console.log(err))
   });
-
-    //On load get gif positions
-    io.on('connection', (socket) => {
-      return position.find().toArray().then(res =>{
-        // console.log(res)
-        let newPositionData = res;
-        io.emit('newPositions', newPositionData)
-        })
-    })
 
     //Sending positions to database  after move
     io.on('connection', (socket) => {
       socket.on('box move', function(data){
         console.log('Sending new positions to Database')
-        position.updateOne({'_id':'position'},{$set:{field1:data}},{upsert:true})
+
+        //URL console.log
+        // console.log(data[0][0]);
+
+        //Position console.log
+        //console.log(data[0][1])
+
+        var items = collection.find()
+
+        let i;
+        for(i = 0; i < data.length; i++){
+          // //URL Data
+          // console.log(data[i][0]);
+          // //Position Data
+          // console.log(data[i][1]);
+
+          //Update position data on each
+          collection.findOneAndUpdate({"url": data[i][0]}, {$set: {"position": data[i][1]}}).then(res =>
+            console.log('DONE')).catch(err => console.log(err))
+        }
+
+      //  collection.find().sort( {"position": 1} ).toArray().then(res => console.log('Sorting')).catch(err => console.log(err));
+
+
         io.emit('box move', data);
       });
     });
@@ -83,8 +96,8 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     socket.on('mongo', function(data){
       //Add data to database
       console.log('Got a new gif!');
-      console.log(data)
-      collection.insertOne({data}, {upsert: true}).then(res =>{
+      // console.log(data[0].url)
+      collection.insertOne({"url": data[0].url, "position": data[0].position}, {upsert: true}).then(res =>{
         // console.log(res);
       }).catch(err => 
         console.log(err));
