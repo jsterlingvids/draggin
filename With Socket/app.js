@@ -51,8 +51,8 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   io.on('connection', (socket) => {
     console.log('Grabbing Initial Gif Data...');
     //Sort the database based on position
-    collection.find().sort( {"position": 1} ).toArray().then(res => {
-      // console.log(res)
+    collection.find().sort( {"position": -1} ).toArray().then(res => {
+      console.log(res)
       let newData = res;
       socket.emit('initial', newData);
     })
@@ -81,7 +81,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
           //Update position data on each
           collection.findOneAndUpdate({"url": data[i][0]}, {$set: {"position": data[i][1]}}).then(res =>
-            console.log('DONE')).catch(err => console.log(err))
+            console.log('Database Updated with new positions')).catch(err => console.log(err))
         }
 
       //  collection.find().sort( {"position": 1} ).toArray().then(res => console.log('Sorting')).catch(err => console.log(err));
@@ -97,11 +97,15 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       //Add data to database
       console.log('Got a new gif!');
       // console.log(data[0].url)
-      collection.insertOne({"url": data[0].url, "position": data[0].position}, {upsert: true}).then(res =>{
+      const newItem = {
+        "url" : data[0].url,
+        "position": data[0].position
+      }
+      collection.insertOne(newItem).then(res =>{
         // console.log(res);
       }).catch(err => 
         console.log(err));
-      io.emit('mongo', data);
+      socket.broadcast.emit('mongo', data);
     })
   })
 

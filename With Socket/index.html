@@ -89,6 +89,8 @@
 
       var grid = new Muuri('.grid', {
       dragEnabled: true,
+      layout: {
+        },
       });
 
       //Receive Initial Data and build
@@ -117,13 +119,26 @@
         //Grid.add function to properly add to grid
         wrapper.innerHTML = columnHTML;
         var columnElem = wrapper.children[0];
-        grid.add([columnElem]);
-        grid.refreshItems();
+        console.log(columnElem.style.cssText); 
+        grid.add([columnElem], { index: 0 });
+        grid.refreshItems().layout();
+        // grid.refreshSortData();
           }
-        
+          grid.refreshItems().layout();
       // grid.refreshItems();
       // grid.synchronize();
     })
+
+    //Refresh once page is loaded
+    grid.on('load', function () {
+      grid.refreshItems().layout();
+      console.log('page is loaded')
+      });
+
+      document.addEventListener('DOMContentLoaded', (event) => {
+        grid.refreshItems().layout();
+        console.log('page is loaded')
+      });
 
 
       //Generate Gif Content
@@ -293,10 +308,12 @@
               </div>
             </div>
             `;
+            
             wrapper.innerHTML = columnHTML;
             var columnElem = wrapper.children[0];
-            grid.add([columnElem]);
-            grid.refreshItems()
+            grid.add([columnElem], { index: 0 });
+            grid.refreshItems().layout();
+            // grid.refreshSortData();
             // console.log([columnElem][0].attributes[1].nodeValue);
 
             let urlAndPositionArray = [];
@@ -312,7 +329,10 @@
             //Emit Gif URL
             // socket.emit('mongo', randomGif);
             socket.emit('mongo', data);
+            grid.refreshItems().layout();
               }
+              
+              
             )};
 
 
@@ -320,6 +340,29 @@
             innerGif5();
    
           };
+
+          //Once new gif is clicked — add to pages without having to consult database
+          socket.on('mongo', function(data){
+            console.log('This is the new gif data:')
+            console.log(data[0].url);
+
+            //Create Element to Add
+            var wrapper = document.createElement('div');
+            var columnHTML = ` <div class="item">
+            <div class="item-content" id="gif5">
+              <!-- Safe zone, enter your custom markup -->
+              <img src="${data[0].url}"></img>
+              <!-- Safe zone ends -->
+              </div>
+            </div>
+            `;
+            wrapper.innerHTML = columnHTML;
+            var columnElem = wrapper.children[0];
+            grid.add([columnElem], { index: 0 });
+            grid.refreshItems();
+            // grid.refreshSortData();
+
+          })
 
           //JSON Testing
           jsonButton = document.getElementById("json");
