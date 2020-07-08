@@ -96,6 +96,8 @@
       //Receive Initial Data and build
       socket.on('initial', function(newData){
       console.log(newData);
+      grid.sort(newData);
+      // console.log(newData);
 
       // let initialGifs = Array.from(newData);
       // // console.log(initialGifs)
@@ -104,6 +106,8 @@
         
       let i;
       for(i = 0; i < newData.length; i++){
+        grid.sort(newData[i].position)
+        // console.log(newData);
 
         //Create div to hold looped items
         var wrapper = document.createElement('div');
@@ -120,26 +124,34 @@
         wrapper.innerHTML = columnHTML;
         var columnElem = wrapper.children[0];
         console.log(columnElem.style.cssText); 
-        grid.add([columnElem], { index: 0 });
-        grid.refreshItems().layout();
+        grid.add([columnElem]);
+        // grid.refreshItems().layout();
         // grid.refreshSortData();
           }
-          grid.refreshItems().layout();
+
+          // grid.refreshItems().layout();
       // grid.refreshItems();
       // grid.synchronize();
     })
 
-    //Refresh once page is loaded
-    grid.on('load', function () {
-      grid.refreshItems().layout();
-      console.log('page is loaded')
-      });
-
-      document.addEventListener('DOMContentLoaded', (event) => {
+    //Refresh the layout once page is loaded
+      function respaceItems(){
         grid.refreshItems().layout();
-        console.log('page is loaded')
-      });
+        console.log('Respaced!')
+        var divs = document.querySelectorAll(".muuri-item");
+          console.log(divs);
+          console.log(grid.getItems([0]._drag));
+      }
 
+      setTimeout(respaceItems, 500);
+
+
+      document.addEventListener('mouseup', function(){
+        var activeItems = grid.getItems().filter(function (item) {
+        return item.isActive();
+      });
+      console.log(activeItems[0]._gridId);
+      })
 
       //Generate Gif Content
 
@@ -276,7 +288,7 @@
           for (i = 0; i < data.length; i++){
             moveDivs[i].attributes[1].nodeValue = data[i];
           }
-          grid.refreshItems();
+          grid.refreshItems().layout();
           
           });
 

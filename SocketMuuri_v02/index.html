@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      .p0 {padding:0 !important;}
+      .grid {
+        position: relative;
+      }
+      .item {
+        position: absolute;
+        margin: 5px;
+        z-index: 1;
+      }
+      .item2 {
+        position: absolute;
+        margin: 0;
+        z-index: 1;
+      }
+
+      .item.muuri-item-hidden {
+        z-index: 0;
+      }
+      .item.muuri-item-releasing {
+        z-index: 2;
+      }
+      .item.muuri-item-dragging {
+        z-index: 3;
+      }
+      .item-content2 {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: #ccc;
+        font-size: 50px;
+        color: white;
+        cursor: pointer;
+      }
+      .item-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: turquoise;
+        font-size: 10px;
+        color: white;
+        cursor: pointer;
+      }
+      .item.muuri-item-dragging .item-content {
+        background: blue;
+      }
+      .item.muuri-item-releasing .item-content {
+        background: blueViolet;
+        size: 1px;
+      }
+    </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-mhpbKVUOPCSocLzx2ElRISIORFRwr1ZbO9bAlowgM5kO7hnpRBe+brVj8NNPUiFs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    
+    
+    <title>Muuri Test</title>
+</head>
+<body>
+  
+  <button type="button" class="btn btn-primary btn-lg" id="new-gif">Add New Gif!</button>
+
+    <div id = "main-grid" class="grid">
+      
+ 
+
+      </div>
+
+    <!-- Socket Scripts -->
+    <script src="/socket.io/socket.io.js"></script>  
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <!-- Muuri Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/muuri@0.9.0/dist/muuri.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web-animations-js@2.3.2/web-animations.min.js"></script>
+    <script src="/test.js"></script>
+
+   
+    
+    
+    <script>
+      var socket = io();
+
+      var grid = new Muuri('.grid', {
+      dragEnabled: true,
+      layout: {
+        },
+      });
+
+      //Receive Initial Data and build
+      socket.on('initial', function(newData){
+      console.log(newData);
+      // grid.sort(newData);
+      // console.log(newData);
+
+      // let initialGifs = Array.from(newData);
+      // // console.log(initialGifs)
+      //Loop through array from database
+
+        
+      let i;
+      for(i = 0; i < newData.length; i++){
+        // grid.sort(newData[i].position)
+        // console.log(newData);
+
+        //Create div to hold looped items
+        var wrapper = document.createElement('div');
+        var columnHTML = `
+        <div class="item">
+            <div class="item-content" id="gif5">
+              <!-- Safe zone, enter your custom markup -->
+              <img src="${newData[i].url}"></img>
+              <!-- Safe zone ends -->
+              </div>
+            </div>
+        `
+        //Grid.add function to properly add to grid
+        wrapper.innerHTML = columnHTML;
+        var columnElem = wrapper.children[0]; 
+        grid.add([columnElem]);
+        // grid.refreshItems().layout();
+        // grid.refreshSortData();
+          }
+
+          // grid.refreshItems().layout();
+      // grid.refreshItems();
+      // grid.synchronize();
+    })
+
+    //Refresh the layout once page is loaded
+      function respaceItems(){
+        grid.refreshItems().layout();
+        console.log('Respaced!')
+        // var divs = document.querySelectorAll(".muuri-item");
+        //   console.log(divs);
+          console.log(grid.getItems());
+      }
+
+      setTimeout(respaceItems, 500);
+
+
+      document.addEventListener('mouseup', function(e){
+        var activeItems = grid.getItems().filter(function (item) {
+        return item.isActive();
+      });
+
+      console.log(activeItems[0]._gridId);
+
+      let divIDs = grid.getItems();
+      //This is the gridID
+      console.log(divIDs[0]._gridId);
+
+      //This is the URL for the Gif
+      console.log(divIDs[0]._element.children[0].childNodes[3].currentSrc);
+
+      //This is the array to push the new IDs to
+
+      function sendNewInfo(){
+      let newIDs = new Array();
+
+      //This is the loop that will push the new IDs and URLs to the newIDs array
+      let i;
+      for(i = 0; i < divIDs.length; i++){
+        newIDs.push([divIDs[i]._id, divIDs[i]._element.children[0].childNodes[3].currentSrc])
+      }
+
+      console.log(newIDs);
+      console.log('Sending new info now!')
+
+      socket.emit('newIDs', newIDs);
+
+      }
+    
+      setTimeout(
+          sendNewInfo, 600);
+    })
+
+      //Generate Gif Content
+
+      const apiKey = 'K4MR2L3zPWENog4Ureog4PPv6rAeZSTB'
+
+
+      // function innerGif(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+      //   .then(response => response.json())
+      //   .then(json => {
+      //       console.log(json)
+      //       //const gif = document.querySelector('item-content');
+      //       let gif = document.getElementById('gif')
+      //       let randomGif = json.data.images.fixed_height.url;
+      //       console.log(randomGif);
+      //       gif.innerHTML = `
+      //       <img src="${randomGif}"></img>`;
+      //       grid.refreshItems().layout()
+      //     }
+      //   )};
+
+      //   function innerGif2(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+      //   .then(response => response.json())
+      //   .then(json => {
+      //       console.log(json)
+      //       //const gif = document.querySelector('item-content');
+      //       let gif = document.getElementById('gif2')
+      //       let randomGif = json.data.images.fixed_height.url;
+      //       console.log(randomGif);
+      //       gif.innerHTML = `
+      //       <img src="${randomGif}"></img>`;
+      //       grid.refreshItems().layout()
+      //     }
+      //   )};
+
+      //   function innerGif3(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+      //   .then(response => response.json())
+      //   .then(json => {
+      //       console.log(json)
+      //       //const gif = document.querySelector('item-content');
+      //       let gif = document.getElementById('gif3')
+      //       let randomGif = json.data.images.fixed_height.url;
+      //       console.log(randomGif);
+      //       gif.innerHTML = `
+      //       <img src="${randomGif}"></img>`;
+      //       grid.refreshItems().layout()
+      //     }
+      //   )};
+
+      //   function innerGif4(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+      //   .then(response => response.json())
+      //   .then(json => {
+      //       console.log(json)
+      //       //const gif = document.querySelector('item-content');
+      //       let gif = document.getElementById('gif4')
+      //       let randomGif = json.data.images.fixed_height.url;
+      //       console.log(randomGif);
+      //       gif.innerHTML = `
+      //       <img src="${randomGif}"></img>`;
+      //       grid.refreshItems().layout()
+      //     }
+      //   )};
+
+
+      //   innerGif();
+      //   innerGif2();
+      //   innerGif3();
+      //   innerGif4();
+
+        //Get positions and via WebSockets on Mouseup event
+
+        // document.addEventListener('mouseup', function(e){
+        //   // console.log(e.target.parentElement);
+        //   // console.log(document.querySelector('muuri-item-positioning'))
+
+        //   //Get Array with all of the instances of .muuri-item
+        //   var divs = document.querySelectorAll(".muuri-item");
+        //   console.log(divs);
+
+        //   //CAUTION - THE ATTRIBUTES TAG MAY CHANGE NUMBERS
+        //   var newPositions = divs[0].attributes[1].nodeValue;
+        //   console.log(newPositions);
+
+        //   //Grab URL Along with Position
+        //   var urlMatch = divs[0].childNodes[1].childNodes[0].nextElementSibling.attributes[0].nodeValue
+        //   console.log(urlMatch);
+
+        //   //Gets all new positions, loops through them and puts them into an arry to send via WebSocket
+        //   function seeTransform(){
+
+        //     // console.log(divs[0].attributes[1].nodeValue)
+        //     //This is the array that will hold all of the new position data
+        //     var newTransform = new Array();
+
+        //     //Loops through the .muuri-items and grabs the transform data of each
+        //     var i;
+        //     for (i = 0; i < divs.length; i++) {
+        //       // console.log(divs[i].style)
+
+        //       //Changes the looped positions to match
+        //       divs[i].attributes[1].nodeValue = divs[i].attributes[1].nodeValue;
+        //       // console.log(divs[i].attributes[1].nodeValue);
+
+        //       //Pushes each loop onto the array - both URL, Position
+        //       newTransform.push([divs[i].childNodes[1].childNodes[0].nextElementSibling.attributes[0].nodeValue, divs[i].attributes[1].nodeValue]);
+        //     }
+        //     // console.log(newTransform);
+
+        //     //Array renamed to data for sending
+        //     data = newTransform;
+        //     console.log(data);
+
+        //     //Emit Data
+        //     e.preventDefault();
+        //     socket.emit('box move', data)
+        //     // console.log(grid.getItems());
+            
+        //     // grid.refreshItems().layout();
+        //     // grid.synchronize();
+        //   };
+
+        //   //Function is sent with a timeout because it takes a little time for the boxes to settle into their new positions
+        //   setTimeout(
+        //   seeTransform, 600);
+        // })
+
+           //Receive Moved Box Data and Function
+          socket.on('box move', function(data){
+        
+          // console.log(data[0]);
+
+          //Select/identify all muuri-items that need positions transformed
+          var moveDivs = document.querySelectorAll(".muuri-item");
+          // console.log(moveDivs);
+
+          //Loop through the new positions and set them equal to the incoming data
+          for (i = 0; i < data.length; i++){
+            moveDivs[i].attributes[1].nodeValue = data[i];
+          }
+          grid.refreshItems().layout();
+          
+          });
+
+          //Add New Gif Button
+          button = document.getElementById("new-gif");
+
+          button.addEventListener('click', addNewGif);
+
+          //Function that adds new Gif
+          function addNewGif(e){
+            console.log('It worked!')
+            e.preventDefault;
+
+            //Fetch Gif
+            function innerGif5(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')
+            .then(response => response.json())
+            .then(json => {
+            console.log(json)
+            let randomGif = json.data.images.fixed_width.url;
+            console.log(randomGif);
+
+            //Create Element to Add
+            var wrapper = document.createElement('div');
+            var columnHTML = ` <div class="item">
+            <div class="item-content" id="gif5">
+              <!-- Safe zone, enter your custom markup -->
+              <img src="${randomGif}"></img>
+              <!-- Safe zone ends -->
+              </div>
+            </div>
+            `;
+            
+            wrapper.innerHTML = columnHTML;
+            var columnElem = wrapper.children[0];
+            grid.add([columnElem], { index: 0 });
+            grid.refreshItems().layout();
+            // grid.refreshSortData();
+            // console.log([columnElem][0].attributes[1].nodeValue);
+            console.log(columnElem);
+
+            let urlAndPositionArray = [];
+            urlAndPositionArray.push({url: [columnElem][0].lastElementChild.children[0].src, position: 1})
+            console.log(urlAndPositionArray);
+            data = urlAndPositionArray;
+            // [columnElem][0].attributes[1].nodeValue
+
+          
+            //.layout()
+            // grid.synchronize();
+
+            //Emit Gif URL
+            // socket.emit('mongo', randomGif);
+            socket.emit('mongo', data);
+            grid.refreshItems().layout();
+              }
+              
+              
+            )};
+
+
+
+            innerGif5();
+   
+          };
+
+          //Once new gif is clicked — add to pages without having to consult database
+          socket.on('mongo', function(data){
+            console.log('This is the new gif data:')
+            console.log(data[0].url);
+
+            //Create Element to Add
+            var wrapper = document.createElement('div');
+            var columnHTML = ` <div class="item">
+            <div class="item-content" id="gif5">
+              <!-- Safe zone, enter your custom markup -->
+              <img src="${data[0].url}"></img>
+              <!-- Safe zone ends -->
+              </div>
+            </div>
+            `;
+            wrapper.innerHTML = columnHTML;
+            var columnElem = wrapper.children[0];
+            grid.add([columnElem], { index: 0 });
+            grid.refreshItems();
+            // grid.refreshSortData();
+
+          })
+
+          //JSON Testing
+          jsonButton = document.getElementById("json");
+
+          
+
+
+
+
+    </script>
+
+</body>
+</html>

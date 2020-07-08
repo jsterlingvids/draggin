@@ -51,8 +51,8 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   io.on('connection', (socket) => {
     console.log('Grabbing Initial Gif Data...');
     //Sort the database based on position
-    collection.find().sort( {"position": -1} ).toArray().then(res => {
-      console.log(res)
+    collection.find().sort( {"position": 1} ).toArray().then(res => {
+      // console.log(res)
       let newData = res;
       socket.emit('initial', newData);
     })
