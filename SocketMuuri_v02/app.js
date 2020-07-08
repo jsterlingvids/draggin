@@ -52,7 +52,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     console.log('Grabbing Initial Gif Data...');
     //Sort the database based on position
     collection.find().toArray().then(res => {
-      console.log(res)
+      // console.log(res)
       let newData = res;
       socket.emit('initial', newData);
     })
@@ -115,12 +115,18 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     socket.on('newIDs', function(data){
       console.log('Sending new IDs(!) to Database')
       // console.log(data);
-      var i;
-      for(i = 0; i < data.length;i++){
-        console.log(data[i][0]);
-        collection.findOneAndUpdate({}, {$set: {"url": data[i][1]}}).then(res =>
-          console.log('Database Updated with new IDSSSS')).catch(err => console.log(err))
-      }
+      data.forEach(item => {
+        console.log(item);
+        collection.findOneAndUpdate({position: item[0]}, {$set: {"url": item[1], "position": item[0]}}, {multi: true}).then(res =>
+            console.log('Database Updated with new IDSSSSS')).catch(err => console.log(err))
+              }
+      )
+      // var i;
+      // for(i = 0; i < data.length;i++){
+      //   // console.log(data[i][0]);
+      //   collection.updateMany({}, {$set: {"url": data[i][1]}}, {multi: true}).then(res =>
+      //     console.log('Database Updated with new IDSSSS')).catch(err => console.log(err))
+      // }
 
       io.emit('newIDs', data);
     });
