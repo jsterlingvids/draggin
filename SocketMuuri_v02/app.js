@@ -52,7 +52,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     console.log('Grabbing Initial Gif Data...');
     //Sort the database based on position
     collection.find().toArray().then(res => {
-      // console.log(res)
+      console.log(res)
       let newData = res;
       socket.emit('initial', newData);
     })
@@ -96,10 +96,12 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     socket.on('mongo', function(data){
       //Add data to database
       console.log('Got a new gif!');
-      // console.log(data[0].url)
+      console.log(data)
       const newItem = {
+        "index": data[0].index,
         "url" : data[0].url,
-        "position": data[0].position
+        "position": data[0].position,
+        "newGIF": "newGif"
       }
       collection.insertOne(newItem).then(res =>{
         // console.log(res);
@@ -115,18 +117,18 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     socket.on('newIDs', function(data){
       console.log('Sending new IDs(!) to Database')
       // console.log(data);
+
+      //Add index value to data array
+      var i;
+      for (i=0; i < data.length; i++){
+        data[i].splice(0,0, i)
+      }
+      // console.log(data);
+
+      //Now that each item has an index value, it'll update the database in order
       data.forEach(item => {
-        console.log(item);
-        collection.findOneAndUpdate({position: item[0]}, {$set: {"url": item[1], "position": item[0]}}, {multi: true}).then(res =>
-            console.log('Database Updated with new IDSSSSS')).catch(err => console.log(err))
-              }
-      )
-      // var i;
-      // for(i = 0; i < data.length;i++){
-      //   // console.log(data[i][0]);
-      //   collection.updateMany({}, {$set: {"url": data[i][1]}}, {multi: true}).then(res =>
-      //     console.log('Database Updated with new IDSSSS')).catch(err => console.log(err))
-      // }
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[2], "position": item[1], "Done?": "yes"}}).then(res=> console.log("DATABASE UPDATED")).catch(err => console.log(err))
+      })
 
       io.emit('newIDs', data);
     });

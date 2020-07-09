@@ -150,7 +150,8 @@
         return item.isActive();
       });
 
-      console.log(activeItems[0]._gridId);
+      console.log(activeItems);
+      console.log(activeItems[0]._id);
 
       let divIDs = grid.getItems();
       //This is the gridID
@@ -350,6 +351,13 @@
               </div>
             </div>
             `;
+
+            var i;
+            var numbers = 0;
+            for(i = 0; i < grid.getItems().length; i++){
+             var numbers = i + 1;
+            }
+            console.log(numbers);
             
             wrapper.innerHTML = columnHTML;
             var columnElem = wrapper.children[0];
@@ -360,7 +368,7 @@
             console.log(columnElem);
 
             let urlAndPositionArray = [];
-            urlAndPositionArray.push({url: [columnElem][0].lastElementChild.children[0].src, position: 1})
+            urlAndPositionArray.push({index: numbers, url: [columnElem][0].lastElementChild.children[0].src, position: 1})
             console.log(urlAndPositionArray);
             data = urlAndPositionArray;
             // [columnElem][0].attributes[1].nodeValue
@@ -372,7 +380,7 @@
             //Emit Gif URL
             // socket.emit('mongo', randomGif);
             socket.emit('mongo', data);
-            grid.refreshItems().layout();
+            // grid.refreshItems().layout();
               }
               
               
