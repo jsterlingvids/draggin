@@ -144,7 +144,7 @@
 
       setTimeout(respaceItems, 500);
 
-
+      //Saving positions of respaced items
       document.addEventListener('mouseup', function(e){
         var activeItems = grid.getItems().filter(function (item) {
         return item.isActive();
@@ -332,6 +332,12 @@
           function addNewGif(e){
             console.log('It worked!')
             e.preventDefault;
+            var giphy = new Array();
+            socket.emit('newGifClicked', giphy);
+
+            socket.on('addTheNewGifToThis', function(allGifData){
+              console.log('HIIIIIIHIIIIIII')
+            });
 
             //Fetch Gif
             function innerGif5(){fetch('https://api.giphy.com/v1/gifs/random?api_key=K4MR2L3zPWENog4Ureog4PPv6rAeZSTB&tag=&rating=G')

@@ -52,7 +52,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     console.log('Grabbing Initial Gif Data...');
     //Sort the database based on position
     collection.find().toArray().then(res => {
-      console.log(res)
+      // console.log(res)
       let newData = res;
       socket.emit('initial', newData);
     })
@@ -96,7 +96,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     socket.on('mongo', function(data){
       //Add data to database
       console.log('Got a new gif!');
-      console.log(data)
+      // console.log(data)
       const newItem = {
         "index": data[0].index,
         "url" : data[0].url,
@@ -134,15 +134,14 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     });
   });
 
-
-
-
 })
 .catch(error => console.error(error))
 
 
+
 http.listen(3000, () => {
   console.log('listening on *:3000');
+
 });
 
 
