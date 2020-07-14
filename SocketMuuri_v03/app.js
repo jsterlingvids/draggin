@@ -134,6 +134,8 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[1], "New One?": "Yes"}}, {upsert: true}).then(res => console.log("TRYING")).catch(err => console.log(err)) 
     })
 
+    //Send the database containing the new URL to all pages (may need to be paired down to be smaller eventually)
+    io.emit('newGifAdded', allDatabaseURLs);
     })
   })
 
