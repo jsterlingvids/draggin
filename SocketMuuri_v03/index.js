@@ -68,7 +68,6 @@ var socket = io();
       console.log(divIDs[0]._element.children[0].childNodes[3].currentSrc);
 
       //This is the array to push the new IDs to
-
       function sendNewInfo(){
       let newIDs = new Array();
 
@@ -92,22 +91,64 @@ var socket = io();
       //Generate Gif Content
       const apiKey = 'K4MR2L3zPWENog4Ureog4PPv6rAeZSTB'
 
-           //Receive Moved Box Data and Function
-          socket.on('box move', function(data){
+          //  //Receive Moved Box Data and Function
+          // socket.on('box move', function(data){
         
-          // console.log(data[0]);
+          // // console.log(data[0]);
 
-          //Select/identify all muuri-items that need positions transformed
-          var moveDivs = document.querySelectorAll(".muuri-item");
-          // console.log(moveDivs);
+          // //Select/identify all muuri-items that need positions transformed
+          // var moveDivs = document.querySelectorAll(".muuri-item");
+          // // console.log(moveDivs);
 
-          //Loop through the new positions and set them equal to the incoming data
-          for (i = 0; i < data.length; i++){
-            moveDivs[i].attributes[1].nodeValue = data[i];
-          }
-          grid.refreshItems().layout();
+          // //Loop through the new positions and set them equal to the incoming data
+          // for (i = 0; i < data.length; i++){
+          //   moveDivs[i].attributes[1].nodeValue = data[i];
+          // }
+          // grid.refreshItems().layout();
           
-          });
+          // });
+
+
+
+
+
+
+
+
+          //When a box has been moved
+          socket.on('boxHasBeenMoved', function(data){
+            console.log('A Box has been moved - updating!')
+            console.log(data);
+
+            //Reloads other pages once someone moves a box - CLUNKY
+            // window.location.reload();
+
+            //iterate through?
+            let gridItems = grid.getItems()
+            console.log(gridItems);
+
+            console.log(gridItems[0]._element.childNodes[2].previousSibling.children[0].currentSrc)
+            console.log(data[0][2])
+
+            let i;
+            for(i = 0; i < gridItems.length; i++){
+              if(gridItems[i]._element.childNodes[2].previousSibling.children[0].currentSrc != data[i[2]]){
+                console.log('SUP')
+              }
+            }
+
+
+
+
+
+          })
+
+
+
+
+
+
+
 
           //Add New Gif Button
           button = document.getElementById("new-gif");

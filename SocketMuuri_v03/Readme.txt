@@ -5,6 +5,7 @@ Also need to change newgif event name from 'mongo'.......
 In a perfect world everything updates with the ID...
 
 Page should update for everyone anytime a gif is moved — that should be the final bit
+Maybe this can be done by iterating through the data sent on Move and the exisiting Grid Items and pushing the Gif URL if any differences exist
 
 
 How it works (refresher):

@@ -151,14 +151,16 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       for (i=0; i < data.length; i++){
         data[i].splice(0,0, i)
       }
-      console.log(data);
+      // console.log(data);
 
       // Now that each item has an updated index value, it'll update the database in order
       data.forEach(item => {
-        collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[2], "Done?": "yes"}}, {upsert: true}).then(res=> console.log("DATABASE UPDATED")).catch(err => console.log(err))
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[2], "Done?": "yes"}}, {upsert: true}).then(res=> console.log("DATABASE UPDATED WITH NEW INDEXES")).catch(err => console.log(err))
       })
 
-      // io.emit('newIDs', data);
+      io.emit('boxHasBeenMoved', data);
+      //Change to this once everything works correctly:
+      // socket.broadcast.emit('boxHasBeenMoved', data);
     });
   });
 
