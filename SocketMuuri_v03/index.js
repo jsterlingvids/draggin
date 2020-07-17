@@ -126,16 +126,47 @@ var socket = io();
             //iterate through?
             let gridItems = grid.getItems()
             console.log(gridItems);
+            
 
             console.log(gridItems[0]._element.childNodes[2].previousSibling.children[0].currentSrc)
             console.log(data[0][2])
 
-            let i;
-            for(i = 0; i < gridItems.length; i++){
-              if(gridItems[i]._element.childNodes[2].previousSibling.children[0].currentSrc != data[i[2]]){
-                console.log('SUP')
-              }
+            let oldGridItems = []
+            let j;
+            for(j = 0; j < gridItems.length; j++){
+              
             }
+
+            console.log(gridItems);
+
+            let changedGridItems = [];
+        
+            
+            // let i;
+            // for(i = 0; i < gridItems.length; i++){
+            //   if(oldGridItems[i][1].childNodes[2].previousSibling.children[0].currentSrc != data[i][2]){
+            //     console.log('SUP')
+            //     changedGridItems.push([data[i][0], gridItems[i]._element]);
+            //   }
+            // }
+          
+            // //ChangedGridItems are the new positions and URLS
+            // console.log(changedGridItems);
+            
+            // let k;
+            // for(k=0; k < changedGridItems.length; k++){
+            //   console.log(changedGridItems[k][1])
+            //   if(oldGridItems[k][1].childNodes[2].previousSibling.children[0].currentSrc == changedGridItems[k][1].childNodes[2].previousSibling.children[0].currentSrc){
+            //     console.log('funky');
+            //   }
+            // }
+
+            // console.log(changedGridItems[0][0]);
+            
+            //(old position, new position)
+            // grid.move(0,-1)
+
+            
 
 
 

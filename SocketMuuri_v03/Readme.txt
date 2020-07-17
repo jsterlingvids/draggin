@@ -7,6 +7,8 @@ In a perfect world everything updates with the ID...
 Page should update for everyone anytime a gif is moved — that should be the final bit
 Maybe this can be done by iterating through the data sent on Move and the exisiting Grid Items and pushing the Gif URL if any differences exist
 
+grid.move() seems to be the right answer here, I need to create an array with the [old position, new position, url] by comparing the incoming move DATA with the current GRID...
+
 
 How it works (refresher):
 
