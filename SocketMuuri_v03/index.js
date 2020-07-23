@@ -116,65 +116,122 @@ var socket = io();
 
 
           //When a box has been moved
-          socket.on('boxHasBeenMoved', function(data){
-            console.log('A Box has been moved - updating!')
-            console.log(data);
+          // socket.on('boxHasBeenMoved', function(data){
+          //   console.log('A Box has been moved - updating!')
+          //   console.log(data);
 
-            //Reloads other pages once someone moves a box - CLUNKY
-            // window.location.reload();
+          //   //Reloads other pages once someone moves a box - CLUNKY
+          //   // window.location.reload();
 
-            //iterate through?
-            let gridItems = grid.getItems()
-            console.log(gridItems);
+          //   //iterate through?
+          //   let gridItems = grid.getItems()
+          //   console.log(gridItems);
             
 
-            console.log(gridItems[0]._element.childNodes[2].previousSibling.children[0].currentSrc)
-            console.log(data[0][2])
+          //   console.log(gridItems[0]._element.childNodes[2].previousSibling.children[0].currentSrc)
+          //   console.log(data[0][2])
 
-            let oldGridItems = []
-            let j;
-            for(j = 0; j < gridItems.length; j++){
-              
-            }
+          //   let oldGridItemPositions = []
+          //   let j;
+          //   for(j = 0; j < gridItems.length; j++){
+          //     if(gridItems[j]._element.childNodes[2].previousSibling.children[0].currentSrc != data[j][2]){
+          //       oldGridItemPositions.push([data[j][0], gridItems[j]._element.childNodes[2].previousSibling.children[0].currentSrc])
+          //     } else {console.log('bummer')}
+          //   }
 
-            console.log(gridItems);
+          //   console.log(oldGridItemPositions);
 
-            let changedGridItems = [];
+          //   let changedGridItems = [];
+
+          //   let i;
+          //   let k;
+          //   for(i = 0; i < data.length; i++){
+          //     for(k = 0; k < oldGridItemPositions.length; k++){
+          //       if(data[i][2] == oldGridItemPositions[k][1]){
+          //         changedGridItems.push([data[i][0], oldGridItemPositions[k][0]])
+          //       }
+          //     }
+          //   }
+
+          //   //changedGridItems = [old position, new position]
+
+          //   console.log(changedGridItems[0][0])
+
+          //   // let l;
+          //   // for(l = 0; l < changedGridItems; l++){
+          //   //   grid.move(changedGridItems[l][1], changedGridItems[l][0])
+          //   // }
+
+          //   // changedGridItems.forEach(item => {
+          //   //   grid.move(item[0], item[1])
+          //   //   console.log(item[0])
+          //   // }
+          //   //   )
         
+  
             
-            // let i;
-            // for(i = 0; i < gridItems.length; i++){
-            //   if(oldGridItems[i][1].childNodes[2].previousSibling.children[0].currentSrc != data[i][2]){
-            //     console.log('SUP')
-            //     changedGridItems.push([data[i][0], gridItems[i]._element]);
-            //   }
-            // }
+          //   //(old position, new position)
+          //   // grid.move(0,2)
+
+          // })
+
+
+
+
+
+
+
+
+
+          //Captures the data of the moved item, but now it's in an endless loop (on.move)
+
+          let changedItems = [];
+          function sendMove(data){
+            console.log(data);
+            changedItems.push([data.fromIndex, data.toIndex]);
+            console.log(changedItems);
+          //   socket.emit('realMove', changedItems);
+          }
+
+          // grid.on('move', sendMove)
+
+          function moveWith(){
+            grid.on('move', function(data){
+              console.log(data)
+              changedItems.push([data.fromIndex, data.toIndex]);
+              console.log(changedItems);
+              socket.emit('realMove', changedItems);
+            })
+          }
           
-            // //ChangedGridItems are the new positions and URLS
-            // console.log(changedGridItems);
-            
-            // let k;
-            // for(k=0; k < changedGridItems.length; k++){
-            //   console.log(changedGridItems[k][1])
-            //   if(oldGridItems[k][1].childNodes[2].previousSibling.children[0].currentSrc == changedGridItems[k][1].childNodes[2].previousSibling.children[0].currentSrc){
-            //     console.log('funky');
-            //   }
-            // }
 
-            // console.log(changedGridItems[0][0]);
-            
-            //(old position, new position)
-            // grid.move(0,-1)
-
-            
-
-
-
-
-
+          socket.on('realBoxHasBeenMoved', function(data){
+            console.log(data[0][1])
+            grid.move(data[0][0], data[0][1])
+            // grid.off('move', sendMove)
           })
 
+          // document.addEventListener('mouseup', function(e){
+          //   let changedItems = [];
+          //   grid.on('move', function(data){
+          //     console.log(data);
+          //     changedItems.push([data.fromIndex, data.toIndex]);
+          //     console.log(changedItems);
+          //     socket.emit('realMove', changedItems);
+          //   })
+          // })
 
+          grid.on('dragEnd', moveWith)
+
+
+          
+
+
+          
+          
+          
+
+          
 
 
 

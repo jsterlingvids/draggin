@@ -72,6 +72,13 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     })
   })
 
+  io.on('connection', (socket) => {
+    socket.on('realMove', function(data){
+      // console.log(data);
+      socket.broadcast.emit('realBoxHasBeenMoved', data);
+    })
+  })
+
     //Sending positions to database  after move
     // io.on('connection', (socket) => {
     //   socket.on('box move', function(data){
