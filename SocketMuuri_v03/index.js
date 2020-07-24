@@ -131,6 +131,13 @@ var socket = io();
           //   console.log(gridItems[0]._element.childNodes[2].previousSibling.children[0].currentSrc)
           //   console.log(data[0][2])
 
+          //   // let o;
+          //   // for(o = 0; o < gridItems.length; o++){
+          //   //   if(gridItems[o]._element.childNodes[2].previousSibling.children[0].currentSrc != data[o][2]){
+
+          //   //   }
+          //   // }
+
           //   let oldGridItemPositions = []
           //   let j;
           //   for(j = 0; j < gridItems.length; j++){
@@ -153,18 +160,21 @@ var socket = io();
           //     }
           //   }
 
-          //   //changedGridItems = [old position, new position]
+          //   // changedGridItems = [old position, new position]
 
-          //   console.log(changedGridItems[0][0])
+          //   console.log(changedGridItems)
+
+          //   grid.move(changedGridItems[0][0], changedGridItems[0][1]);
+
 
           //   // let l;
           //   // for(l = 0; l < changedGridItems; l++){
-          //   //   grid.move(changedGridItems[l][1], changedGridItems[l][0])
+          //   //   grid.move(changedGridItems[l][0], changedGridItems[l][1])
           //   // }
 
           //   // changedGridItems.forEach(item => {
           //   //   grid.move(item[0], item[1])
-          //   //   console.log(item[0])
+          //   //   console.log(item)
           //   // }
           //   //   )
         
@@ -190,41 +200,84 @@ var socket = io();
             console.log(data);
             changedItems.push([data.fromIndex, data.toIndex]);
             console.log(changedItems);
-          //   socket.emit('realMove', changedItems);
+            socket.emit('realMove', changedItems);
+            grid.off('move', sendMove);
           }
 
-          // grid.on('move', sendMove)
+          grid.on('move', sendMove);
 
-          function moveWith(){
-            grid.on('move', function(data){
-              console.log(data)
-              changedItems.push([data.fromIndex, data.toIndex]);
-              console.log(changedItems);
-              socket.emit('realMove', changedItems);
-            })
-          }
+          
+
+          
+            
+            
+          //   function sendMove(data){
+          //     console.log(data)
+          //     let currentGrid = grid.getItems();
+          //     console.log(currentGrid);
+          //     let currentGridURLs = [];
+          //     let i;
+          //     for(i = 0; i < currentGrid.length; i++){
+          //       currentGridURLs.push(currentGrid[i]._element.childNodes[2].previousSibling.children[0].currentSrc)
+          //     }
+          //     console.log(currentGridURLs);
+          //     changedItems.push([data.fromIndex, data.toIndex]);
+          //     console.log(changedItems);
+          //     let movePositions = {newPositions: changedItems,
+          //     newGrid: currentGridURLs}
+          //     socket.emit('realMove', movePositions);
+          //     // grid.off('move', sendMove)
+          //   }
+
+          //   grid.on('move', sendMove )
+          
           
 
           socket.on('realBoxHasBeenMoved', function(data){
-            console.log(data[0][1])
-            grid.move(data[0][0], data[0][1])
+            console.log(data)
+            console.log(data[0][0])
+
+            
+            function onMove(){
+              grid.move(data[0][0], data[0][1])
+            }
+
+            onMove();
+           
+            
+            // grid.on('move', onMove);
+            // grid.off('move', onMove);
+            // let currentGrid = grid.getItems();
+            // let i;
+            // for(i = 0; i < currentGrid.length; i++){
+            //   if(currentGrid[i]._element.childNodes[2].previousSibling.children[0].currentSrc != data.newGrid[i]){
+            //     function moveWith(){grid.move(data.newPositions[0][0], data.newPositions[0][1])}
+            //     moveWith()
+            //     grid.off('move', moveWith)
+            //   } else {
+            //     console.log('nothing to move')
+            //   }
+            // }
+            // function moveWhenData(){grid.move(data.newPositions[0][0], data.newPositions[0][1])}
+            // grid.on('move', function(data){
+            //   grid.off('move')
+            // })
             // grid.off('move', sendMove)
           })
 
-          // document.addEventListener('mouseup', function(e){
-          //   let changedItems = [];
-          //   grid.on('move', function(data){
-          //     console.log(data);
-          //     changedItems.push([data.fromIndex, data.toIndex]);
-          //     console.log(changedItems);
-          //     socket.emit('realMove', changedItems);
-          //   })
-          // })
+          // // document.addEventListener('mouseup', function(e){
+          // //   let changedItems = [];
+          // //   grid.on('move', function(data){
+          // //     console.log(data);
+          // //     changedItems.push([data.fromIndex, data.toIndex]);
+          // //     console.log(changedItems);
+          // //     socket.emit('realMove', changedItems);
+          // //   })
+          // // })
 
-          grid.on('dragEnd', moveWith)
-
-
-          
+          // // grid.on('dragReleaseEnd', function(item){
+          // //   console.log(item);
+          // // })
 
 
           
