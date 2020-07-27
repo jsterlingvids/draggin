@@ -72,64 +72,13 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     })
   })
 
+  //Receives data when a box has been moved
   io.on('connection', (socket) => {
-    socket.on('realMove', function(data){
+    socket.on('thisIsTheMoveData', function(data){
       // console.log(data);
-      socket.broadcast.emit('realBoxHasBeenMoved', data);
+      socket.broadcast.emit('dataHasBeenMoved', data);
     })
   })
-
-    //Sending positions to database  after move
-    // io.on('connection', (socket) => {
-    //   socket.on('box move', function(data){
-    //     console.log('Sending new positions to Database')
-
-    //     //URL console.log
-    //     // console.log(data[0][0]);
-
-    //     //Position console.log
-    //     //console.log(data[0][1])
-
-    //     var items = collection.find()
-
-    //     let i;
-    //     for(i = 0; i < data.length; i++){
-    //       // //URL Data
-    //       // console.log(data[i][0]);
-    //       // //Position Data
-    //       // console.log(data[i][1]);
-
-    //       //Update position data on each
-    //       collection.findOneAndUpdate({"url": data[i][0]}, {$set: {"position": data[i][1]}}).then(res =>
-    //         console.log('Database Updated with new positions')).catch(err => console.log(err))
-    //     }
-
-    //   //  collection.find().sort( {"position": 1} ).toArray().then(res => console.log('Sorting')).catch(err => console.log(err));
-
-
-    //     io.emit('box move', data);
-    //   });
-    // });
-
-  //Socket sends new data to server after "Add Gif" button is clicked
-  // io.on('connection', (socket) => {
-  //   socket.on('mongo', function(data){
-  //     //Add data to database
-  //     console.log('Got a new gif!');
-  //     // console.log(data)
-  //     const newItem = {
-  //       "index": data[0].index,
-  //       "url" : data[0].url,
-  //       "position": data[0].position,
-  //       "newGIF": "newGif"
-  //     }
-  //     collection.insertOne(newItem).then(res =>{
-  //       // console.log(res);
-  //     }).catch(err => 
-  //       console.log(err));
-  //     socket.broadcast.emit('mongo', data);
-  //   })
-  // })
 
   //Receives new Database with new gif data after add new gif is clicked
   io.on('connection', (socket) => {
@@ -147,7 +96,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   })
 
 
-  //Once and item is moved — this updates all positions
+  //Once and item is moved — this updates all positions on the server
   io.on('connection', (socket) => {
     socket.on('newIDs', function(data){
       console.log('Sending new IDs(!) to Database')
@@ -165,7 +114,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
         collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[2], "Done?": "yes"}}, {upsert: true}).then(res=> console.log("DATABASE UPDATED WITH NEW INDEXES")).catch(err => console.log(err))
       })
 
-      io.emit('boxHasBeenMoved', data);
+      // io.emit('boxHasBeenMoved', data);
       //Change to this once everything works correctly:
       // socket.broadcast.emit('boxHasBeenMoved', data);
     });
@@ -173,9 +122,6 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
 })
 .catch(error => console.error(error))
-
-
-
 
 
 http.listen(3000, () => {
