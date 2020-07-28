@@ -318,4 +318,30 @@ var socket = io();
           //JSON Testing
           jsonButton = document.getElementById("json");
 
+
+
+          //Adding Videos
+          document.getElementById('video').addEventListener('click', videoFetch)
+
+          // function videoFetch(){fetch('http://localhost:8080/https://youtu.be/w4UHrM0LzYo')
+          //   .then(response => {response.json()
+          //   console.log(response.json)})
+          //   // .then(json => {
+          //   // console.log(json)
+          //   // }
+          //   // )
+          //   .catch(err => console.log(err))};
+
+          function videoFetch(){
+            fetch('https://cors-anywhere.herokuapp.com/https://www.msnbc.com').then(response => {response.json
+          console.log(response)})
+            .then(json => console.log(json)).catch(err => console.log(err))
+              
+            };
+          
+
+          
+             
+
+
           
