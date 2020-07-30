@@ -10,6 +10,17 @@ const { json } = require('express');
 const bodyParser = require("body-parser");
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient
+const metascraper = require('metascraper')([
+  require('metascraper-author')(),
+  require('metascraper-date')(),
+  require('metascraper-description')(),
+  require('metascraper-image')(),
+  require('metascraper-logo')(),
+  require('metascraper-clearbit')(),
+  require('metascraper-publisher')(),
+  require('metascraper-title')(),
+  require('metascraper-url')()
+])
 
 
 
@@ -28,6 +39,45 @@ cors_proxy.createServer({
 }).listen(port, host, function() {
     console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
+
+
+//Metascraper
+// const got = require('got')
+
+// const targetUrl = 'www.joshsterlingvideo.com';
+
+// (async () => {
+//   const { body: html, url } = await got(targetUrl)
+//   const metadata = await metascraper({ html, url })
+//   console.log(metadata)
+// })()
+
+io.on('connection', (socket) => {
+  socket.on('linkSubmit', function(data){
+    // console.log(data)
+    const got = require('got')
+    const targetUrl = data;
+
+    // (async => {
+    // const {body: html, url} = await got(targetUrl)
+    // const metadata = metascraper({html, url})
+    // console.log(metadata)})
+
+    // got(targetUrl)
+    // .then(response => response.json())
+    // .then(data => console.log(data))
+    // .catch(err => console.log(err))
+
+    (async () => {
+      const { body: html, url } = await got(targetUrl)
+      const metadata = await metascraper({ html, url })
+      console.log(metadata)
+      socket.emit('newPostData', metadata);
+    })()
+
+
+  })
+})
 
 
 

@@ -4,7 +4,14 @@ var socket = io();
       dragEnabled: true,
       layout: {
         },
+        dragStartPredicate: {
+          distance: 15,
+          delay: 0,
+        },
       });
+
+
+
 
       //Receive Initial Data and build
       socket.on('initial', function(newData){
@@ -51,8 +58,9 @@ var socket = io();
       //Runs on timeout because it only properly resorts once all data has been loaded
       setTimeout(respaceItems, 500);
 
-      //Saving positions of respaced items
+      //Saving positions of respaced items (change to mouseup?)
       document.getElementById('main-grid').addEventListener('mouseup', function(e){
+        
         var activeItems = grid.getItems().filter(function (item) {
         return item.isActive();
       });
@@ -86,6 +94,8 @@ var socket = io();
     
       setTimeout(
           sendNewInfo, 600);
+
+          // e.preventDefault();
     })
 
       //Generate Gif Content
@@ -120,10 +130,10 @@ var socket = io();
             socket.emit('thisIsTheMoveData', moveDataArray);
             moveDataArray = [];
             console.log(moveDataArray);
+            
           });}
 
           moveData();
-          
 
           //Add New Gif Button
           button = document.getElementById("new-gif");
@@ -323,21 +333,41 @@ var socket = io();
           //Adding Videos
           document.getElementById('video').addEventListener('click', videoFetch)
 
-          // function videoFetch(){fetch('http://localhost:8080/https://youtu.be/w4UHrM0LzYo')
-          //   .then(response => {response.json()
-          //   console.log(response.json)})
-          //   // .then(json => {
-          //   // console.log(json)
-          //   // }
-          //   // )
-          //   .catch(err => console.log(err))};
-
           function videoFetch(){
-            fetch('https://cors-anywhere.herokuapp.com/https://www.msnbc.com').then(response => {response.json
-          console.log(response)})
-            .then(json => console.log(json)).catch(err => console.log(err))
-              
-            };
+            let url = 'https://www.msnbc.com/'
+            socket.emit('linkSubmit', url)
+          }
+
+          socket.on('newPostData', function(data){
+            console.log(data);
+
+             //Create html element with new GIF URL in it
+             var wrapper = document.createElement('div');
+             var columnHTML = `
+             <div class="item">
+                 <div class="item-content">
+                 <!-- Safe zone, enter your custom markup -->
+                 <a href = "${data.url}">
+                 <img src="${data.image}"></img></a>
+                 <!-- Safe zone ends -->
+                 </div>
+                 </div>
+             `
+             //Grid.add function to properly add to grid
+             wrapper.innerHTML = columnHTML;
+             var columnElem = wrapper.children[0]; 
+             console.log(columnElem);
+             grid.add([columnElem], {index: 0});
+
+             //   Refresh the layout once page is loaded
+             function respaceItems(){
+                 grid.refreshItems().layout();
+                 console.log('Respaced! With New Gif!')
+                 }
+             //Runs on timeout because it takes a second to load the gif
+                 setTimeout(respaceItems, 300);
+
+          })
           
 
           
