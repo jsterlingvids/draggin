@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      .p0 {padding:0 !important;}
+      .grid {
+        position: relative;
+      }
+
+      img {
+      max-width: 100%;
+      max-height: 100%;
+      /* position: center; */
+      }
+
+      .item {
+        position: absolute;
+        width: 200px;
+        margin: 5px;
+        z-index: 1;
+        /* overflow: hidden; */
+      }
+
+      .item2 {
+        position: absolute;
+        margin: 0;
+        z-index: 1;
+      }
+
+      .item.muuri-item-hidden {
+        z-index: 0;
+      }
+      .item.muuri-item-releasing {
+        z-index: 2;
+        pointer-events: none;
+      }
+      .item.muuri-item-dragging {
+        z-index: 3;
+        pointer-events: none;
+      }
+      .item-content2 {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: #ccc;
+        font-size: 50px;
+        color: white;
+        cursor: pointer;
+      }
+      .item-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        background: turquoise;
+        font-size: 10px;
+        color: white;
+        cursor: pointer;
+        overflow: hidden;
+      }
+      .item.muuri-item-dragging .item-content {
+        background: blue;
+      }
+      .item.muuri-item-releasing .item-content {
+        background: blueViolet;
+        size: 1px;
+      }
+    </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-mhpbKVUOPCSocLzx2ElRISIORFRwr1ZbO9bAlowgM5kO7hnpRBe+brVj8NNPUiFs" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    
+    
+    <title>Muuri Test</title>
+</head>
+<body>
+  
+  <button type="button" class="btn btn-primary btn-lg" id="new-gif">Add New Gif!</button>
+  <button type="button" class="btn btn-primary btn-lg" id="video">Add Video!</button>
+
+    <div id = "main-grid" class="grid">
+      
+ 
+
+      </div>
+
+    <!-- Socket Scripts -->
+    <script src="/socket.io/socket.io.js"></script>  
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <!-- Muuri Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/muuri@0.9.0/dist/muuri.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web-animations-js@2.3.2/web-animations.min.js"></script>
+    <script src="/index.js"></script>
+
+   
+    
+    
+    <script>
+   
+
+
+    </script>
+
+</body>
+</html>
