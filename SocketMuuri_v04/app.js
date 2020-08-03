@@ -40,45 +40,24 @@ cors_proxy.createServer({
     console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
 
-
-//Metascraper
-// const got = require('got')
-
-// const targetUrl = 'www.joshsterlingvideo.com';
-
-// (async () => {
-//   const { body: html, url } = await got(targetUrl)
-//   const metadata = await metascraper({ html, url })
-//   console.log(metadata)
-// })()
-
+// Get metadata from post url after new link is submitted
 io.on('connection', (socket) => {
   socket.on('linkSubmit', function(data){
     // console.log(data)
     const got = require('got')
     const targetUrl = data;
 
-    // (async => {
-    // const {body: html, url} = await got(targetUrl)
-    // const metadata = metascraper({html, url})
-    // console.log(metadata)})
-
-    // got(targetUrl)
-    // .then(response => response.json())
-    // .then(data => console.log(data))
-    // .catch(err => console.log(err))
-
     (async () => {
       const { body: html, url } = await got(targetUrl)
       const metadata = await metascraper({ html, url })
-      console.log(metadata)
+      // console.log(metadata)
       socket.emit('newPostData', metadata);
+      socket.broadcast.emit('someoneElseAddedNewPost', metadata);
     })()
 
 
   })
 })
-
 
 
 //This Code works from here on down
@@ -122,7 +101,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   const collection = client.db("test").collection("test");
   const position = client.db("test").collection("position");
 
-  //On load get gif data
+  // On load get gif data
   io.on('connection', (socket) => {
     console.log('Grabbing Initial Gif Data...');
     //Sort the database based on position
@@ -194,22 +173,43 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
 
   //Adding new Post to Database logic
-io.on('connection', (socket) => 
-{socket.on('postAddedUpdateDatabase', function(newPostInfo){
-  //New Post Data [index, Post HTML content, Post Meta Data]
-  console.log(newPostInfo)
-  collection.find().toArray().then(res => {
-    // console.log(res)
-    let databaseEntries = res;
-    databaseEntries.unshift(newPostInfo);
-    let postArray = Object.entries(databaseEntries);
-    socket.emit('gifDataTest', postArray)
-    console.log(postArray[1]['Post Content']);
+  io.on('connection', (socket) => 
+  {socket.on('postAddedUpdateDatabase', function(newPostInfo){
+    //New Post Data [Post HTML content, Post Meta Data]
+    // console.log(newPostInfo)
 
-    // postArray.forEach(item => {
-    //   console.log(item[1][1][1][0])
-    //   // collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1]['Post Content'], "Post Meta-Data": item[2] }}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
-    // })
+    //Get current database
+    collection.find().toArray().then(res => {
+      console.log('here')
+      // console.log(res)
+      let databaseEntries = res;
+      // console.log(databaseEntries)
+
+      //Map current Database entries to new array to easily add new link info
+      let updateDatabaseArray = databaseEntries.map(item => [item["Post Content"], item["Post Meta-Data"]]);
+      // console.log(updateDatabaseArray);
+
+      //Add new link to the front of the database array
+      updateDatabaseArray.unshift(newPostInfo);
+      console.log(updateDatabaseArray.length);
+
+      //Add index number to newly updated array
+      let i;
+              for(i = 0; i < updateDatabaseArray.length; i++){
+                updateDatabaseArray[i].splice(0,0,i)
+              }
+              console.log(updateDatabaseArray);
+      
+      
+      // socket.emit('newDataBaseWithNewPost', updateDatabaseArray);
+      
+      //Update database with new links and positions
+      updateDatabaseArray.forEach(item => {
+        console.log('item')
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1], "Post Meta-Data": item[2] }}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
+      })
+
+      
 
     
   })

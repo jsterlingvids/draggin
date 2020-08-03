@@ -15,9 +15,9 @@ var socket = io();
 
       //Receive Initial Data and build
       socket.on('initial', function(newData){
-      console.log(newData[9]["Post Content"]);
+      // console.log(newData[9]["Post Content"]);
       // grid.sort(newData);
-      // console.log(newData);
+      console.log(newData);
 
       // let initialGifs = Array.from(newData);
       // // console.log(initialGifs)
@@ -328,12 +328,18 @@ var socket = io();
 
           //Adding Links
           document.getElementById('video').addEventListener('click', linkFetch)
+          let urlInput = document.getElementById('url-input')
 
+          //This submits the link to the server
           function linkFetch(){
-            let url = 'https://www.msnbc.com/'
+            let url = urlInput.value
+            // let url = urlInput.value
+            // console.log(urlInput)
             socket.emit('linkSubmit', url)
+            urlInput.value = '';
           }
 
+          //Once the server gets and process the link, this data is sent back to the original client
           socket.on('newPostData', function(data){
             console.log(data);
 
@@ -363,18 +369,9 @@ var socket = io();
 
              //Runs on timeout because it takes a second to load the gif
                  setTimeout(respaceItems, 300);
-              let numberofCurrentItems = grid.getItems();
-            
-             //Finds the number of items currently on the page (maybe do this server-side down the line?)
-              let i;
-              for (i = 0; i < numberofCurrentItems.length; i++){
-                console.log(i)
-              }
+              
 
-              //This is the total number of posts
-              let totalNumber = i + 1 - 1;
-              console.log(totalNumber);
-
+              //Now that the post is added, the info is sent back to the server to be sent out to other clients and saved in the database
               //[Post Content, URL Meta Data]
               let newPostInfo = [columnElem.children[0].innerHTML, data]
               console.log(newPostInfo)
@@ -383,29 +380,38 @@ var socket = io();
 
               return newPostInfo
 
-              
-
           })
 
-          //This is how I get the DATABASE OBJECT TO ARRAY
-          socket.on('gifDataTest', function(newGifData){
-            
-            console.log(newGifData);
+          //Adding new post to page for all clients simultaneously
+          socket.on('someoneElseAddedNewPost', function(data){
+            // console.log(data);
 
-            console.log(typeof newGifData)
-            newGifData.unshift('bingo')
+            //Create html element with new GIF URL in it
+            var wrapper = document.createElement('div');
+            var columnHTML = `
+            <div class="item">
+                <div class="item-content">
+                <!-- Safe zone, enter your custom markup -->
+                <a href = "${data.url}">
+                <img src="${data.image}"></img></a>
+                <!-- Safe zone ends -->
+                </div>
+                </div>
+            `
+            //Grid.add function to properly add to grid
+            wrapper.innerHTML = columnHTML;
+            var columnElem = wrapper.children[0]; 
+            console.log(columnElem.children[0].innerHTML);
+            grid.add([columnElem], {index: 0});
 
-            let postArray = Object.entries(newGifData);
-            console.log(typeof postArray);
-            console.log(postArray);
+            //Refresh the layout once page is loaded
+            function respaceItems(){
+                grid.refreshItems().layout();
+                console.log('Respaced! With New Gif!')
+                }
 
-            
-
-            // let i;
-            // for(i = 0; i < newGifData.length; i++){
-            //   newGifData[i].splice(0,0,1)
-            // }
-            // console.log(newGifData);
+            //Runs on timeout because it takes a second to load the gif
+                setTimeout(respaceItems, 300);
           })
 
          
