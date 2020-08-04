@@ -32,6 +32,7 @@ var host = process.env.HOST || '0.0.0.0';
 var port = process.env.PORT || 8080;
  
 var cors_proxy = require('cors-anywhere');
+const { resolve } = require('path');
 cors_proxy.createServer({
     originWhitelist: [], // Allow all origins
     requireHeader: ['origin', 'x-requested-with'],
@@ -43,15 +44,21 @@ cors_proxy.createServer({
 // Get metadata from post url after new link is submitted
 io.on('connection', (socket) => {
   socket.on('linkSubmit', function(data){
+    //The data is the URL received
     // console.log(data)
     const got = require('got')
     const targetUrl = data;
 
+    //Scrapes the data for the Metadata
     (async () => {
       const { body: html, url } = await got(targetUrl)
       const metadata = await metascraper({ html, url })
       // console.log(metadata)
+
+      //Sends new post metadata back to original client
       socket.emit('newPostData', metadata);
+
+      //Sends new post metadata to everyone connected to update immediately
       socket.broadcast.emit('someoneElseAddedNewPost', metadata);
     })()
 
@@ -126,7 +133,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     })
   })
 
-  //Receives data when a box has been moved
+  //Receives data when a box has been moved (NEW)
   io.on('connection', (socket) => {
     socket.on('thisIsTheMoveData', function(data){
       // console.log(data);
@@ -135,41 +142,78 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   })
 
   //Receives new Database with new gif data after add new gif is clicked
+  // io.on('connection', (socket) => {
+  //   socket.on('newDatabaseWithAddition', function(allDatabaseURLs){
+  //     // console.log(allDatabaseURLs);
+
+  //     allDatabaseURLs.forEach(item => {
+  //       // console.log(item[0]);
+  //     collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[1], "New One?": "Yes"}}, {upsert: true}).then(res => console.log("TRYING")).catch(err => console.log(err)) 
+  //   })
+
+  //   //Send the database containing the new URL to all pages (may need to be paired down to be smaller eventually)
+  //   io.emit('newGifAdded', allDatabaseURLs);
+  //   })
+  // })
+
+
+  // //Once and item is moved — this updates all positions on the server
+  // io.on('connection', (socket) => {
+  //   socket.on('newIDs', function(data){
+  //     console.log('Sending new IDs(!) to Database')
+  //     // console.log(data);
+
+  //     // Add index value to data array
+  //     var i;
+  //     for (i=0; i < data.length; i++){
+  //       data[i].splice(0,0, i)
+  //     }
+  //     // console.log(data);
+
+  //     // Now that each item has an updated index value, it'll update the database in order
+  //     data.forEach(item => {
+  //       collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[2], "Done?": "yes"}}, {upsert: true}).then(res=> console.log("DATABASE UPDATED WITH NEW INDEXES")).catch(err => console.log(err))
+  //     })
+
+  //   });
+  // });
+
+  //Saving new positions in the server
   io.on('connection', (socket) => {
-    socket.on('newDatabaseWithAddition', function(allDatabaseURLs){
-      // console.log(allDatabaseURLs);
+    socket.on('thisIsMoveServerUpdateData', function(data){
+      //[old position, new position]
+      // let newPositionArray1 = [];
+      console.log(data);
 
-      allDatabaseURLs.forEach(item => {
-        // console.log(item[0]);
-      collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[1], "New One?": "Yes"}}, {upsert: true}).then(res => console.log("TRYING")).catch(err => console.log(err)) 
-    })
+      let result;
+      //Create an array for the index to update the Move TO
+      collection.find({ "index": data[0] }).toArray().then(res => {
+        // console.log(res)
+        let newPositionArray1 = res.map(item => [item["Post Content"], item["Post Meta-Data"]])
+        newPositionArray1.unshift(data[1]);
+        
 
-    //Send the database containing the new URL to all pages (may need to be paired down to be smaller eventually)
-    io.emit('newGifAdded', allDatabaseURLs);
+        
+          collection.findOneAndUpdate({"index": newPositionArray1[0]}, {$set: {"Post Content": newPositionArray1[1][0], "Post Meta-Data": newPositionArray1[1][1] }}, {upsert: true}).then(res=> console.log("Position1 Updated in DataBase")).catch(err => console.log(err))
+        
+      }).catch(err => console.log(err))
+     
+
+      //Create an array for the index to update the Move FROM
+      collection.find({ "index": data[1] }).toArray().then(res => {
+        console.log(res)
+        let newPositionArray2 = res.map(item => [item["Post Content"], item["Post Meta-Data"]])
+        newPositionArray2.unshift(data[0]);
+        console.log(newPositionArray2[0]);
+        
+          collection.findOneAndUpdate({"index": newPositionArray2[0]}, {$set: {"Post Content": newPositionArray2[1][0], "Post Meta-Data": newPositionArray2[1][1] }}, {upsert: true}).then(res=> console.log("Position2 Updated in DataBase")).catch(err => console.log(err))
+        
+      }).catch(err => console.log(err))
+
+      
+
     })
   })
-
-
-  //Once and item is moved — this updates all positions on the server
-  io.on('connection', (socket) => {
-    socket.on('newIDs', function(data){
-      console.log('Sending new IDs(!) to Database')
-      // console.log(data);
-
-      // Add index value to data array
-      var i;
-      for (i=0; i < data.length; i++){
-        data[i].splice(0,0, i)
-      }
-      // console.log(data);
-
-      // Now that each item has an updated index value, it'll update the database in order
-      data.forEach(item => {
-        collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[2], "Done?": "yes"}}, {upsert: true}).then(res=> console.log("DATABASE UPDATED WITH NEW INDEXES")).catch(err => console.log(err))
-      })
-
-    });
-  });
 
 
   //Adding new Post to Database logic

@@ -100,6 +100,7 @@ var socket = io();
 
           //When data has been moved — this runs to move boxes on another browser
           socket.on('dataHasBeenMoved', function(data){
+            //[old position, new position]
             console.log(data);
             grid.move(data[0], data[1])
           })
@@ -109,28 +110,49 @@ var socket = io();
 
           // moveDataArray = old position, new position
           let moveDataArray = [];
+          let moveDataArrayServerUpdate = [];
 
           //DragInit to get the index number when the drag starts
           grid.on('dragInit', function (item, event) {
             // console.log(event);
+
+            //Get index of item at move and push to array
             console.log(grid.getItems().indexOf(item));
             moveDataArray.push(grid.getItems().indexOf(item))
+            moveDataArrayServerUpdate.push(grid.getItems().indexOf(item));
+
             console.log(moveDataArray);
+            console.log(moveDataArrayServerUpdate);
           });
 
           
           //dragRelease End gets the new position at the end of the drag
           grid.on('dragReleaseEnd', function (item) {
+
+            //Get index of item when move is done and also add to array
             console.log(grid.getItems().indexOf(item));
-            moveDataArray.push(grid.getItems().indexOf(item))
+            moveDataArray.push(grid.getItems().indexOf(item));
+            moveDataArrayServerUpdate.push(grid.getItems().indexOf(item));
+
             console.log(moveDataArray);
+            console.log(moveDataArrayServerUpdate);
+
+            //Emit the data to server and clear the array
             socket.emit('thisIsTheMoveData', moveDataArray);
+            socket.emit('thisIsMoveServerUpdateData', moveDataArrayServerUpdate)
             moveDataArray = [];
-            console.log(moveDataArray);
+            moveDataArrayServerUpdate = [];
+
+            // console.log(moveDataArray);
+            console.log(moveDataArrayServerUpdate);
+
             
-          });}
+          });
+        }
 
           moveData();
+
+          
 
           //Add New Gif Button
           button = document.getElementById("new-gif");
