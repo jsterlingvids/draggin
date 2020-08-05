@@ -4,7 +4,7 @@ Also need to change newgif event name from 'mongo'.......
 
 In a perfect world everything updates with the ID...
 
-Getting the move logic updated on the server side so that the new positions are correctly saved
+I need to see if I can get the meta data to be read as the object that it is
 
 
 How it works (refresher):

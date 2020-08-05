@@ -180,38 +180,16 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
   //Saving new positions in the server
   io.on('connection', (socket) => {
-    socket.on('thisIsMoveServerUpdateData', function(data){
-      //[old position, new position]
+    socket.on('moveDataToSavetoServer', function(data){
+      //[index to update, new Post Content, new Post MetaData]
       // let newPositionArray1 = [];
-      console.log(data);
+      // console.log(data)
 
-      let result;
-      //Create an array for the index to update the Move TO
-      collection.find({ "index": data[0] }).toArray().then(res => {
-        // console.log(res)
-        let newPositionArray1 = res.map(item => [item["Post Content"], item["Post Meta-Data"]])
-        newPositionArray1.unshift(data[1]);
-        
-
-        
-          collection.findOneAndUpdate({"index": newPositionArray1[0]}, {$set: {"Post Content": newPositionArray1[1][0], "Post Meta-Data": newPositionArray1[1][1] }}, {upsert: true}).then(res=> console.log("Position1 Updated in DataBase")).catch(err => console.log(err))
-        
-      }).catch(err => console.log(err))
-     
-
-      //Create an array for the index to update the Move FROM
-      collection.find({ "index": data[1] }).toArray().then(res => {
-        console.log(res)
-        let newPositionArray2 = res.map(item => [item["Post Content"], item["Post Meta-Data"]])
-        newPositionArray2.unshift(data[0]);
-        console.log(newPositionArray2[0]);
-        
-          collection.findOneAndUpdate({"index": newPositionArray2[0]}, {$set: {"Post Content": newPositionArray2[1][0], "Post Meta-Data": newPositionArray2[1][1] }}, {upsert: true}).then(res=> console.log("Position2 Updated in DataBase")).catch(err => console.log(err))
-        
-      }).catch(err => console.log(err))
-
-      
-
+      //For each item in data, search based on index, and update the Post Content/Meta Data based on what's in the array
+      data.forEach(item => {
+        console.log(item[0])
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1], "Post Meta-Data": item[2] }}).then(res=> console.log("Locations Updated on Database")).catch(err => console.log(err))
+      })
     })
   })
 

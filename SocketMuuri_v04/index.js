@@ -17,7 +17,7 @@ var socket = io();
       socket.on('initial', function(newData){
       // console.log(newData[9]["Post Content"]);
       // grid.sort(newData);
-      console.log(newData);
+      // console.log(newData);
 
       // let initialGifs = Array.from(newData);
       // // console.log(initialGifs)
@@ -28,14 +28,20 @@ var socket = io();
         // grid.sort(newData[i].position)
         // console.log(newData);
 
+        let metaDataString = JSON.stringify(newData[i]["Post Meta-Data"])
+        
         var wrapper = document.createElement('div');
+        
+        
         var columnHTML = `
         <div class="item">
             <div class="item-content" id="gif5">
+            <div class= "meta-data" id="meta-data" style= "display: none">${metaDataString}</div>
               ${newData[i]["Post Content"]}
               </div>
             </div>
         `
+
         //Grid.add function to properly add to grid
         wrapper.innerHTML = columnHTML;
         var columnElem = wrapper.children[0]; 
@@ -110,7 +116,7 @@ var socket = io();
 
           // moveDataArray = old position, new position
           let moveDataArray = [];
-          let moveDataArrayServerUpdate = [];
+
 
           //DragInit to get the index number when the drag starts
           grid.on('dragInit', function (item, event) {
@@ -119,10 +125,10 @@ var socket = io();
             //Get index of item at move and push to array
             console.log(grid.getItems().indexOf(item));
             moveDataArray.push(grid.getItems().indexOf(item))
-            moveDataArrayServerUpdate.push(grid.getItems().indexOf(item));
+
 
             console.log(moveDataArray);
-            console.log(moveDataArrayServerUpdate);
+
           });
 
           
@@ -132,19 +138,16 @@ var socket = io();
             //Get index of item when move is done and also add to array
             console.log(grid.getItems().indexOf(item));
             moveDataArray.push(grid.getItems().indexOf(item));
-            moveDataArrayServerUpdate.push(grid.getItems().indexOf(item));
 
             console.log(moveDataArray);
-            console.log(moveDataArrayServerUpdate);
 
             //Emit the data to server and clear the array
             socket.emit('thisIsTheMoveData', moveDataArray);
-            socket.emit('thisIsMoveServerUpdateData', moveDataArrayServerUpdate)
             moveDataArray = [];
-            moveDataArrayServerUpdate = [];
 
             // console.log(moveDataArray);
-            console.log(moveDataArrayServerUpdate);
+
+           
 
             
           });
@@ -152,7 +155,73 @@ var socket = io();
 
           moveData();
 
+          // Saving moved positions on the server
+          function moveDataServerUpdate(){
+
+          let gridItemSnapShotBeforeDrag = [];
+
+          // When a drag starts — first get the postions, content and meta data and put them in an aray
+          grid.on('dragInit', function(item, event){
+            let gridItems = grid.getItems()
+            // console.log(gridItems)
+            
+            //Push [index, Post Content, Post Meta-Data] before move
+            let i;
+            for(i = 0; i < gridItems.length; i++ ){
+              gridItemSnapShotBeforeDrag.push([i, gridItems[i]._element.innerHTML, gridItems[i]._element.children[0].children[0].innerHTML])
+            }
+
+            // console.log(gridItemSnapShotBeforeDrag);
+      
+          })
+
+          let gridItemSnapShotAfterDrag = [];
+          let moveDataToSave = [];
+
+          //After drag is done, push the new positions, content and meta data into an array to compare
+          grid.on('dragReleaseEnd', function(item){
+            let gridItems = grid.getItems()
+
+
+            //Meta data is now hidden into the posts themselves
+            //This is the location of the hidden metadata: gridItems[0]._element.children[0].children[0].innerHTML
+            // console.log(gridItems[0]._element.children[0].children[0].innerHTML)
+
+            
+            //Push [index, Post Content, Post Meta-Data] after move
+            let i;
+            for(i = 0; i < gridItems.length; i++ ){
+              gridItemSnapShotAfterDrag.push([i, gridItems[i]._element.innerHTML, gridItems[i]._element.children[0].children[0].innerHTML])
+            }
+
+
+            //Compare the two before/after move arrays based on URL — if a URL is different (meaning it has been moved), that new index position, content and meta data is pushed to an array
+            let k;
+            for(k = 0; k < gridItems.length; k++){
+              if(gridItemSnapShotBeforeDrag[k][1] !== gridItemSnapShotAfterDrag[k][1]){
+                console.log('different')
+                moveDataToSave.push([gridItemSnapShotAfterDrag[k][0], gridItemSnapShotAfterDrag[k][1], gridItemSnapShotAfterDrag[k][2]])
+              }
+            }
+
+            
+            // console.log(gridItemSnapShotBeforeDrag)
+            // console.log(gridItemSnapShotAfterDrag)
+            // console.log(moveDataToSave);
+
+            //The Array with the info for the database to update is sent to the server
+            socket.emit('moveDataToSavetoServer', moveDataToSave)
+          })
+
           
+
+
+
+
+        }
+
+        moveDataServerUpdate()
+
 
           //Add New Gif Button
           button = document.getElementById("new-gif");
