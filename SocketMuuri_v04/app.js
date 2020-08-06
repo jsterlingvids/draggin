@@ -53,6 +53,7 @@ io.on('connection', (socket) => {
     (async () => {
       const { body: html, url } = await got(targetUrl)
       const metadata = await metascraper({ html, url })
+      // console.log('metadata below')
       // console.log(metadata)
 
       //Sends new post metadata back to original client
@@ -120,19 +121,6 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       .catch(err => console.log(err))
   });
 
-  //Once the new gif button is pressed, send that info to the client
-  io.on('connection', (socket) => {
-    socket.on('requestForData', function(data){
-      // let newGifData = "This is the data I'm sending"
-      collection.find().toArray().then(res => {
-        // console.log(res)
-        let newGifData = res;
-        socket.emit('addNewGifToThis', newGifData)
-      })
-        .catch(err => console.log(err))
-    })
-  })
-
   //Receives data when a box has been moved (NEW)
   io.on('connection', (socket) => {
     socket.on('thisIsTheMoveData', function(data){
@@ -141,54 +129,16 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     })
   })
 
-  //Receives new Database with new gif data after add new gif is clicked
-  // io.on('connection', (socket) => {
-  //   socket.on('newDatabaseWithAddition', function(allDatabaseURLs){
-  //     // console.log(allDatabaseURLs);
-
-  //     allDatabaseURLs.forEach(item => {
-  //       // console.log(item[0]);
-  //     collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[1], "New One?": "Yes"}}, {upsert: true}).then(res => console.log("TRYING")).catch(err => console.log(err)) 
-  //   })
-
-  //   //Send the database containing the new URL to all pages (may need to be paired down to be smaller eventually)
-  //   io.emit('newGifAdded', allDatabaseURLs);
-  //   })
-  // })
-
-
-  // //Once and item is moved — this updates all positions on the server
-  // io.on('connection', (socket) => {
-  //   socket.on('newIDs', function(data){
-  //     console.log('Sending new IDs(!) to Database')
-  //     // console.log(data);
-
-  //     // Add index value to data array
-  //     var i;
-  //     for (i=0; i < data.length; i++){
-  //       data[i].splice(0,0, i)
-  //     }
-  //     // console.log(data);
-
-  //     // Now that each item has an updated index value, it'll update the database in order
-  //     data.forEach(item => {
-  //       collection.findOneAndUpdate({"index": item[0]}, {$set: {"url": item[2], "Done?": "yes"}}, {upsert: true}).then(res=> console.log("DATABASE UPDATED WITH NEW INDEXES")).catch(err => console.log(err))
-  //     })
-
-  //   });
-  // });
-
   //Saving new positions in the server
   io.on('connection', (socket) => {
     socket.on('moveDataToSavetoServer', function(data){
-      //[index to update, new Post Content, new Post MetaData]
-      // let newPositionArray1 = [];
+      //[index to update, new Post Content]
       // console.log(data)
 
-      //For each item in data, search based on index, and update the Post Content/Meta Data based on what's in the array
+      //For each item in data, search based on index, and update the Post Content based on what's in the array
       data.forEach(item => {
-        console.log(item[0])
-        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1], "Post Meta-Data": item[2] }}).then(res=> console.log("Locations Updated on Database")).catch(err => console.log(err))
+        // console.log(item[0])
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1]}}).then(res=> console.log("Locations Updated on Database")).catch(err => console.log(err))
       })
     })
   })
@@ -197,7 +147,8 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   //Adding new Post to Database logic
   io.on('connection', (socket) => 
   {socket.on('postAddedUpdateDatabase', function(newPostInfo){
-    //New Post Data [Post HTML content, Post Meta Data]
+    //New Post Data [Post HTML content]
+    // console.log('----CHECK IT OUT-----')
     // console.log(newPostInfo)
 
     //Get current database
@@ -208,27 +159,29 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       // console.log(databaseEntries)
 
       //Map current Database entries to new array to easily add new link info
-      let updateDatabaseArray = databaseEntries.map(item => [item["Post Content"], item["Post Meta-Data"]]);
+      let updateDatabaseArray = databaseEntries.map(item => [item["Post Content"]]);
+      // console.log("--SEE WHAT ADDING A NEW POST LOOKS LIKE HERE----")
       // console.log(updateDatabaseArray);
 
       //Add new link to the front of the database array
       updateDatabaseArray.unshift(newPostInfo);
-      console.log(updateDatabaseArray.length);
+      // console.log("--AFTER THE NEW URL IS ADDED TO THE TOP")
+      // console.log(updateDatabaseArray);
 
       //Add index number to newly updated array
       let i;
               for(i = 0; i < updateDatabaseArray.length; i++){
+                // console.log(updateDatabaseArray[i])
                 updateDatabaseArray[i].splice(0,0,i)
               }
-              console.log(updateDatabaseArray);
+      // console.log("--AFTER THE NUMBERS ARE ADDED----")
+      // console.log(updateDatabaseArray);
       
-      
-      // socket.emit('newDataBaseWithNewPost', updateDatabaseArray);
       
       //Update database with new links and positions
       updateDatabaseArray.forEach(item => {
-        console.log('item')
-        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1], "Post Meta-Data": item[2] }}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
+        // console.log('item')
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1]}}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
       })
 
       

@@ -4,7 +4,7 @@ Also need to change newgif event name from 'mongo'.......
 
 In a perfect world everything updates with the ID...
 
-I need to see if I can get the meta data to be read as the object that it is
+POST META DATA HAS TO BE MADE INTO A STRING BEFORE BEING SAVED TO SERVER
 
 
 How it works (refresher):
