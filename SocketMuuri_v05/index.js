@@ -216,10 +216,12 @@ var socket = io();
                    height: 100%;
                    border: 2px solid lightblue;
                    display: flex;
+                   flex-direction: column;
+                   justify-content:center;
                    align-items: center;
                    justify-content: center;">
-                    <button type="button" class="btn btn-primary btn-lg" id="add-link">Add Link!</button><br>
-                    <button type="button" class="btn btn-primary btn-lg" id="add-note">Add Note!</button>
+                    <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">Add Link!</button>
+                    <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;">Add Note!</button>
                     </div>
                     
                     
@@ -232,11 +234,102 @@ var socket = io();
 
             document.getElementById('master-div').appendChild(overlay)
 
+            // console.log(document.getElementsByTagName('button'))
+
+            // document.addEventListener('click', function(e){
+            //   console.log(e.target);
+            //   console.log(e.srcElement);
+              
+
+            // })
             
-            let AddNotesButton = document.getElementsByTagName('button')[4]
+            //Add link button click
+            let AddNotesButton = document.getElementsByTagName('button')[3]
             AddNotesButton.addEventListener('click', function(){
-              console.log('hiiii')
-            })
+              overlay.innerHTML = `
+              <div class="overlay" style="
+              position: fixed;
+              right: 0px;
+              width: 50%;
+              height: 100%; 
+              border: 3px solid lightblue;
+              padding: 10px;
+              z-index: 2;
+              top: 0;
+              background-color: rgb(0, 0, 0);
+              background-color: rgba(0, 0, 0, 0.5);
+              transition: 1s;
+              align-items: center;
+              justify-content: center;">
+
+
+                     <div id="wrapper" style=" 
+                     width: 100%;
+                     height: 100%;
+                     border: 2px solid lightblue;
+                     display: flex;
+                     flex-direction: column;
+                     justify-content:center;
+                     align-items: center;
+                     justify-content: center;">
+
+                     <input type="text" id="link-URL-input-Box" placeholder="Copy/Paste a link here" style="height: 10%; width: 50%;">
+                     <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 1%; margin: 2%;">---></button>
+
+
+                     </div>
+                     </div>`;
+
+
+                //Once URL is copied and pasted and next button is clicked
+                document.getElementsByTagName('button')[3].addEventListener('click', function(e){
+                  e.preventDefault()
+                  //This is the URL Input Value
+                  let urlInputValue = document.getElementsByTagName('input')[1].value
+                  console.log(document.getElementsByTagName('input')[1].value)
+                 overlay.innerHTML = `<div class="overlay" style="
+                  position: fixed;
+                  right: 0px;
+                  width: 50%;
+                  height: 100%; 
+                  border: 3px solid lightblue;
+                  padding: 10px;
+                  z-index: 2;
+                  top: 0;
+                  background-color: rgb(0, 0, 0);
+                  background-color: rgba(0, 0, 0, 0.5);
+                  transition: 1s;
+                  align-items: center;
+                  justify-content: center;">
+
+
+                     <div id="wrapper" style=" 
+                     width: 100%;
+                     height: 100%;
+                     border: 2px solid lightblue;
+                     display: flex;
+                     flex-direction: column;
+                     justify-content:center;
+                     align-items: center;
+                     justify-content: center;">
+
+                     
+                     <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 1%; margin: 2%;">---></button>
+
+
+                     </div>
+                     </div>`
+
+                  
+                })
+              }
+
+            )
+
+            
+
+            
+
 
          
           }
