@@ -45,7 +45,7 @@ cors_proxy.createServer({
 io.on('connection', (socket) => {
   socket.on('linkSubmit', function(data){
     //The data is the URL received
-    // console.log(data)
+    console.log(data)
     const got = require('got')
     const targetUrl = data;
 

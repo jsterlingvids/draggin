@@ -169,11 +169,6 @@ var socket = io();
             socket.emit('moveDataToSavetoServer', moveDataToSave)
           })
 
-          
-
-
-
-
         }
 
         moveDataServerUpdate()
@@ -192,6 +187,7 @@ var socket = io();
 
           addSomethingButton.addEventListener('click', bringInSubmissionQuestions)
 
+          //Submission Overlay Loads Up
           function bringInSubmissionQuestions(e){
             e.preventDefault();
 
@@ -230,22 +226,85 @@ var socket = io();
 
             overlay.innerHTML = overlayHTML;
 
-            
-
             document.getElementById('master-div').appendChild(overlay)
 
-            // console.log(document.getElementsByTagName('button'))
-
-            // document.addEventListener('click', function(e){
-            //   console.log(e.target);
-            //   console.log(e.srcElement);
-              
-
-            // })
             
-            //Add link button click
-            let AddNotesButton = document.getElementsByTagName('button')[3]
-            AddNotesButton.addEventListener('click', function(){
+
+            //Add Notes button clicked
+            document.getElementsByTagName('button')[4].addEventListener('click', function(e){
+              console.log('notessss')
+              overlay.innerHTML = `
+              <div class="overlay" style="
+              position: fixed;
+              right: 0px;
+              width: 50%;
+              height: 100%; 
+              border: 3px solid lightblue;
+              padding: 10px;
+              z-index: 2;
+              top: 0;
+              background-color: rgb(0, 0, 0);
+              background-color: rgba(0, 0, 0, 0.5);
+              transition: 1s;
+              align-items: center;
+              justify-content: center;">
+
+
+                     <div id="wrapper" style=" 
+                     width: 100%;
+                     height: 100%;
+                     border: 2px solid lightblue;
+                     display: flex;
+                     flex-direction: column;
+                     justify-content:center;
+                     align-items: center;
+                     justify-content: center;">
+
+                     <div class="notes-preview" id = "notes-content" style= "
+                     width: 200px;
+                     height: 200px;
+                     margin: 5px;
+                     color: white;
+                     background: lightblue;
+                     text-shadow: 2px 2px 2px black;
+                     word-wrap: break-word;
+                     display: flex;
+                    justify-content: center;
+                    align-items: center;
+                     ">
+                     
+                     </div>
+
+                     <textarea id="note-input-Box" placeholder="What do you want to say?" style="height: 20%; width: 50%;"></textarea>
+                     <button type="button" class="btn btn-primary btn-lg" id="Add Note" style="padding: 1%; margin: 2%;">Submit Note?</button>
+
+
+                     </div>
+                     </div>`;
+
+                     
+
+                     //This gets the boxes input value and inserts into the box (with textFit for resizing)
+                     document.getElementById('note-input-Box').addEventListener('keyup', function(e){
+                      console.log(document.getElementById('note-input-Box').value)
+                      let notesPreview = document.getElementById('notes-content')
+                      notesPreview.innerHTML = `
+                      ${document.getElementById('note-input-Box').value}
+                      `
+                      textFit(document.getElementById('notes-content'), {minFontSize:14, maxFontSize: 50, multiLine: true})
+                     })
+                    
+                    })
+
+                    
+
+          
+            
+
+            
+            //Add link button clicked
+            let AddLinkButton = document.getElementsByTagName('button')[3]
+            AddLinkButton.addEventListener('click', function(){
               overlay.innerHTML = `
               <div class="overlay" style="
               position: fixed;
@@ -284,10 +343,21 @@ var socket = io();
                 //Once URL is copied and pasted and next button is clicked
                 document.getElementsByTagName('button')[3].addEventListener('click', function(e){
                   e.preventDefault()
+                  
                   //This is the URL Input Value
                   let urlInputValue = document.getElementsByTagName('input')[1].value
                   console.log(document.getElementsByTagName('input')[1].value)
-                 overlay.innerHTML = `<div class="overlay" style="
+                  let url = urlInputValue
+                  socket.emit('linkSubmit', url)                  
+                })
+
+                // This is the Post Preview
+                socket.on('newPostData', function(metadata){
+                  console.log(metadata)
+                  // console.log(document.getElementsByTagName('div'))
+
+                  overlay.innerHTML = `
+                  <div class="overlay" id="submission-overlay" style="
                   position: fixed;
                   right: 0px;
                   width: 50%;
@@ -313,103 +383,82 @@ var socket = io();
                      align-items: center;
                      justify-content: center;">
 
+
+                     <div class="new-post" style= "
+                     width: 200px;
+                     margin: 5px;
+                     color: white;">
+
+                     Post Preview:<p></p>
+                     <!-- Safe zone, enter your custom markup -->
+                     <a href = "${metadata.url}">
+                     <img src="${metadata.image}"></img></a>
+                     <!-- Safe zone ends -->
+
                      
-                     <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 1%; margin: 2%;">---></button>
-
-
-                     </div>
-                     </div>`
-
                   
+                     </div>
+
+                     <div class= "button-holder" style = "margin: 2%;">
+                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
+                     </div>
+                   
+                     </div>
+                     </div>`;
+
+                     //Clicking "Submit Link" and submitting link
+                     document.getElementById('submit-link').addEventListener('click', function(e){
+                      //  console.log('woahhhh')
+                           //Create html element
+                            var wrapper = document.createElement('div');
+                            var columnHTML = `
+                            <div class="item">
+                                <div class="item-content" id= "post">
+                                <!-- Safe zone, enter your custom markup -->
+                                <a href = "${metadata.url}">
+                                <img src="${metadata.image}"></img></a>
+                                <!-- Safe zone ends -->
+                                </div>
+                                </div>
+                            `
+
+                            //Grid.add function to properly add to grid
+                            wrapper.innerHTML = columnHTML;
+                            var columnElem = wrapper.children[0]; 
+                            //  console.log(columnElem.innerHTML);
+                            grid.add([columnElem], {index: 0});
+
+                            //Refresh the layout once page is loaded
+                            function respaceItems(){
+                                grid.refreshItems().layout();
+                                console.log('Respaced! With New Gif!')
+                                }
+
+                            //Runs on timeout because it takes a second to load the content
+                                setTimeout(respaceItems, 300);
+                              
+
+                              //Now that the post is added, the info is sent back to the server to be sent out to other clients and saved in the database
+                              //[Post Content]
+                              let newPostInfo = [columnElem.innerHTML]
+                              // console.log(newPostInfo)
+
+                              socket.emit('postAddedUpdateDatabase', newPostInfo);
+
+                              document.getElementById('submission-overlay').remove();
+
+                              
+
+                          })
+                     })
+
                 })
+
+
+
               }
 
-            )
 
-            
-
-            
-
-
-         
-          }
-
-       
-      
-          
-
-          //This submits the link to the server
-          function linkFetch(){
-            let url = urlInput.value
-            // let url = urlInput.value
-            // console.log(urlInput)
-            socket.emit('linkSubmit', url)
-            urlInput.value = '';
-            urlInput.style.display = "none";
-            addLinkButton.style.display = "none";
-            addSomethingButton.style.display = "block";
-
-
-
-          }
-
-          //Input in URL box changes look of button
-          urlInput.addEventListener('input', changeButton)
-
-          function changeButton(e){
-            e.preventDefault();
-            addLinkButton.textContent = '--->'
-          }
-
-          urlInput.onblur = function resetButton(){
-            addLinkButton.textContent = 'Add URL!'
-          }
-
-          
-
-          //Once the server gets and process the link, this data is sent back to the original client
-          socket.on('newPostData', function(data){
-            console.log(data);
-
-             //Create html element
-             var wrapper = document.createElement('div');
-             var columnHTML = `
-             <div class="item">
-                 <div class="item-content" id= "post">
-                 <!-- Safe zone, enter your custom markup -->
-                 <a href = "${data.url}">
-                 <img src="${data.image}"></img></a>
-                 <!-- Safe zone ends -->
-                 </div>
-                 </div>
-             `
-
-             //Grid.add function to properly add to grid
-             wrapper.innerHTML = columnHTML;
-             var columnElem = wrapper.children[0]; 
-            //  console.log(columnElem.innerHTML);
-             grid.add([columnElem], {index: 0});
-
-             //Refresh the layout once page is loaded
-             function respaceItems(){
-                 grid.refreshItems().layout();
-                 console.log('Respaced! With New Gif!')
-                 }
-
-             //Runs on timeout because it takes a second to load the content
-                 setTimeout(respaceItems, 300);
-              
-
-              //Now that the post is added, the info is sent back to the server to be sent out to other clients and saved in the database
-              //[Post Content]
-              let newPostInfo = [columnElem.innerHTML]
-              // console.log(newPostInfo)
-
-              socket.emit('postAddedUpdateDatabase', newPostInfo);
-
-              return newPostInfo
-
-          })
 
           //Adding new post to page for all clients simultaneously
           socket.on('someoneElseAddedNewPost', function(data){

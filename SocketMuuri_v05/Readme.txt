@@ -4,7 +4,7 @@ Also need to change newgif event name from 'mongo'.......
 
 In a perfect world everything updates with the ID...
 
-Styling!
+Styling! Notes especially
 
 
 How it works (refresher):
