@@ -4,7 +4,11 @@ Also need to change newgif event name from 'mongo'.......
 
 In a perfect world everything updates with the ID...
 
-Styling! Notes especially
+Styling! Styling the posts
+
+Add a specific ID to a post image and see if it can be individually styled!
+
+Keep styling and make sure the correct information is sent and retrieved from the server when a post is created, move or saved
 
 
 How it works (refresher):

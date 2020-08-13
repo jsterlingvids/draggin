@@ -132,13 +132,13 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   //Saving new positions in the server
   io.on('connection', (socket) => {
     socket.on('moveDataToSavetoServer', function(data){
-      //[index to update, new Post Content]
+      //[index to update, new Post Content, Post Type]
       // console.log(data)
 
       //For each item in data, search based on index, and update the Post Content based on what's in the array
       data.forEach(item => {
         // console.log(item[0])
-        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1]}}).then(res=> console.log("Locations Updated on Database")).catch(err => console.log(err))
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1], "Post Type": item[2]}}).then(res=> console.log("Locations Updated on Database")).catch(err => console.log(err))
       })
     })
   })
@@ -148,8 +148,8 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   io.on('connection', (socket) => 
   {socket.on('postAddedUpdateDatabase', function(newPostInfo){
     //New Post Data [Post HTML content]
-    // console.log('----CHECK IT OUT-----')
-    // console.log(newPostInfo)
+    console.log('----CHECK IT OUT-----')
+    console.log(newPostInfo)
 
     //Get current database
     collection.find().toArray().then(res => {
@@ -159,7 +159,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       // console.log(databaseEntries)
 
       //Map current Database entries to new array to easily add new link info
-      let updateDatabaseArray = databaseEntries.map(item => [item["Post Content"]]);
+      let updateDatabaseArray = databaseEntries.map(item => [item["Post Content"], item["Post Type"]]);
       // console.log("--SEE WHAT ADDING A NEW POST LOOKS LIKE HERE----")
       // console.log(updateDatabaseArray);
 
@@ -181,7 +181,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       //Update database with new links and positions
       updateDatabaseArray.forEach(item => {
         // console.log('item')
-        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1]}}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1], "Post Type": item[2]}}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
       })
 
       

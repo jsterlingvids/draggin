@@ -27,13 +27,55 @@ var socket = io();
       for(i = 0; i < newData.length; i++){
         // grid.sort(newData[i].position)
         // console.log(newData);
-        
+
+
+        if(newData[i]["Post Type"] === "link"){
         var wrapper = document.createElement('div');
         
         
         var columnHTML = `
         <div class="item">
-              ${newData[i]["Post Content"]}
+        <div class="item-content" id="post" data-type="link" style="opacity: 1; transform: scale(1);">
+              <!-- Safe zone, enter your custom markup -->
+                <div class="link-content" id="link-master" style="
+                position: relative;
+                display: inline-block;">
+
+                <a href="https://media0.giphy.com/media/443kbynwXvVRg960xE/giphy.gif">
+                <img src="https://media0.giphy.com/media/443kbynwXvVRg960xE/giphy.gif">
+                </a>
+                    <div class="post-description" id="post-description-master" style="
+                        position: absolute;
+                        z-index: 999;
+                        left: 0;
+                        bottom: 0;
+                        text-align: left;
+                        font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                        padding-bottom: 10px;
+                        padding-left: 5px;
+                        padding-top: 5px;
+                        text-size-adjust: auto;
+                        margin-right: 10px;
+                        margin-bottom: 5px;
+                        margin-left: 5px;
+                        padding-right: 3px;
+                        box-shadow: 3px -3px 0px 3px #00000052;
+                        background-color: #8f3cb96b;
+                        /* background-color: #ff5c4ca3; */">
+
+                        <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
+
+                        <span id="post-description" style="
+                        margin-left: 5px;
+                        font-size: 15px;
+                        font-size-adjust: inherit;
+                        font-variant-caps: titling-caps;
+                        font-weight: bold;
+                        ">This is my video description but what if it were much, much, longer?</span>
+                    </div>
+                    </div>
+                <!-- Safe zone ends -->
+                    </div>
             </div>
         `
 
@@ -42,10 +84,53 @@ var socket = io();
         var columnElem = wrapper.children[0]; 
         grid.add([columnElem]);
           }
+          else if (newData[i]["Post Type"] === "note") {
+            var wrapper = document.createElement('div');
+            var columnHTML = `
+            <div class="item">
+              <div class="item-content" id="post" data-type="note" style="opacity: 1; transform: scale(1);">
+              <!-- Safe zone, enter your custom markup -->
+                <div class="notes" id="notes-content" style="width: 200px;                     height: 200px;
+                color: white;                            
+                background: lightblue;                            
+                text-shadow: 2px 2px 2px black;                            
+                word-wrap: break-word;                            
+                display: flex;                            
+                justify-content: center;                            
+                align-items: center;">
+                  
+                    ${newData[i]["Post Content"]}
+                    
+                  
+                </div>
+              <!-- Safe zone ends -->
+              </div>
+            </div>
+            `       
+                         
+            
+        //Grid.add function to properly add to grid
+        wrapper.innerHTML = columnHTML;
+        var columnElem = wrapper.children[0]; 
+        // console.log(columnElem.children[0].childNodes[3])
+        grid.add([columnElem]);
+
+        
+            
+          }
+        } 
     })
 
+    //Auto fits the text of all notes
+    function textFit(){
+      textFit(document.getElementById('notes-content'), {minFontSize:14, maxFontSize: 50, multiLine: true})
+    }
+
+
+    setTimeout(textFit, 75);
     //Refresh the layout once page is loaded
-      function respaceItems(){
+      function respaceItems(){ 
+        // textFit(document.getElementById('notes-content'), {minFontSize:14, maxFontSize: 50, multiLine: true})
         grid.refreshItems().layout();
         console.log('Respaced!')
         // var divs = document.querySelectorAll(".muuri-item");
@@ -119,12 +204,25 @@ var socket = io();
           // When a drag starts — first get the postions and content put them in an array
           grid.on('dragInit', function(item, event){
             let gridItems = grid.getItems()
-            // console.log(gridItems)
-            
-            //Push [index, Post Content] before move
+            console.log(gridItems)
+
+            //This is where the notes text content is:
+            // griditems[i]._element.childNodes[1].firstElementChild.childNodes[0].childNodes[0].nodeValue
+
+            //This is where the data type is hidden:
+            // griditems[i]._element.childNodes[1].attributes[2].nodeValue
+
+            //Push [index, Post Content, Post Type] before move
             let i;
             for(i = 0; i < gridItems.length; i++ ){
-              gridItemSnapShotBeforeDrag.push([i, gridItems[i]._element.innerHTML])
+              if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "link"){
+                // console.log('link post')
+                gridItemSnapShotBeforeDrag.push([i, gridItems[i]._element.innerHTML, gridItems[i]._element.childNodes[1].attributes[2].nodeValue])
+              } 
+              else if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "note") {
+                // console.log('notes post')
+                gridItemSnapShotBeforeDrag.push([i, gridItems[i]._element.childNodes[1].firstElementChild.childNodes[0].childNodes[0].nodeValue, gridItems[i]._element.childNodes[1].attributes[2].nodeValue])
+              }
             }
 
             // console.log(gridItemSnapShotBeforeDrag);
@@ -147,23 +245,32 @@ var socket = io();
             //Push [index, Post Content] after move
             let i;
             for(i = 0; i < gridItems.length; i++ ){
-              gridItemSnapShotAfterDrag.push([i, gridItems[i]._element.innerHTML])
+              if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "link"){
+                // console.log('link post')
+                gridItemSnapShotAfterDrag.push([i, gridItems[i]._element.innerHTML, gridItems[i]._element.childNodes[1].attributes[2].nodeValue])
+              } 
+              else if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "note") {
+                // console.log('notes post')
+                gridItemSnapShotAfterDrag.push([i, gridItems[i]._element.childNodes[1].firstElementChild.childNodes[0].childNodes[0].nodeValue, gridItems[i]._element.childNodes[1].attributes[2].nodeValue])
+              }
             }
 
+            // console.log(gridItemSnapShotAfterDrag)
 
-            //Compare the two before/after move arrays based on URL — if a URL is different (meaning it has been moved), that new index position, and content is pushed to an array
+
+            //Compare the two before/after move arrays based on Post Content value [1] — if a URL is different (meaning it has been moved), that new index position, and content is pushed to an array
             let k;
             for(k = 0; k < gridItems.length; k++){
               if(gridItemSnapShotBeforeDrag[k][1] !== gridItemSnapShotAfterDrag[k][1]){
                 console.log('different')
-                moveDataToSave.push([gridItemSnapShotAfterDrag[k][0], gridItemSnapShotAfterDrag[k][1]])
+                moveDataToSave.push([gridItemSnapShotAfterDrag[k][0], gridItemSnapShotAfterDrag[k][1], gridItemSnapShotAfterDrag[k][2]])
               }
             }
 
             
             // console.log(gridItemSnapShotBeforeDrag)
             // console.log(gridItemSnapShotAfterDrag)
-            // console.log(moveDataToSave);
+            console.log(moveDataToSave);
 
             //The Array with the info for the database to update is sent to the server
             socket.emit('moveDataToSavetoServer', moveDataToSave)
@@ -193,7 +300,7 @@ var socket = io();
 
             let overlay = document.createElement('div');
             let overlayHTML = `
-            <div class="overlay" style="
+            <div class="overlay" id="overlay" style="
             position: fixed;
             right: 0px;
             width: 50%;
@@ -234,7 +341,7 @@ var socket = io();
             document.getElementsByTagName('button')[4].addEventListener('click', function(e){
               console.log('notessss')
               overlay.innerHTML = `
-              <div class="overlay" style="
+              <div class="overlay" id="overlay" style="
               position: fixed;
               right: 0px;
               width: 50%;
@@ -260,7 +367,7 @@ var socket = io();
                      align-items: center;
                      justify-content: center;">
 
-                     <div class="notes-preview" id = "notes-content" style= "
+                     <div class="notes-preview" id = "notes-content-preview" style= "
                      width: 200px;
                      height: 200px;
                      margin: 5px;
@@ -287,11 +394,78 @@ var socket = io();
                      //This gets the boxes input value and inserts into the box (with textFit for resizing)
                      document.getElementById('note-input-Box').addEventListener('keyup', function(e){
                       console.log(document.getElementById('note-input-Box').value)
-                      let notesPreview = document.getElementById('notes-content')
+                      let notesPreview = document.getElementById('notes-content-preview')
                       notesPreview.innerHTML = `
                       ${document.getElementById('note-input-Box').value}
                       `
-                      textFit(document.getElementById('notes-content'), {minFontSize:14, maxFontSize: 50, multiLine: true})
+                      textFit(document.getElementById('notes-content-preview'), {minFontSize:14, maxFontSize: 50, multiLine: true})
+                     })
+
+
+                     //This is the button click that adds the note to the grid and the database
+                     document.getElementById('Add Note').addEventListener('click', function(e){
+                      //  console.log('yeeeeee')
+                      //  console.log(document.getElementById('notes-content').innerHTML)
+                       //Create html element
+                       var wrapper = document.createElement('div');
+                       var columnHTML = `
+                       <div class="item">
+                           <div class="item-content" id= "post" data-type="note">
+                           <!-- Safe zone, enter your custom markup -->
+                           <div class="notes" id = "notes-content" style= "
+                            width: 200px;
+                            height: 200px;
+                            color: white;
+                            background: lightblue;
+                            text-shadow: 2px 2px 2px black;
+                            word-wrap: break-word;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            ">
+                           ${document.getElementById('notes-content-preview').innerHTML}
+                           </div>
+                           <!-- Safe zone ends -->
+                           </div>
+                           </div>
+                       `
+
+                       //Grid.add function to properly add to grid
+                       wrapper.innerHTML = columnHTML;
+                       var columnElem = wrapper.children[0]; 
+                       //  console.log(columnElem.innerHTML);
+                       grid.add([columnElem], {index: 0});
+
+                       //Refresh the layout once page is loaded
+                       function respaceItems(){
+                           grid.refreshItems().layout();
+                           console.log('Respaced! With New Gif!')
+                           }
+
+                       //Runs on timeout because it takes a second to load the content
+                           setTimeout(respaceItems, 300);
+                         
+
+                         //Now that the post is added, the info is sent back to the server to be sent out to other clients and saved in the database
+                         //[Text of Note, Post Type]
+                         let newPostInfo = [columnElem.children[0].childNodes[3].children[0].innerHTML, columnElem.children[0].attributes[2].nodeValue]
+                        
+                         //This is how to access the post data type
+                        //  console.log(columnElem.children[0].attributes[2].nodeValue)
+
+                         console.log(columnElem.children)
+                         //This is where the text content of a notes post lives:
+                        //  console.log(columnElem.children[0].childNodes[3].children[0].innerHTML)
+                         console.log(newPostInfo)
+
+
+                         
+
+                         socket.emit('postAddedUpdateDatabase', newPostInfo);
+
+                        document.getElementById('overlay').remove();
+
+
                      })
                     
                     })
@@ -411,16 +585,55 @@ var socket = io();
                       //  console.log('woahhhh')
                            //Create html element
                             var wrapper = document.createElement('div');
+                            // <a href = "${metadata.url}">
+                            //     <img src="${metadata.image}"></img></a>
                             var columnHTML = `
+
                             <div class="item">
-                                <div class="item-content" id= "post">
-                                <!-- Safe zone, enter your custom markup -->
-                                <a href = "${metadata.url}">
-                                <img src="${metadata.image}"></img></a>
-                                <!-- Safe zone ends -->
-                                </div>
+                            <div class="item-content" id="post" data-type="link" style="opacity: 1; transform: scale(1);">
+                                  <!-- Safe zone, enter your custom markup -->
+                                    <div class="link-content" id="link-master" style="
+                                    position: relative;
+                                    display: inline-block;">
+
+                                    <a href="${metadata.url}">
+                                    <img src="${metadata.image}">
+                                    </a>
+                                        <div class="post-description" id="post-description-master" style="
+                                            position: absolute;
+                                            z-index: 999;
+                                            left: 0;
+                                            bottom: 0;
+                                            text-align: left;
+                                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                                            padding-bottom: 10px;
+                                            padding-left: 5px;
+                                            padding-top: 5px;
+                                            text-size-adjust: auto;
+                                            margin-right: 10px;
+                                            margin-bottom: 5px;
+                                            margin-left: 5px;
+                                            padding-right: 3px;
+                                            box-shadow: 3px -3px 0px 3px #00000052;
+                                            background-color: #8f3cb96b;
+                                            /* background-color: #ff5c4ca3; */">
+
+                                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
+
+                                            <span id="post-description" style="
+                                            margin-left: 5px;
+                                            font-size: 15px;
+                                            font-size-adjust: inherit;
+                                            font-variant-caps: titling-caps;
+                                            font-weight: bold;
+                                            ">${metadata.title}</span>
+                                        </div>
+                                        </div>
+                                    <!-- Safe zone ends -->
+                                        </div>
                                 </div>
                             `
+                            
 
                             //Grid.add function to properly add to grid
                             wrapper.innerHTML = columnHTML;
@@ -439,11 +652,17 @@ var socket = io();
                               
 
                               //Now that the post is added, the info is sent back to the server to be sent out to other clients and saved in the database
-                              //[Post Content]
-                              let newPostInfo = [columnElem.innerHTML]
-                              // console.log(newPostInfo)
 
-                              socket.emit('postAddedUpdateDatabase', newPostInfo);
+                              console.log(columnElem.children[0].attributes[2].nodeValue)
+
+                              //[Post Content, Post Type]
+                              let newPostInfo = [columnElem.innerHTML, columnElem.children[0].attributes[2].nodeValue]
+                              console.log(newPostInfo)
+
+                              //NEW [Post Link, Post Image, Post Description, Post Type]
+                              //let newPostInfo = [metadata.url, metadata.image]
+
+                              // socket.emit('postAddedUpdateDatabase', newPostInfo);
 
                               document.getElementById('submission-overlay').remove();
 
