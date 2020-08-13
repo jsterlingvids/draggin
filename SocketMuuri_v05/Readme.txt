@@ -6,9 +6,8 @@ In a perfect world everything updates with the ID...
 
 Styling! Styling the posts
 
-Add a specific ID to a post image and see if it can be individually styled!
-
-Keep styling and make sure the correct information is sent and retrieved from the server when a post is created, move or saved
+Figuring out the best way to style/handle notes
+and adding specific post types
 
 
 How it works (refresher):

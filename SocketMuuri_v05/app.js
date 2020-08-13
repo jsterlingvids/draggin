@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
       socket.emit('newPostData', metadata);
 
       //Sends new post metadata to everyone connected to update immediately
-      socket.broadcast.emit('someoneElseAddedNewPost', metadata);
+      // socket.broadcast.emit('someoneElseAddedNewPost', metadata);
     })()
 
 
@@ -135,10 +135,10 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       //[index to update, new Post Content, Post Type]
       // console.log(data)
 
-      //For each item in data, search based on index, and update the Post Content based on what's in the array
+      //For each item in data, search based on index, and update the link, image, description and type based on what's in the array
       data.forEach(item => {
         // console.log(item[0])
-        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1], "Post Type": item[2]}}).then(res=> console.log("Locations Updated on Database")).catch(err => console.log(err))
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Link": item[1], "Post Image": item[2], "Post Description": item[3], "Post Type": item[4]}}).then(res=> console.log("Locations Updated on Database")).catch(err => console.log(err))
       })
     })
   })
@@ -147,6 +147,9 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   //Adding new Post to Database logic
   io.on('connection', (socket) => 
   {socket.on('postAddedUpdateDatabase', function(newPostInfo){
+
+    //Sends new post metadata to everyone connected to update immediately
+    socket.broadcast.emit('someoneElseAddedNewPost', newPostInfo);
     //New Post Data [Post HTML content]
     console.log('----CHECK IT OUT-----')
     console.log(newPostInfo)
@@ -159,7 +162,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       // console.log(databaseEntries)
 
       //Map current Database entries to new array to easily add new link info
-      let updateDatabaseArray = databaseEntries.map(item => [item["Post Content"], item["Post Type"]]);
+      let updateDatabaseArray = databaseEntries.map(item => [item["Post Link"], item["Post Image"], item["Post Description"], item["Post Type"]]);
       // console.log("--SEE WHAT ADDING A NEW POST LOOKS LIKE HERE----")
       // console.log(updateDatabaseArray);
 
@@ -178,10 +181,10 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       // console.log(updateDatabaseArray);
       
       
-      //Update database with new links and positions
+      //Update database with new links 
       updateDatabaseArray.forEach(item => {
         // console.log('item')
-        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Content": item[1], "Post Type": item[2]}}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
+        collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Link": item[1], "Post Image": item[2], "Post Description": item[3], "Post Type": item[4]}}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
       })
 
       
