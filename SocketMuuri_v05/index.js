@@ -90,19 +90,26 @@ var socket = io();
             <div class="item">
               <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
               <!-- Safe zone, enter your custom markup -->
-                <div class="notes" id="notes-content" style="width: 200px;                     height: 200px;
-                color: white;                            
-                background: lightblue;                            
-                text-shadow: 2px 2px 2px black;                            
-                word-wrap: break-word;                            
-                display: flex;                            
-                justify-content: center;                            
-                align-items: center;">
-                  
-                    ${newData[i]["Post Content"]}
-                    
-                  
-                </div>
+
+              <div class="notes-content" id = "notes-content" style= "
+              width: 300px;
+              height: 300px;
+              color: white;
+              background: rgb(19 191 247);
+              text-shadow: 2px 2px 0px black;
+              word-wrap: break-word;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-weight: bold;
+              padding: 5px;
+              overflow: hidden;
+              ">
+              <span class="textFitted" style="${newData[i]["Post Description"]}">
+              ${newData[i]["Post Link"]}
+              </span>
+              </div>
+                
               <!-- Safe zone ends -->
               </div>
             </div>
@@ -121,13 +128,6 @@ var socket = io();
         } 
     })
 
-    //Auto fits the text of all notes
-    function textFit(){
-      textFit(document.getElementById('notes-content'), {minFontSize:14, maxFontSize: 50, multiLine: true})
-    }
-
-
-    setTimeout(textFit, 75);
     //Refresh the layout once page is loaded
       function respaceItems(){ 
         // textFit(document.getElementById('notes-content'), {minFontSize:14, maxFontSize: 50, multiLine: true})
@@ -229,7 +229,11 @@ var socket = io();
               else if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "note") {
                 // console.log('notes post')
 
-                gridItemSnapShotBeforeDrag.push([i, null, null, gridItems[i]._element.childNodes[1].firstElementChild.childNodes[0].childNodes[0].nodeValue, postType])
+                let postLink = gridItems[i]._element.children[0].children[0].children[0].innerHTML
+                let postDescription = gridItems[i]._element.children[0].children[0].children[0].attributes[1].value
+                let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
+
+                gridItemSnapShotBeforeDrag.push([i, postLink, null, postDescription, postType])
               }
             }
 
@@ -266,7 +270,11 @@ var socket = io();
               } 
               else if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "note") {
                 // console.log('notes post')
-                gridItemSnapShotAfterDrag.push([i, null, null, gridItems[i]._element.childNodes[1].firstElementChild.childNodes[0].childNodes[0].nodeValue, postType])
+                let postLink = gridItems[i]._element.children[0].children[0].children[0].innerHTML
+                let postDescription = gridItems[i]._element.children[0].children[0].children[0].attributes[1].value
+                let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
+
+                gridItemSnapShotAfterDrag.push([i, postLink, null, postDescription, postType])
               }
             }
 
@@ -301,11 +309,11 @@ var socket = io();
           let addSomethingButton = document.getElementById('add-something')
           let addLinkButton = document.getElementById('add-link')
           let addNoteButton = document.getElementById('add-note')
-          let urlInput = document.getElementById('url-input')
+          // let urlInput = document.getElementById('url-input')
 
-          addLinkButton.style.display = "none";
-          addNoteButton.style.display = "none";
-          urlInput.style.display = "none";
+          // addLinkButton.style.display = "none";
+          // addNoteButton.style.display = "none";
+          // urlInput.style.display = "none";
 
           addSomethingButton.addEventListener('click', bringInSubmissionQuestions)
 
@@ -351,9 +359,9 @@ var socket = io();
             document.getElementById('master-div').appendChild(overlay)
 
             
-
+            console.log(document.getElementsByTagName('button'))
             //Add Notes button clicked
-            document.getElementsByTagName('button')[4].addEventListener('click', function(e){
+            document.getElementsByTagName('button')[2].addEventListener('click', function(e){
               console.log('notessss')
               overlay.innerHTML = `
               <div class="overlay" id="overlay" style="
@@ -380,19 +388,24 @@ var socket = io();
                      flex-direction: column;
                      justify-content:center;
                      align-items: center;
-                     justify-content: center;">
+                     justify-content: center;
+                     font-family: helvetica, sans-serif;">
 
                      <div class="notes-preview" id = "notes-content-preview" style= "
-                     width: 200px;
-                     height: 200px;
-                     margin: 5px;
+                     width: 300px;
+                     height: 300px;
+                     margin: 10px;
                      color: white;
-                     background: lightblue;
-                     text-shadow: 2px 2px 2px black;
+                     background: rgb(19 191 247);
+                     text-shadow: 2px 2px 0px black;
                      word-wrap: break-word;
                      display: flex;
-                    justify-content: center;
-                    align-items: center;
+                     justify-content: center;
+                     align-items: center;
+                     font-weight: bold;
+                     padding: 5px;
+                     overflow: hidden;
+                     text-align: center;
                      ">
                      
                      </div>
@@ -410,7 +423,7 @@ var socket = io();
                      document.getElementById('note-input-Box').addEventListener('keyup', function(e){
                       console.log(document.getElementById('note-input-Box').value)
                       let notesPreview = document.getElementById('notes-content-preview')
-                      notesPreview.innerHTML = `
+                      notesPreview.textContent = `
                       ${document.getElementById('note-input-Box').value}
                       `
                       textFit(document.getElementById('notes-content-preview'), {minFontSize:14, maxFontSize: 50, multiLine: true})
@@ -427,19 +440,24 @@ var socket = io();
                        <div class="item">
                            <div class="item-content" id= "post" data-type="note">
                            <!-- Safe zone, enter your custom markup -->
-                           <div class="notes" id = "notes-content" style= "
-                            width: 200px;
-                            height: 200px;
+
+                           <div class="notes-content" id = "notes-content" style= "
+                            width: 300px;
+                            height: 300px;
                             color: white;
-                            background: lightblue;
-                            text-shadow: 2px 2px 2px black;
+                            background: rgb(19 191 247);
+                            text-shadow: 2px 2px 0px black;
                             word-wrap: break-word;
                             display: flex;
                             justify-content: center;
                             align-items: center;
+                            font-weight: bold;
+                            padding: 5px;
+                            overflow: hidden;
                             ">
                            ${document.getElementById('notes-content-preview').innerHTML}
                            </div>
+
                            <!-- Safe zone ends -->
                            </div>
                            </div>
@@ -462,13 +480,16 @@ var socket = io();
                          
 
                          //Now that the post is added, the info is sent back to the server to be sent out to other clients and saved in the database
-                         //[Text of Note, Post Type]
-                         let newPostInfo = [columnElem.children[0].childNodes[3].children[0].innerHTML, columnElem.children[0].attributes[2].nodeValue]
+                         //[Post Link, Post Image, Post Description (for notes this is font size and style), Post Type]
+
+                         let newPostInfo = [columnElem.children[0].childNodes[3].children[0].innerHTML, null, columnElem.children[0].children[0].children[0].attributes[1].value , columnElem.children[0].attributes[2].nodeValue]
                         
                          //This is how to access the post data type
                         //  console.log(columnElem.children[0].attributes[2].nodeValue)
+                        //This is how to access the link font:
+                        // [0]._element.children[0].children[0].children[0].attributes[1].value
 
-                         console.log(columnElem.children)
+                        //  console.log(columnElem.children[0].children[0].children[0].attributes[1].value)
                          //This is where the text content of a notes post lives:
                         //  console.log(columnElem.children[0].childNodes[3].children[0].innerHTML)
                          console.log(newPostInfo)
@@ -492,7 +513,7 @@ var socket = io();
 
             
             //Add link button clicked
-            let AddLinkButton = document.getElementsByTagName('button')[3]
+            let AddLinkButton = document.getElementsByTagName('button')[1]
             AddLinkButton.addEventListener('click', function(){
               overlay.innerHTML = `
               <div class="overlay" style="
@@ -528,15 +549,18 @@ var socket = io();
                      </div>
                      </div>`;
 
-
+                
                 //Once URL is copied and pasted and next button is clicked
-                document.getElementsByTagName('button')[3].addEventListener('click', function(e){
+                document.getElementsByTagName('button')[1].addEventListener('click', function(e){
                   e.preventDefault()
                   
                   //This is the URL Input Value
-                  let urlInputValue = document.getElementsByTagName('input')[1].value
-                  console.log(document.getElementsByTagName('input')[1].value)
+                  let urlInputValue = document.getElementsByTagName('input')[0].value
+                  console.log(document.getElementsByTagName('input')[0].value)
                   let url = urlInputValue
+                  if (url.includes("youtu.be")){
+                    console.log('IT DOES CONTAIN YOUTUBE')
+                  }
                   socket.emit('linkSubmit', url)                  
                 })
 
@@ -743,6 +767,8 @@ var socket = io();
           socket.on('someoneElseAddedNewPost', function(data){
             console.log(data);
 
+            if(data[3] === "link"){
+
             //Create html element with new GIF URL in it
             var wrapper = document.createElement('div');
             var columnHTML = `
@@ -798,13 +824,67 @@ var socket = io();
             grid.add([columnElem], {index: 0});
 
             //Refresh the layout once page is loaded
-            function respaceItems(){
-                grid.refreshItems().layout();
-                console.log('Respaced! With New Gif!')
-                }
+          function respaceItems(){
+            grid.refreshItems().layout();
+            console.log('Respaced! With New Gif!')
+            }
 
-            //Runs on timeout because it takes a second to load the gif
-                setTimeout(respaceItems, 300);
+        //Runs on timeout because it takes a second to load the gif
+            setTimeout(respaceItems, 300);
+
+            } 
+            
+            else if(data[3] === "note"){
+
+              var wrapper = document.createElement('div');
+              var columnHTML = `
+              <div class="item">
+                <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);">
+                <!-- Safe zone, enter your custom markup -->
+  
+                <div class="notes-content" id = "notes-content" style= "
+                width: 300px;
+                height: 300px;
+                color: white;
+                background: rgb(19 191 247);
+                text-shadow: 2px 2px 0px black;
+                word-wrap: break-word;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: bold;
+                padding: 5px;
+                overflow: hidden;
+                ">
+                <span class="textFitted" style="${data[2]}">
+                ${data[0]}
+                </span>
+                </div>
+                  
+                <!-- Safe zone ends -->
+                </div>
+              </div>
+              `       
+                           
+              
+          //Grid.add function to properly add to grid
+          wrapper.innerHTML = columnHTML;
+          var columnElem = wrapper.children[0]; 
+          // console.log(columnElem.children[0].innerHTML);
+          grid.add([columnElem], {index: 0});
+
+          //Refresh the layout once page is loaded
+          function respaceItems(){
+            grid.refreshItems().layout();
+            console.log('Respaced! With New Gif!')
+            }
+
+        //Runs on timeout because it takes a second to load the gif
+            setTimeout(respaceItems, 300);
+
+            }
+
+            
           })
 
          

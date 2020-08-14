@@ -1,13 +1,8 @@
-Need to have new gif instantly added to all viewers sites
 
-Also need to change newgif event name from 'mongo'.......
-
-In a perfect world everything updates with the ID...
 
 Styling! Styling the posts
 
-Figuring out the best way to style/handle notes
-and adding specific post types
+Adding and distinguishing between specific post types: video, article and image and gif (line 561)
 
 
 How it works (refresher):
