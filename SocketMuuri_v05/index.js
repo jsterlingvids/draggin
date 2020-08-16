@@ -558,7 +558,7 @@ var socket = io();
                   let urlInputValue = document.getElementsByTagName('input')[0].value
                   console.log(document.getElementsByTagName('input')[0].value)
                   let url = urlInputValue
-                  if (url.includes("youtu.be")){
+                  if (url.includes("youtu.be" || "youtube")){
                     console.log('IT DOES CONTAIN YOUTUBE')
                   }
                   socket.emit('linkSubmit', url)                  
@@ -568,6 +568,8 @@ var socket = io();
                 socket.on('newPostData', function(metadata){
                   console.log(metadata)
                   // console.log(document.getElementsByTagName('div'))
+
+                  if (metadata.url.includes("youtube" || "youtu.be")){
 
                   overlay.innerHTML = `
                   <div class="overlay" id="submission-overlay" style="
@@ -651,7 +653,94 @@ var socket = io();
                      </div>
                    
                      </div>
-                     </div>`;
+                     </div>`} else if(metadata.url.includes(".gif")){
+                       console.log("wowww")
+                       overlay.innerHTML = `
+                       <div class="overlay" id="submission-overlay" style="
+                        position: fixed;
+                        right: 0px;
+                        width: 50%;
+                        height: 100%; 
+                        border: 3px solid lightblue;
+                        padding: 10px;
+                        z-index: 2;
+                        top: 0;
+                        background-color: rgb(0, 0, 0);
+                        background-color: rgba(0, 0, 0, 0.5);
+                        transition: 1s;
+                        align-items: center;
+                        justify-content: center;">
+
+
+                          <div id="wrapper" style=" 
+                          width: 100%;
+                          height: 100%;
+                          border: 2px solid lightblue;
+                          display: flex;
+                          flex-direction: column;
+                          justify-content:center;
+                          align-items: center;
+                          justify-content: center;">
+
+                          <!-- Post Preview --!>
+                          <div class="new-post" style= "
+                          width: 300px;
+                          margin: 5px;
+                          color: white;">
+
+                          Post Preview:<p></p>
+                          <!-- Safe zone, enter your custom markup -->
+                          <div class="link-content" id="link-master" style="
+                          position: relative;
+                          display: inline-block;">
+
+                     <a href="${metadata.url}">
+                     <img src="${metadata.image}">
+                     </a>
+                         <div class="post-description" id="post-description-master" style="
+                             position: absolute;
+                             z-index: 999;
+                             left: 0;
+                             bottom: 0;
+                             text-align: left;
+                             font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                             padding-bottom: 10px;
+                             padding-left: 5px;
+                             padding-top: 5px;
+                             text-size-adjust: auto;
+                             margin-right: 10px;
+                             margin-bottom: 5px;
+                             margin-left: 5px;
+                             padding-right: 3px;
+                             box-shadow: 3px -3px 0px 3px #00000052;
+                             background-color: #8f3cb96b;
+                             display: none;
+                             /* background-color: #ff5c4ca3; */">
+
+                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
+
+                             <span id="post-description-preview" style="
+                             margin-left: 5px;
+                             font-size: 15px;
+                             font-size-adjust: inherit;
+                             font-variant-caps: titling-caps;
+                             font-weight: bold;
+                             ">${metadata.title}</span>
+                         </div>
+                         </div>
+                     <!-- Safe zone ends -->
+                     </div>
+                     <!-- Post Preview --!>
+
+                     <textarea id="link-description-input-Box" placeholder="Post Description" style="height: 20%; width: 50%; display: none;">${metadata.title}</textarea>
+                     <div class= "button-holder" style = "margin: 2%;">
+                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
+                     </div>
+                   
+                     </div>
+                     </div>`
+
+                     };
 
                      document.getElementById('link-description-input-Box').addEventListener('keyup', function(e){
                        
