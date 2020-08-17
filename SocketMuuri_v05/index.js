@@ -1,3 +1,8 @@
+//Declaring constants
+
+const videoURL = "youtube.com" || "youtu.be";
+const imgURL = ".gif"
+
 var socket = io();
 
       var grid = new Muuri('.grid', {
@@ -346,6 +351,15 @@ var socket = io();
                    justify-content:center;
                    align-items: center;
                    justify-content: center;">
+                   
+                   <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px;
+                    right: 20px; font-size: 20px;">
+                   <i class="fas fa-times-circle" aria-hidden="true"></i>
+                   </button>
+          
+
+
+
                     <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">Add Link!</button>
                     <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;">Add Note!</button>
                     </div>
@@ -357,11 +371,43 @@ var socket = io();
             overlay.innerHTML = overlayHTML;
 
             document.getElementById('master-div').appendChild(overlay)
+            
+            //Animate Overlay In
+            document.getElementById('overlay').animate([
+              // keyframes
+               { transform: 'translateX(600px)' }, 
+               { transform: 'translateX(0px)' }
+             ], 300);
 
             
             console.log(document.getElementsByTagName('button'))
+
+            //"Add Submission" Button Disappears
+            document.getElementById('submission-start').style = "display: none;"
+
+
+
+            //Exit button clicked
+            document.getElementsByTagName('button')[1].addEventListener('click', function(e){
+              
+              //Animate the overlay to the right side
+              document.getElementById('overlay').animate([
+             // keyframes
+              { transform: 'translateX(0px)' }, 
+              { transform: 'translateX(600px)' }
+            ], 300);
+              
+            //Remove Overlay on timeout once it is slid over
+              function removeOverlay(){
+                document.getElementById('overlay').remove()
+                document.getElementById('submission-start').style = "float: right; padding: 10px; display: block;"}
+              
+              setTimeout(removeOverlay, 300);
+
+            })
+
             //Add Notes button clicked
-            document.getElementsByTagName('button')[2].addEventListener('click', function(e){
+            document.getElementsByTagName('button')[3].addEventListener('click', function(e){
               console.log('notessss')
               overlay.innerHTML = `
               <div class="overlay" id="overlay" style="
@@ -513,7 +559,7 @@ var socket = io();
 
             
             //Add link button clicked
-            let AddLinkButton = document.getElementsByTagName('button')[1]
+            let AddLinkButton = document.getElementsByTagName('button')[2]
             AddLinkButton.addEventListener('click', function(){
               overlay.innerHTML = `
               <div class="overlay" style="
@@ -530,6 +576,7 @@ var socket = io();
               transition: 1s;
               align-items: center;
               justify-content: center;">
+              
 
 
                      <div id="wrapper" style=" 
@@ -558,7 +605,7 @@ var socket = io();
                   let urlInputValue = document.getElementsByTagName('input')[0].value
                   console.log(document.getElementsByTagName('input')[0].value)
                   let url = urlInputValue
-                  if (url.includes("youtu.be" || "youtube")){
+                  if (url.includes(videoURL)){
                     console.log('IT DOES CONTAIN YOUTUBE')
                   }
                   socket.emit('linkSubmit', url)                  
@@ -569,7 +616,7 @@ var socket = io();
                   console.log(metadata)
                   // console.log(document.getElementsByTagName('div'))
 
-                  if (metadata.url.includes("youtube" || "youtu.be")){
+                  if (metadata.url.includes(videoURL)){
 
                   overlay.innerHTML = `
                   <div class="overlay" id="submission-overlay" style="
@@ -653,7 +700,9 @@ var socket = io();
                      </div>
                    
                      </div>
-                     </div>`} else if(metadata.url.includes(".gif")){
+                     </div>`} 
+                     
+                     else if(metadata.url.includes(imgURL)){
                        console.log("wowww")
                        overlay.innerHTML = `
                        <div class="overlay" id="submission-overlay" style="
@@ -740,7 +789,98 @@ var socket = io();
                      </div>
                      </div>`
 
-                     };
+                     } 
+                     
+                     else {
+                       console.log('link normale')
+                       overlay.innerHTML = `
+                  <div class="overlay" id="submission-overlay" style="
+                  position: fixed;
+                  right: 0px;
+                  width: 50%;
+                  height: 100%; 
+                  border: 3px solid lightblue;
+                  padding: 10px;
+                  z-index: 2;
+                  top: 0;
+                  background-color: rgb(0, 0, 0);
+                  background-color: rgba(0, 0, 0, 0.5);
+                  transition: 1s;
+                  align-items: center;
+                  justify-content: center;">
+
+
+                     <div id="wrapper" style=" 
+                     width: 100%;
+                     height: 100%;
+                     border: 2px solid lightblue;
+                     display: flex;
+                     flex-direction: column;
+                     justify-content:center;
+                     align-items: center;
+                     justify-content: center;">
+
+                    <!-- Post Preview --!>
+                     <div class="new-post" style= "
+                     width: 300px;
+                     margin: 5px;
+                     color: white;">
+
+                     Post Preview:<p style="
+                     margin: 5px;
+                     "></p>
+                     <!-- Safe zone, enter your custom markup -->
+                     <div class="link-content" id="link-master" style="
+                     position: relative;
+                     display: inline-block;">
+
+                     <a href="${metadata.url}">
+                     <img src="${metadata.image}">
+                     </a>
+                         <div class="post-description" id="post-description-master" style="
+                             position: absolute;
+                             z-index: 999;
+                             left: 0;
+                             bottom: 0;
+                             text-align: left;
+                             font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                             padding-bottom: 10px;
+                             padding-left: 5px;
+                             padding-top: 5px;
+                             text-size-adjust: auto;
+                             margin-right: 10px;
+                             margin-bottom: 5px;
+                             margin-left: 5px;
+                             padding-right: 3px;
+                             box-shadow: 3px -3px 0px 3px #00000052;
+                             background-color: #8f3cb96b;
+                             /* background-color: #ff5c4ca3; */">
+
+                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>LINK</b></span>
+
+                             <span id="post-description-preview" style="
+                             margin-left: 5px;
+                             font-size: 15px;
+                             font-size-adjust: inherit;
+                             font-variant-caps: titling-caps;
+                             font-weight: bold;
+                             ">${metadata.title}</span>
+                         </div>
+                         </div>
+                     <!-- Safe zone ends -->
+                     </div>
+                     <!-- Post Preview --!>
+
+                     <span style="margin: 2px; padding-right: 175px; color: white;">Post Description: </span>
+
+                     <textarea id="link-description-input-Box" placeholder="Post Description" style="height: 20%; width: 50%;">${metadata.title}</textarea>
+                     <div class= "button-holder" style = "margin: 2%;">
+                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
+                     </div>
+                   
+                     </div>
+                     </div>`
+                     }
 
                      document.getElementById('link-description-input-Box').addEventListener('keyup', function(e){
                        
