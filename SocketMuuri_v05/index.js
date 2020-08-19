@@ -1,5 +1,7 @@
 //Declaring constants
 
+// const { link } = require("fs");
+
 const videoURL = "youtube.com" || "youtu.be";
 const imgURL = ".gif"
 
@@ -17,6 +19,7 @@ var socket = io();
 
 
 
+//On loadup
 
       //Receive Initial Data and build
       socket.on('initial', function(newData){
@@ -34,60 +37,116 @@ var socket = io();
         // console.log(newData);
 
 
-        if(newData[i]["Post Type"] === "link"){
-        var wrapper = document.createElement('div');
+        if(newData[i]["Post Type"] === "link-video"){
+          var wrapper = document.createElement('div');
+          
+          
+          var columnHTML = `
+          <div class="item">
+          <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
+                <!-- Safe zone, enter your custom markup -->
+                  <div class="link-content" id="link-master" style="
+                  position: relative;
+                  display: inline-block;">
+
+                  <a href="${newData[i]["Post Link"]}">
+                  <img src="${newData[i]["Post Image"]}">
+                  </a>
+                      <div class="post-description" id="post-description-master" style="
+                          position: absolute;
+                          z-index: 999;
+                          left: 0;
+                          bottom: 0;
+                          text-align: left;
+                          font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                          padding-bottom: 10px;
+                          padding-left: 5px;
+                          padding-top: 5px;
+                          text-size-adjust: auto;
+                          margin-right: 10px;
+                          margin-bottom: 5px;
+                          margin-left: 5px;
+                          padding-right: 3px;
+                          box-shadow: 3px -3px 0px 3px #00000052;
+                          background-color: #8f3cb96b;
+                          /* background-color: #ff5c4ca3; */">
+
+                          <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
+
+                          <span id="post-description" style="
+                          margin-left: 5px;
+                          font-size: 15px;
+                          font-size-adjust: inherit;
+                          font-variant-caps: titling-caps;
+                          font-weight: bold;
+                          ">${newData[i]["Post Description"]}</span>
+                      </div>
+                      </div>
+                  <!-- Safe zone ends -->
+                      </div>
+              </div>
+          `
+
+          //Grid.add function to properly add to grid
+          wrapper.innerHTML = columnHTML;
+          var columnElem = wrapper.children[0]; 
+          grid.add([columnElem]);
+          } else if (newData[i]["Post Type"] === "link-img"){
+            var wrapper = document.createElement('div');
         
         
-        var columnHTML = `
-        <div class="item">
-        <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
-              <!-- Safe zone, enter your custom markup -->
-                <div class="link-content" id="link-master" style="
-                position: relative;
-                display: inline-block;">
+            var columnHTML = `
+            <div class="item">
+            <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
+                  <!-- Safe zone, enter your custom markup -->
+                    <div class="link-content" id="link-master" style="
+                    position: relative;
+                    display: inline-block;">
+    
+                    <a href="${newData[i]["Post Link"]}">
+                    <img src="${newData[i]["Post Image"]}">
+                    </a>
+                        <div class="post-description" id="post-description-master" style="
+                            position: absolute;
+                            z-index: 999;
+                            left: 0;
+                            bottom: 0;
+                            text-align: left;
+                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                            padding-bottom: 10px;
+                            padding-left: 5px;
+                            padding-top: 5px;
+                            text-size-adjust: auto;
+                            margin-right: 10px;
+                            margin-bottom: 5px;
+                            margin-left: 5px;
+                            padding-right: 3px;
+                            box-shadow: 3px -3px 0px 3px #00000052;
+                            background-color: #8f3cb96b;
+                            display: none;
+                            /* background-color: #ff5c4ca3; */">
+    
+                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
+    
+                            <span id="post-description" style="
+                            margin-left: 5px;
+                            font-size: 15px;
+                            font-size-adjust: inherit;
+                            font-variant-caps: titling-caps;
+                            font-weight: bold;
+                            ">${newData[i]["Post Description"]}</span>
+                        </div>
+                        </div>
+                    <!-- Safe zone ends -->
+                        </div>
+                </div>
+            `
+    
+            //Grid.add function to properly add to grid
+            wrapper.innerHTML = columnHTML;
+            var columnElem = wrapper.children[0]; 
+            grid.add([columnElem]);
 
-                <a href="${newData[i]["Post Link"]}">
-                <img src="${newData[i]["Post Image"]}">
-                </a>
-                    <div class="post-description" id="post-description-master" style="
-                        position: absolute;
-                        z-index: 999;
-                        left: 0;
-                        bottom: 0;
-                        text-align: left;
-                        font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                        padding-bottom: 10px;
-                        padding-left: 5px;
-                        padding-top: 5px;
-                        text-size-adjust: auto;
-                        margin-right: 10px;
-                        margin-bottom: 5px;
-                        margin-left: 5px;
-                        padding-right: 3px;
-                        box-shadow: 3px -3px 0px 3px #00000052;
-                        background-color: #8f3cb96b;
-                        /* background-color: #ff5c4ca3; */">
-
-                        <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
-
-                        <span id="post-description" style="
-                        margin-left: 5px;
-                        font-size: 15px;
-                        font-size-adjust: inherit;
-                        font-variant-caps: titling-caps;
-                        font-weight: bold;
-                        ">${newData[i]["Post Description"]}</span>
-                    </div>
-                    </div>
-                <!-- Safe zone ends -->
-                    </div>
-            </div>
-        `
-
-        //Grid.add function to properly add to grid
-        wrapper.innerHTML = columnHTML;
-        var columnElem = wrapper.children[0]; 
-        grid.add([columnElem]);
           }
           else if (newData[i]["Post Type"] === "note") {
             var wrapper = document.createElement('div');
@@ -129,6 +188,62 @@ var socket = io();
 
         
             
+          } else {
+
+            var wrapper = document.createElement('div');
+        
+        
+            var columnHTML = `
+            <div class="item">
+            <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
+                  <!-- Safe zone, enter your custom markup -->
+                    <div class="link-content" id="link-master" style="
+                    position: relative;
+                    display: inline-block;">
+
+                    <a href="${newData[i]["Post Link"]}">
+                    <img src="${newData[i]["Post Image"]}">
+                    </a>
+                        <div class="post-description" id="post-description-master" style="
+                            position: absolute;
+                            z-index: 999;
+                            left: 0;
+                            bottom: 0;
+                            text-align: left;
+                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                            padding-bottom: 10px;
+                            padding-left: 5px;
+                            padding-top: 5px;
+                            text-size-adjust: auto;
+                            margin-right: 10px;
+                            margin-bottom: 5px;
+                            margin-left: 5px;
+                            padding-right: 3px;
+                            box-shadow: 3px -3px 0px 3px #00000052;
+                            background-color: #8f3cb96b;
+                            /* background-color: #ff5c4ca3; */">
+
+                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>LINK</b></span>
+
+                            <span id="post-description" style="
+                            margin-left: 5px;
+                            font-size: 15px;
+                            font-size-adjust: inherit;
+                            font-variant-caps: titling-caps;
+                            font-weight: bold;
+                            ">${newData[i]["Post Description"]}</span>
+                        </div>
+                        </div>
+                    <!-- Safe zone ends -->
+                        </div>
+                </div>
+            `
+
+            //Grid.add function to properly add to grid
+            wrapper.innerHTML = columnHTML;
+            var columnElem = wrapper.children[0]; 
+            grid.add([columnElem]);
+
           }
         } 
     })
@@ -149,6 +264,9 @@ var socket = io();
       
       //Generate Gif Content
       const apiKey = 'K4MR2L3zPWENog4Ureog4PPv6rAeZSTB'
+
+
+//Moving Posts
 
           //When data has been moved — this runs to move boxes on another browser
           socket.on('dataHasBeenMoved', function(data){
@@ -221,7 +339,7 @@ var socket = io();
             //Push [index, Post Link, Post Image, Post Description, Post Type] before move
             let i;
             for(i = 0; i < gridItems.length; i++ ){
-              if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "link"){
+              if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "link" || "link-video" || "link-img"){
                 // console.log('link post')
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
@@ -262,7 +380,7 @@ var socket = io();
             //Push [index, link, image, description, type] after move
             let i;
             for(i = 0; i < gridItems.length; i++ ){
-              if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "link"){
+              if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "link" || "link-video" || "link-img"){
                 // console.log('link post')
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
@@ -283,7 +401,7 @@ var socket = io();
               }
             }
 
-            // console.log(gridItemSnapShotAfterDrag)
+            console.log(gridItemSnapShotAfterDrag)
 
 
             //Compare the two before/after move arrays based on Post Link value [1] — if a URL is different (meaning it has been moved), that new index position, link, image, description and type are pushed to an array to send to server
@@ -296,8 +414,8 @@ var socket = io();
             }
 
             
-            // console.log(gridItemSnapShotBeforeDrag)
-            // console.log(gridItemSnapShotAfterDrag)
+            console.log(gridItemSnapShotBeforeDrag)
+            console.log(gridItemSnapShotAfterDrag)
             // console.log(moveDataToSave);
 
             //The Array with the info for the database to update is sent to the server
@@ -309,8 +427,8 @@ var socket = io();
         moveDataServerUpdate()
 
 
+//Adding Links
 
-          //Adding Links
           let addSomethingButton = document.getElementById('add-something')
           let addLinkButton = document.getElementById('add-link')
           let addNoteButton = document.getElementById('add-note')
@@ -322,110 +440,368 @@ var socket = io();
 
           addSomethingButton.addEventListener('click', bringInSubmissionQuestions)
 
-          //Submission Overlay Loads Up
-          function bringInSubmissionQuestions(e){
-            e.preventDefault();
+  
 
-            let overlay = document.createElement('div');
-            let overlayHTML = `
-            <div class="overlay" id="overlay" style="
-            position: fixed;
-            right: 0px;
-            width: 50%;
-            height: 100%; 
-            border: 3px solid lightblue;
-            padding: 10px;
-            z-index: 2;
-            top: 0;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.5);
-            transition: 1s;
-            align-items: center;
-            justify-content: center;">
-                   <div id="wrapper" style=" 
-                   width: 100%;
-                   height: 100%;
-                   border: 2px solid lightblue;
-                   display: flex;
-                   flex-direction: column;
-                   justify-content:center;
-                   align-items: center;
-                   justify-content: center;">
-                   
-                   <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px;
-                    right: 20px; font-size: 20px;">
-                   <i class="fas fa-times-circle" aria-hidden="true"></i>
-                   </button>
-          
+          //Adding new post to page for all clients simultaneously
+          socket.on('someoneElseAddedNewPost', function(data){
+            console.log(data);
 
+            if(data[3] === "link-video"){
 
+            //Create html element with new GIF URL in it
+            var wrapper = document.createElement('div');
+            var columnHTML = `
+            <div class="item">
+            <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);">
+                  <!-- Safe zone, enter your custom markup -->
+                    <div class="link-content" id="link-master" style="
+                    position: relative;
+                    display: inline-block;">
 
-                    <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">Add Link!</button>
-                    <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;">Add Note!</button>
-                    </div>
-                    
-                    
-                 </div>
+                    <a href="${data[0]}">
+                    <img src="${data[1]}">
+                    </a>
+                        <div class="post-description" id="post-description-master" style="
+                            position: absolute;
+                            z-index: 999;
+                            left: 0;
+                            bottom: 0;
+                            text-align: left;
+                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                            padding-bottom: 10px;
+                            padding-left: 5px;
+                            padding-top: 5px;
+                            text-size-adjust: auto;
+                            margin-right: 10px;
+                            margin-bottom: 5px;
+                            margin-left: 5px;
+                            padding-right: 3px;
+                            box-shadow: 3px -3px 0px 3px #00000052;
+                            background-color: #8f3cb96b;
+                            /* background-color: #ff5c4ca3; */">
+
+                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
+
+                            <span id="post-description" style="
+                            margin-left: 5px;
+                            font-size: 15px;
+                            font-size-adjust: inherit;
+                            font-variant-caps: titling-caps;
+                            font-weight: bold;
+                            ">${data[2]}</span>
+                        </div>
+                        </div>
+                    <!-- Safe zone ends -->
+                        </div>
+                </div>
             `
 
-            overlay.innerHTML = overlayHTML;
+            } else if(data[3] === "link-img"){
+              //Create html element with new GIF URL in it
+              var wrapper = document.createElement('div');
+              var columnHTML= `
+                              <div class="item">
+                              <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);"></div>
 
-            document.getElementById('master-div').appendChild(overlay)
+                              <!-- Safe zone, enter your custom markup -->
+                              <div class="link-content" id="link-master" style="
+                              position: relative;
+                              display: inline-block;">
+    
+                         <a href="${data[0]}">
+                         <img src="${data[1]}">
+                         </a>
+                             <div class="post-description" id="post-description-master" style="
+                                 position: absolute;
+                                 z-index: 999;
+                                 left: 0;
+                                 bottom: 0;
+                                 text-align: left;
+                                 font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                                 padding-bottom: 10px;
+                                 padding-left: 5px;
+                                 padding-top: 5px;
+                                 text-size-adjust: auto;
+                                 margin-right: 10px;
+                                 margin-bottom: 5px;
+                                 margin-left: 5px;
+                                 padding-right: 3px;
+                                 box-shadow: 3px -3px 0px 3px #00000052;
+                                 background-color: #8f3cb96b;
+                                 display: none;
+                                 /* background-color: #ff5c4ca3; */">
+    
+                                 <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
+    
+                                 <span id="post-description-preview" style="
+                                 margin-left: 5px;
+                                 font-size: 15px;
+                                 font-size-adjust: inherit;
+                                 font-variant-caps: titling-caps;
+                                 font-weight: bold;
+                                 ">${data[2]}</span>
+                             </div>
+                             </div>
+                         <!-- Safe zone ends -->
+                         </div>
+                         </div>                        
+                         `
+            } 
+
+            else if(data[3] === "note"){
+
+              var wrapper = document.createElement('div');
+              var columnHTML = `
+              <div class="item">
+                <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);">
+                <!-- Safe zone, enter your custom markup -->
+  
+                <div class="notes-content" id = "notes-content" style= "
+                width: 300px;
+                height: 300px;
+                color: white;
+                background: rgb(19 191 247);
+                text-shadow: 2px 2px 0px black;
+                word-wrap: break-word;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-weight: bold;
+                padding: 5px;
+                overflow: hidden;
+                ">
+                <span class="textFitted" style="${data[2]}">
+                ${data[0]}
+                </span>
+                </div>
+                  
+                <!-- Safe zone ends -->
+                </div>
+              </div>
+              `    }  else {
+                            //Create html element with new GIF URL in it
+            var wrapper = document.createElement('div');
+            var columnHTML = `
+            <div class="item">
+            <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);">
+                  <!-- Safe zone, enter your custom markup -->
+                    <div class="link-content" id="link-master" style="
+                    position: relative;
+                    display: inline-block;">
+
+                    <a href="${data[0]}">
+                    <img src="${data[1]}">
+                    </a>
+                        <div class="post-description" id="post-description-master" style="
+                            position: absolute;
+                            z-index: 999;
+                            left: 0;
+                            bottom: 0;
+                            text-align: left;
+                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                            padding-bottom: 10px;
+                            padding-left: 5px;
+                            padding-top: 5px;
+                            text-size-adjust: auto;
+                            margin-right: 10px;
+                            margin-bottom: 5px;
+                            margin-left: 5px;
+                            padding-right: 3px;
+                            box-shadow: 3px -3px 0px 3px #00000052;
+                            background-color: #8f3cb96b;
+                            /* background-color: #ff5c4ca3; */">
+
+                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>LINK</b></span>
+
+                            <span id="post-description" style="
+                            margin-left: 5px;
+                            font-size: 15px;
+                            font-size-adjust: inherit;
+                            font-variant-caps: titling-caps;
+                            font-weight: bold;
+                            ">${data[2]}</span>
+                        </div>
+                        </div>
+                    <!-- Safe zone ends -->
+                        </div>
+                </div>
+            `
+
+              } 
+                           
+              
+          //Grid.add function to properly add to grid
+          wrapper.innerHTML = columnHTML;
+          var columnElem = wrapper.children[0]; 
+          // console.log(columnElem.children[0].innerHTML);
+          grid.add([columnElem], {index: 0});
+
+          //Refresh the layout once page is loaded
+          function respaceItems(){
+            grid.refreshItems().layout();
+            console.log('Respaced! With New Gif!')
+            }
+
+        //Runs on timeout because it takes a second to load the gif
+            setTimeout(respaceItems, 300);
+
             
-            //Animate Overlay In
-            document.getElementById('overlay').animate([
-              // keyframes
-               { transform: 'translateX(600px)' }, 
-               { transform: 'translateX(0px)' }
-             ], 300);
 
             
-            console.log(document.getElementsByTagName('button'))
-
-            //"Add Submission" Button Disappears
-            document.getElementById('submission-start').style = "display: none;"
+          })
 
 
 
-            //Exit button clicked
-            document.getElementsByTagName('button')[1].addEventListener('click', function(e){
-              
-              //Animate the overlay to the right side
-              document.getElementById('overlay').animate([
-             // keyframes
-              { transform: 'translateX(0px)' }, 
-              { transform: 'translateX(600px)' }
-            ], 300);
-              
-            //Remove Overlay on timeout once it is slid over
-              function removeOverlay(){
-                document.getElementById('overlay').remove()
-                document.getElementById('submission-start').style = "float: right; padding: 10px; display: block;"}
-              
-              setTimeout(removeOverlay, 300);
 
-            })
+// Submissions HTML Builds
 
-            //Add Notes button clicked
-            document.getElementsByTagName('button')[3].addEventListener('click', function(e){
-              console.log('notessss')
-              overlay.innerHTML = `
-              <div class="overlay" id="overlay" style="
-              position: fixed;
-              right: 0px;
-              width: 50%;
-              height: 100%; 
-              border: 3px solid lightblue;
-              padding: 10px;
-              z-index: 2;
-              top: 0;
-              background-color: rgb(0, 0, 0);
-              background-color: rgba(0, 0, 0, 0.5);
-              transition: 1s;
+      //Submission Overlay Loads Up
+      function bringInSubmissionQuestions(e){
+        e.preventDefault();
+
+        let overlay = document.createElement('div');
+        let overlayHTML = `
+        <div class="overlay" id="overlay" style="
+        position: fixed;
+        right: 0px;
+        width: 50%;
+        height: 100%; 
+        border: 3px solid lightblue;
+        padding: 10px;
+        z-index: 2;
+        top: 0;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.5);
+        transition: 1s;
+        align-items: center;
+        justify-content: center;">
+              <div id="wrapper" style=" 
+              width: 100%;
+              height: 100%;
+              border: 2px solid lightblue;
+              display: flex;
+              flex-direction: column;
+              justify-content:center;
               align-items: center;
               justify-content: center;">
+              
+              <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px;
+                right: 20px; font-size: 20px;">
+              <i class="fas fa-times-circle" aria-hidden="true"></i>
+              </button>
 
 
+
+
+                <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">Add Link!</button>
+                <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;">Add Note!</button>
+                </div>
+                
+                
+            </div>
+        `
+
+        overlay.innerHTML = overlayHTML;
+
+        document.getElementById('master-div').appendChild(overlay)
+        
+        //Animate Overlay In
+        document.getElementById('overlay').animate([
+          // keyframes
+          { transform: 'translateX(600px)' }, 
+          { transform: 'translateX(0px)' }
+        ], 300);
+
+        
+        console.log(document.getElementsByTagName('button'))
+
+        //"Add Submission" Button Disappears
+        document.getElementById('submission-start').style = "display: none;"
+
+        //Exit button clicked
+        document.getElementById('exit-button').addEventListener('click', exitButton)
+
+        //Add Notes button clicked
+        document.getElementById('add-note').addEventListener('click', addNote)
+        
+        //Add link button clicked
+        document.getElementById('add-link').addEventListener('click', addLink)
+      }
+
+
+
+
+      //Exit Button
+      function exitButton(){
+        console.log('exit button')
+
+       //Animate the overlay to the right side
+       document.getElementById('overlay').animate([
+       // keyframes
+       { transform: 'translateX(0px)' }, 
+       { transform: 'translateX(600px)' }
+       ], 300);
+                      
+       //Remove Overlay on timeout once it is slid over
+       function removeOverlay(){
+       document.getElementById('overlay').remove()
+       document.getElementById('submission-start').style = "float: right; padding: 10px; display: block;"}
+                      
+       setTimeout(removeOverlay, 300);
+      }
+
+      //Back Button
+      function backButton(e){
+        console.log('back button')
+        e.preventDefault();
+
+        let overlayHTML = `
+       
+              <div id="wrapper" style=" 
+              width: 100%;
+              height: 100%;
+              border: 2px solid lightblue;
+              display: flex;
+              flex-direction: column;
+              justify-content:center;
+              align-items: center;
+              justify-content: center;">
+              
+              <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px;
+                right: 20px; font-size: 20px;">
+              <i class="fas fa-times-circle" aria-hidden="true"></i>
+              </button>
+
+
+                <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">Add Link!</button>
+                <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;">Add Note!</button>
+                </div>
+        `
+
+        overlay.innerHTML = overlayHTML;
+        
+        
+        console.log(document.getElementsByTagName('button'))
+
+        //"Add Submission" Button Disappears
+        document.getElementById('submission-start').style = "display: none;"
+
+
+
+        //Exit button clicked
+        document.getElementById('exit-button').addEventListener('click', exitButton)
+
+        //Add Notes button clicked
+        document.getElementById('add-note').addEventListener('click', addNote)
+        
+        //Add link button clicked
+        document.getElementById('add-link').addEventListener('click', addLink)
+      }
+
+      //Add Notes  
+      function addNote(){
+        console.log('notessss')
+              overlay.innerHTML = `
                      <div id="wrapper" style=" 
                      width: 100%;
                      height: 100%;
@@ -436,6 +812,19 @@ var socket = io();
                      align-items: center;
                      justify-content: center;
                      font-family: helvetica, sans-serif;">
+
+                     <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
+                     <i class="fas fa-times-circle" aria-hidden="true"></i>
+                     </button>
+
+                     <button type="button" class="btn btn-primary" id="back-button" style="position: absolute; top: 20px; left: 20px; font-size: 20px;">
+                     <i class="fas fa-arrow-alt-circle-left"></i>
+                     </button>
+
+                     
+                     <span class = "note-preview-span" style="position: relative; padding-right: 160px;
+                     color: white; font-family: Helvetica Neue; margin-top: 25px;"> 
+                     Your Note Preview:</span>
 
                      <div class="notes-preview" id = "notes-content-preview" style= "
                      width: 300px;
@@ -453,6 +842,8 @@ var socket = io();
                      overflow: hidden;
                      text-align: center;
                      ">
+
+                     
                      
                      </div>
 
@@ -461,8 +852,13 @@ var socket = io();
 
 
                      </div>
-                     </div>`;
+                     `;
 
+                     //Exit Button Clicked
+                     document.getElementById('exit-button').addEventListener('click', exitButton)
+
+                     //Back Button Clicked
+                     document.getElementById('back-button').addEventListener('click', backButton)
                      
 
                      //This gets the boxes input value and inserts into the box (with textFit for resizing)
@@ -546,39 +942,18 @@ var socket = io();
                          socket.emit('postAddedUpdateDatabase', newPostInfo);
 
                         document.getElementById('overlay').remove();
+                        document.getElementById('submission-start').style = "float: right; padding: 10px; display: block;"
 
 
                      })
-                    
-                    })
+                    }
 
-                    
 
-          
-            
+            //Add Links
+            function addLink(){
+              console.log('linksss')
 
-            
-            //Add link button clicked
-            let AddLinkButton = document.getElementsByTagName('button')[2]
-            AddLinkButton.addEventListener('click', function(){
               overlay.innerHTML = `
-              <div class="overlay" style="
-              position: fixed;
-              right: 0px;
-              width: 50%;
-              height: 100%; 
-              border: 3px solid lightblue;
-              padding: 10px;
-              z-index: 2;
-              top: 0;
-              background-color: rgb(0, 0, 0);
-              background-color: rgba(0, 0, 0, 0.5);
-              transition: 1s;
-              align-items: center;
-              justify-content: center;">
-              
-
-
                      <div id="wrapper" style=" 
                      width: 100%;
                      height: 100%;
@@ -589,16 +964,29 @@ var socket = io();
                      align-items: center;
                      justify-content: center;">
 
+                     <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
+                     <i class="fas fa-times-circle" aria-hidden="true"></i>
+                     </button>
+
+                     <button type="button" class="btn btn-primary" id="back-button" style="position: absolute; top: 20px; left: 20px; font-size: 20px;">
+                     <i class="fas fa-arrow-alt-circle-left"></i>
+                     </button>
+
                      <input type="text" id="link-URL-input-Box" placeholder="Copy/Paste a link here" style="height: 10%; width: 50%;">
                      <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 1%; margin: 2%;">---></button>
 
 
-                     </div>
                      </div>`;
+
+               //Exit Button Clicked
+               document.getElementById('exit-button').addEventListener('click', exitButton)
+
+              //Back Button Clicked
+              document.getElementById('back-button').addEventListener('click', backButton)                     
 
                 
                 //Once URL is copied and pasted and next button is clicked
-                document.getElementsByTagName('button')[1].addEventListener('click', function(e){
+                document.getElementById('add-link').addEventListener('click', function(e){
                   e.preventDefault()
                   
                   //This is the URL Input Value
@@ -613,28 +1001,13 @@ var socket = io();
 
                 // This is the Post Preview
                 socket.on('newPostData', function(metadata){
+                  let linkType;
                   console.log(metadata)
                   // console.log(document.getElementsByTagName('div'))
 
                   if (metadata.url.includes(videoURL)){
 
                   overlay.innerHTML = `
-                  <div class="overlay" id="submission-overlay" style="
-                  position: fixed;
-                  right: 0px;
-                  width: 50%;
-                  height: 100%; 
-                  border: 3px solid lightblue;
-                  padding: 10px;
-                  z-index: 2;
-                  top: 0;
-                  background-color: rgb(0, 0, 0);
-                  background-color: rgba(0, 0, 0, 0.5);
-                  transition: 1s;
-                  align-items: center;
-                  justify-content: center;">
-
-
                      <div id="wrapper" style=" 
                      width: 100%;
                      height: 100%;
@@ -644,6 +1017,14 @@ var socket = io();
                      justify-content:center;
                      align-items: center;
                      justify-content: center;">
+
+                     <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
+                     <i class="fas fa-times-circle" aria-hidden="true"></i>
+                     </button>
+
+                     <button type="button" class="btn btn-primary" id="back-button" style="position: absolute; top: 20px; left: 20px; font-size: 20px;">
+                     <i class="fas fa-arrow-alt-circle-left"></i>
+                     </button>                     
 
                     <!-- Post Preview --!>
                      <div class="new-post" style= "
@@ -699,28 +1080,14 @@ var socket = io();
                      <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
                      </div>
                    
-                     </div>
-                     </div>`} 
+                     </div>`
+                    
+                    linkType = 'link-video'
+                  } 
                      
                      else if(metadata.url.includes(imgURL)){
                        console.log("wowww")
                        overlay.innerHTML = `
-                       <div class="overlay" id="submission-overlay" style="
-                        position: fixed;
-                        right: 0px;
-                        width: 50%;
-                        height: 100%; 
-                        border: 3px solid lightblue;
-                        padding: 10px;
-                        z-index: 2;
-                        top: 0;
-                        background-color: rgb(0, 0, 0);
-                        background-color: rgba(0, 0, 0, 0.5);
-                        transition: 1s;
-                        align-items: center;
-                        justify-content: center;">
-
-
                           <div id="wrapper" style=" 
                           width: 100%;
                           height: 100%;
@@ -730,6 +1097,14 @@ var socket = io();
                           justify-content:center;
                           align-items: center;
                           justify-content: center;">
+
+                          <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
+                          <i class="fas fa-times-circle" aria-hidden="true"></i>
+                          </button>
+     
+                          <button type="button" class="btn btn-primary" id="back-button" style="position: absolute; top: 20px; left: 20px; font-size: 20px;">
+                          <i class="fas fa-arrow-alt-circle-left"></i>
+                          </button>
 
                           <!-- Post Preview --!>
                           <div class="new-post" style= "
@@ -786,7 +1161,6 @@ var socket = io();
                      <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
                      </div>
                    
-                     </div>
                      </div>`
 
                      } 
@@ -794,22 +1168,6 @@ var socket = io();
                      else {
                        console.log('link normale')
                        overlay.innerHTML = `
-                  <div class="overlay" id="submission-overlay" style="
-                  position: fixed;
-                  right: 0px;
-                  width: 50%;
-                  height: 100%; 
-                  border: 3px solid lightblue;
-                  padding: 10px;
-                  z-index: 2;
-                  top: 0;
-                  background-color: rgb(0, 0, 0);
-                  background-color: rgba(0, 0, 0, 0.5);
-                  transition: 1s;
-                  align-items: center;
-                  justify-content: center;">
-
-
                      <div id="wrapper" style=" 
                      width: 100%;
                      height: 100%;
@@ -819,6 +1177,14 @@ var socket = io();
                      justify-content:center;
                      align-items: center;
                      justify-content: center;">
+
+                     <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
+                     <i class="fas fa-times-circle" aria-hidden="true"></i>
+                     </button>
+
+                     <button type="button" class="btn btn-primary" id="back-button" style="position: absolute; top: 20px; left: 20px; font-size: 20px;">
+                     <i class="fas fa-arrow-alt-circle-left"></i>
+                     </button>
 
                     <!-- Post Preview --!>
                      <div class="new-post" style= "
@@ -878,10 +1244,16 @@ var socket = io();
                      <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
                      </div>
                    
-                     </div>
                      </div>`
                      }
 
+                     //Exit Button Clicked
+                     document.getElementById('exit-button').addEventListener('click', exitButton)
+
+                     //Back Button Clicked
+                     document.getElementById('back-button').addEventListener('click', backButton)
+
+                     //Post Description Preview Input
                      document.getElementById('link-description-input-Box').addEventListener('keyup', function(e){
                        
                       document.getElementById('post-description-preview').textContent = document.getElementById('link-description-input-Box').value;
@@ -892,14 +1264,26 @@ var socket = io();
                      //Clicking "Submit Link" and submitting link
                      document.getElementById('submit-link').addEventListener('click', function(e){
                       //  console.log('woahhhh')
+
+                      //Definte linkType
+                      if(metadata.url.includes(videoURL)){
+                        linkType = "link-video"
+                      } else if(metadata.url.includes(imgURL || ".gif")){
+                        linkType = "link-img"
+                      } else {
+                        linkType = "link"
+                      }
+                      console.log(linkType)
+
                            //Create html element
                             var wrapper = document.createElement('div');
                             // <a href = "${metadata.url}">
                             //     <img src="${metadata.image}"></img></a>
+                            if(linkType === "link-video"){
                             var columnHTML = `
 
                             <div class="item">
-                            <div class="item-content" id="post" data-type="link" style="opacity: 1; transform: scale(1);">
+                            <div class="item-content" id="post" data-type="${linkType}" style="opacity: 1; transform: scale(1);">
                                   <!-- Safe zone, enter your custom markup -->
                                     <div class="link-content" id="link-master" style="
                                     position: relative;
@@ -941,7 +1325,102 @@ var socket = io();
                                     <!-- Safe zone ends -->
                                         </div>
                                 </div>
-                            `
+                            `} else if(linkType === "link-img"){
+                              console.log('gifff post!')
+                              var columnHTML= `
+                              <div class="item">
+                              <div class="item-content" id="post" data-type="${linkType}" style="opacity: 1; transform: scale(1);"></div>
+
+                              <!-- Safe zone, enter your custom markup -->
+                              <div class="link-content" id="link-master" style="
+                              position: relative;
+                              display: inline-block;">
+    
+                         <a href="${metadata.url}">
+                         <img src="${metadata.image}">
+                         </a>
+                             <div class="post-description" id="post-description-master" style="
+                                 position: absolute;
+                                 z-index: 999;
+                                 left: 0;
+                                 bottom: 0;
+                                 text-align: left;
+                                 font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                                 padding-bottom: 10px;
+                                 padding-left: 5px;
+                                 padding-top: 5px;
+                                 text-size-adjust: auto;
+                                 margin-right: 10px;
+                                 margin-bottom: 5px;
+                                 margin-left: 5px;
+                                 padding-right: 3px;
+                                 box-shadow: 3px -3px 0px 3px #00000052;
+                                 background-color: #8f3cb96b;
+                                 display: none;
+                                 /* background-color: #ff5c4ca3; */">
+    
+                                 <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
+    
+                                 <span id="post-description-preview" style="
+                                 margin-left: 5px;
+                                 font-size: 15px;
+                                 font-size-adjust: inherit;
+                                 font-variant-caps: titling-caps;
+                                 font-weight: bold;
+                                 ">${metadata.title}</span>
+                             </div>
+                             </div>
+                         <!-- Safe zone ends -->
+                         </div>
+                         </div>                        
+                         `
+                            } else {
+                              var columnHTML = 
+                              `<div class="item">
+                              <div class="item-content" id="post" data-type="${linkType}" style="opacity: 1; transform: scale(1);">
+                              <!-- Safe zone, enter your custom markup -->
+                              <div class="link-content" id="link-master" style="
+                              position: relative;
+                              display: inline-block;">
+
+                              <a href="${metadata.url}">
+                              <img src="${metadata.image}">
+                              </a>
+                                  <div class="post-description" id="post-description-master" style="
+                                      position: absolute;
+                                      z-index: 999;
+                                      left: 0;
+                                      bottom: 0;
+                                      text-align: left;
+                                      font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                                      padding-bottom: 10px;
+                                      padding-left: 5px;
+                                      padding-top: 5px;
+                                      text-size-adjust: auto;
+                                      margin-right: 10px;
+                                      margin-bottom: 5px;
+                                      margin-left: 5px;
+                                      padding-right: 3px;
+                                      box-shadow: 3px -3px 0px 3px #00000052;
+                                      background-color: #8f3cb96b;
+                                      /* background-color: #ff5c4ca3; */">
+
+                                      <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>LINK</b></span>
+
+                                      <span id="post-description-preview" style="
+                                      margin-left: 5px;
+                                      font-size: 15px;
+                                      font-size-adjust: inherit;
+                                      font-variant-caps: titling-caps;
+                                      font-weight: bold;
+                                      ">${metadata.title}</span>
+                                  </div>
+                                  </div>
+                              <!-- Safe zone ends -->
+                              </div>
+                              </div>`
+                              
+                            }
                             
 
                             //Grid.add function to properly add to grid
@@ -963,161 +1442,25 @@ var socket = io();
                               //Now that the post is added, the info is sent back to the server to be sent out to other clients and saved in the database
 
                               console.log(columnElem.children[0].attributes[2].nodeValue)
-                              
-                              //This will define link post type, and will put logic rules in here
-                              let postType = "link"
-
+   
                               //[Post Content, Post Type]
                               // let newPostInfo = [columnElem.innerHTML, columnElem.children[0].attributes[2].nodeValue]
                               
-
                               //NEW [Post Link, Post Image, Post Description, Post Type]
-                              let newPostInfo = [metadata.url, metadata.image, document.getElementById('link-description-input-Box').value, postType]
+                              let newPostInfo = [metadata.url, metadata.image, document.getElementById('link-description-input-Box').value, linkType]
                               console.log(newPostInfo)
 
                               socket.emit('postAddedUpdateDatabase', newPostInfo);
 
-                              document.getElementById('submission-overlay').remove();
-
-                              
+                              document.getElementById('overlay').remove();
+                              document.getElementById('submission-start').style = "float: right; padding: 10px; display: block;"
 
                           })
                      })
 
-                })
 
-
-
-              }
-
-
-
-          //Adding new post to page for all clients simultaneously
-          socket.on('someoneElseAddedNewPost', function(data){
-            console.log(data);
-
-            if(data[3] === "link"){
-
-            //Create html element with new GIF URL in it
-            var wrapper = document.createElement('div');
-            var columnHTML = `
-            <div class="item">
-            <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);">
-                  <!-- Safe zone, enter your custom markup -->
-                    <div class="link-content" id="link-master" style="
-                    position: relative;
-                    display: inline-block;">
-
-                    <a href="${data[0]}">
-                    <img src="${data[1]}">
-                    </a>
-                        <div class="post-description" id="post-description-master" style="
-                            position: absolute;
-                            z-index: 999;
-                            left: 0;
-                            bottom: 0;
-                            text-align: left;
-                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                            padding-bottom: 10px;
-                            padding-left: 5px;
-                            padding-top: 5px;
-                            text-size-adjust: auto;
-                            margin-right: 10px;
-                            margin-bottom: 5px;
-                            margin-left: 5px;
-                            padding-right: 3px;
-                            box-shadow: 3px -3px 0px 3px #00000052;
-                            background-color: #8f3cb96b;
-                            /* background-color: #ff5c4ca3; */">
-
-                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
-
-                            <span id="post-description" style="
-                            margin-left: 5px;
-                            font-size: 15px;
-                            font-size-adjust: inherit;
-                            font-variant-caps: titling-caps;
-                            font-weight: bold;
-                            ">${data[2]}</span>
-                        </div>
-                        </div>
-                    <!-- Safe zone ends -->
-                        </div>
-                </div>
-            `
-            
-            //Grid.add function to properly add to grid
-            wrapper.innerHTML = columnHTML;
-            var columnElem = wrapper.children[0]; 
-            // console.log(columnElem.children[0].innerHTML);
-            grid.add([columnElem], {index: 0});
-
-            //Refresh the layout once page is loaded
-          function respaceItems(){
-            grid.refreshItems().layout();
-            console.log('Respaced! With New Gif!')
-            }
-
-        //Runs on timeout because it takes a second to load the gif
-            setTimeout(respaceItems, 300);
-
-            } 
-            
-            else if(data[3] === "note"){
-
-              var wrapper = document.createElement('div');
-              var columnHTML = `
-              <div class="item">
-                <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);">
-                <!-- Safe zone, enter your custom markup -->
-  
-                <div class="notes-content" id = "notes-content" style= "
-                width: 300px;
-                height: 300px;
-                color: white;
-                background: rgb(19 191 247);
-                text-shadow: 2px 2px 0px black;
-                word-wrap: break-word;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-weight: bold;
-                padding: 5px;
-                overflow: hidden;
-                ">
-                <span class="textFitted" style="${data[2]}">
-                ${data[0]}
-                </span>
-                </div>
-                  
-                <!-- Safe zone ends -->
-                </div>
-              </div>
-              `       
-                           
-              
-          //Grid.add function to properly add to grid
-          wrapper.innerHTML = columnHTML;
-          var columnElem = wrapper.children[0]; 
-          // console.log(columnElem.children[0].innerHTML);
-          grid.add([columnElem], {index: 0});
-
-          //Refresh the layout once page is loaded
-          function respaceItems(){
-            grid.refreshItems().layout();
-            console.log('Respaced! With New Gif!')
-            }
-
-        //Runs on timeout because it takes a second to load the gif
-            setTimeout(respaceItems, 300);
 
             }
-
-            
-          })
-
-         
-
           
           
 

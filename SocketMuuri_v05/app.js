@@ -204,8 +204,6 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
 
 
-
-
 http.listen(3000, () => {
   console.log('listening on *:3000');
 
