@@ -339,8 +339,10 @@ var socket = io();
             //Push [index, Post Link, Post Image, Post Description, Post Type] before move
             let i;
             for(i = 0; i < gridItems.length; i++ ){
-              if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "link" || "link-video" || "link-img"){
-                // console.log('link post')
+              let postingType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue
+              console.log(postingType)
+
+              if(postingType === 'link'){
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
                 let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
@@ -348,19 +350,40 @@ var socket = io();
                 let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
 
                 gridItemSnapShotBeforeDrag.push([i, postLink , postImage, postDescription, postType])
-              } 
-              else if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "note") {
-                // console.log('notes post')
+
+              } else if (postingType === 'link-img'){
+                console.log('not this guyyyy')
+
+                let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
+                let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
+                let postImage = gridItems[i]._element.childNodes[1].childNodes[3].childNodes[1].childNodes[1].currentSrc
+                let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
+
+                gridItemSnapShotBeforeDrag.push([i, postLink , postImage, postDescription, postType])
+
+
+              } else if(postingType === 'link-video'){
+
+                let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
+                let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
+                let postImage = gridItems[i]._element.childNodes[1].childNodes[3].childNodes[1].childNodes[1].currentSrc
+                let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
+
+                gridItemSnapShotBeforeDrag.push([i, postLink , postImage, postDescription, postType])
+
+              } else if (postingType === 'note'){
 
                 let postLink = gridItems[i]._element.children[0].children[0].children[0].innerHTML
-                let postDescription = gridItems[i]._element.children[0].children[0].children[0].attributes[1].value
+                let postDescription = gridItems[i]._element.children[0].children[0].children[0].attributes[1].nodeValue
                 let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
 
                 gridItemSnapShotBeforeDrag.push([i, postLink, null, postDescription, postType])
+
+
               }
             }
 
-            // console.log(gridItemSnapShotBeforeDrag);
+            console.log(gridItemSnapShotBeforeDrag);
       
           })
 
@@ -380,26 +403,50 @@ var socket = io();
             //Push [index, link, image, description, type] after move
             let i;
             for(i = 0; i < gridItems.length; i++ ){
-              if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "link" || "link-video" || "link-img"){
-                // console.log('link post')
+              let postingType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue
+              console.log(postingType)
+
+              if(postingType === 'link'){
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
                 let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
                 let postImage = gridItems[i]._element.childNodes[1].childNodes[3].childNodes[1].childNodes[1].currentSrc
                 let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
 
+                gridItemSnapShotAfterDrag.push([i, postLink , postImage, postDescription, postType])
+
+              } else if (postingType === 'link-img'){
+                console.log('not this guyyyy')
+
+                let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
+                let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
+                let postImage = gridItems[i]._element.childNodes[1].childNodes[3].childNodes[1].childNodes[1].currentSrc
+                let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
 
                 gridItemSnapShotAfterDrag.push([i, postLink , postImage, postDescription, postType])
-              } 
-              else if(gridItems[i]._element.childNodes[1].attributes[2].nodeValue === "note") {
-                // console.log('notes post')
+
+
+              } else if(postingType === 'link-video'){
+
+                let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
+                let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
+                let postImage = gridItems[i]._element.childNodes[1].childNodes[3].childNodes[1].childNodes[1].currentSrc
+                let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
+
+                gridItemSnapShotAfterDrag.push([i, postLink , postImage, postDescription, postType])
+
+              } else if (postingType === 'note'){
+
                 let postLink = gridItems[i]._element.children[0].children[0].children[0].innerHTML
-                let postDescription = gridItems[i]._element.children[0].children[0].children[0].attributes[1].value
+                let postDescription = gridItems[i]._element.children[0].children[0].children[0].attributes[1].nodeValue
                 let postType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue;
 
                 gridItemSnapShotAfterDrag.push([i, postLink, null, postDescription, postType])
+
+
               }
             }
+           
 
             console.log(gridItemSnapShotAfterDrag)
 
@@ -499,53 +546,53 @@ var socket = io();
             } else if(data[3] === "link-img"){
               //Create html element with new GIF URL in it
               var wrapper = document.createElement('div');
-              var columnHTML= `
-                              <div class="item">
-                              <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);"></div>
+              var columnHTML = `
 
-                              <!-- Safe zone, enter your custom markup -->
-                              <div class="link-content" id="link-master" style="
-                              position: relative;
-                              display: inline-block;">
-    
-                         <a href="${data[0]}">
-                         <img src="${data[1]}">
-                         </a>
-                             <div class="post-description" id="post-description-master" style="
-                                 position: absolute;
-                                 z-index: 999;
-                                 left: 0;
-                                 bottom: 0;
-                                 text-align: left;
-                                 font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                                 padding-bottom: 10px;
-                                 padding-left: 5px;
-                                 padding-top: 5px;
-                                 text-size-adjust: auto;
-                                 margin-right: 10px;
-                                 margin-bottom: 5px;
-                                 margin-left: 5px;
-                                 padding-right: 3px;
-                                 box-shadow: 3px -3px 0px 3px #00000052;
-                                 background-color: #8f3cb96b;
-                                 display: none;
-                                 /* background-color: #ff5c4ca3; */">
-    
-                                 <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
-    
-                                 <span id="post-description-preview" style="
-                                 margin-left: 5px;
-                                 font-size: 15px;
-                                 font-size-adjust: inherit;
-                                 font-variant-caps: titling-caps;
-                                 font-weight: bold;
-                                 ">${data[2]}</span>
-                             </div>
-                             </div>
-                         <!-- Safe zone ends -->
-                         </div>
-                         </div>                        
-                         `
+                              <div class="item">
+                              <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);">
+                                    <!-- Safe zone, enter your custom markup -->
+                                      <div class="link-content" id="link-master" style="
+                                      position: relative;
+                                      display: inline-block;">
+  
+                                      <a href="${data[0]}">
+                                      <img src="${data[1]}">
+                                      </a>
+                                          <div class="post-description" id="post-description-master" style="
+                                              position: absolute;
+                                              z-index: 999;
+                                              left: 0;
+                                              bottom: 0;
+                                              text-align: left;
+                                              font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                                              padding-bottom: 10px;
+                                              padding-left: 5px;
+                                              padding-top: 5px;
+                                              text-size-adjust: auto;
+                                              margin-right: 10px;
+                                              margin-bottom: 5px;
+                                              margin-left: 5px;
+                                              padding-right: 3px;
+                                              box-shadow: 3px -3px 0px 3px #00000052;
+                                              background-color: #8f3cb96b;
+                                              display:none;
+                                              /* background-color: #ff5c4ca3; */">
+  
+                                              <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
+  
+                                              <span id="post-description" style="
+                                              margin-left: 5px;
+                                              font-size: 15px;
+                                              font-size-adjust: inherit;
+                                              font-variant-caps: titling-caps;
+                                              font-weight: bold;
+                                              ">${data[2]}</span>
+                                          </div>
+                                          </div>
+                                      <!-- Safe zone ends -->
+                                          </div>
+                                  </div>
+                              `
             } 
 
             else if(data[3] === "note"){
@@ -986,26 +1033,93 @@ var socket = io();
 
                 
                 //Once URL is copied and pasted and next button is clicked
-                document.getElementById('add-link').addEventListener('click', function(e){
+                document.getElementById('link-URL-input-Box').addEventListener('paste', function(e){
                   e.preventDefault()
-                  
-                  //This is the URL Input Value
-                  let urlInputValue = document.getElementsByTagName('input')[0].value
-                  console.log(document.getElementsByTagName('input')[0].value)
-                  let url = urlInputValue
-                  if (url.includes(videoURL)){
-                    console.log('IT DOES CONTAIN YOUTUBE')
+                  console.log(e);
+                  let paste = (event.clipboardData || window.clipboardData).getData('text');
+                  console.log(paste);
+                  e.path[0].placeholder = paste;
+
+                  //A loader runs on a timer just before sending the link
+                  function loader(){
+                    let wrapper = document.getElementById('wrapper')
+                    wrapper.innerHTML = `
+
+                     <div class="loader" id= "post-loader" style = "  border: 16px solid #f3f3f3; /* Light grey */
+                     border-top: 16px solid #3498db; /* Blue */
+                     border-radius: 50%;
+                     width: 120px;
+                     height: 120px;
+                     animation: spin 2s linear infinite;"></div>
+                    `
+                    document.getElementById('post-loader').animate([
+                      {transform: 'rotate(0deg)'},
+                      {transform:'rotate(360deg)'}
+                    ],{
+                      duration: 1000,
+                      iterations: Infinity
+                    })
+                    
                   }
-                  socket.emit('linkSubmit', url)                  
+
+                  setTimeout(loader, 300);
+
+                  //The Link is sent to the server
+                  function submitLinkToServer(){
+                    let url = paste
+                    if (url.includes(videoURL)){
+                      console.log('IT DOES CONTAIN YOUTUBE')
+                    }
+                    socket.emit('linkSubmit', url)
+                  }
+
+                  setTimeout(submitLinkToServer, 1000)
+                
                 })
+                
+                
+
 
                 // This is the Post Preview
                 socket.on('newPostData', function(metadata){
                   let linkType;
                   console.log(metadata)
-                  // console.log(document.getElementsByTagName('div'))
 
-                  if (metadata.url.includes(videoURL)){
+                  //These are the different preview builds
+                  if(metadata === 'no dice'){ console.log('not gonna happen!')
+                  overlay.innerHTML = `
+                     <div id="wrapper" style=" 
+                     width: 100%;
+                     height: 100%;
+                     border: 2px solid lightblue;
+                     display: flex;
+                     flex-direction: column;
+                     justify-content:center;
+                     align-items: center;
+                     justify-content: center;">
+
+                     <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
+                     <i class="fas fa-times-circle" aria-hidden="true"></i>
+                     </button>
+
+                     <button type="button" class="btn btn-primary" id="back-button" style="position: absolute; top: 20px; left: 20px; font-size: 20px;">
+                     <i class="fas fa-arrow-alt-circle-left"></i>
+                     </button>
+                      
+                     <span id = "error-text" style="color: white; font-family:Helvetica Neue;">Unable to create a post from your pasted URL!</span>
+
+                     <textarea id="link-description-input-Box" placeholder="Post Description" style="height: 20%; width: 50%; display: none;">${metadata.title}</textarea>
+                     <div class= "button-holder" style = "margin: 2%; display: none;">
+                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
+                     </div>
+                     
+                     </div>
+                     `   
+                     
+                     
+              }             
+
+                  else if (metadata.url.includes(videoURL)){
 
                   overlay.innerHTML = `
                      <div id="wrapper" style=" 
@@ -1327,53 +1441,54 @@ var socket = io();
                                 </div>
                             `} else if(linkType === "link-img"){
                               console.log('gifff post!')
-                              var columnHTML= `
-                              <div class="item">
-                              <div class="item-content" id="post" data-type="${linkType}" style="opacity: 1; transform: scale(1);"></div>
+                              var columnHTML = `
 
-                              <!-- Safe zone, enter your custom markup -->
-                              <div class="link-content" id="link-master" style="
-                              position: relative;
-                              display: inline-block;">
-    
-                         <a href="${metadata.url}">
-                         <img src="${metadata.image}">
-                         </a>
-                             <div class="post-description" id="post-description-master" style="
-                                 position: absolute;
-                                 z-index: 999;
-                                 left: 0;
-                                 bottom: 0;
-                                 text-align: left;
-                                 font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                                 padding-bottom: 10px;
-                                 padding-left: 5px;
-                                 padding-top: 5px;
-                                 text-size-adjust: auto;
-                                 margin-right: 10px;
-                                 margin-bottom: 5px;
-                                 margin-left: 5px;
-                                 padding-right: 3px;
-                                 box-shadow: 3px -3px 0px 3px #00000052;
-                                 background-color: #8f3cb96b;
-                                 display: none;
-                                 /* background-color: #ff5c4ca3; */">
-    
-                                 <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
-    
-                                 <span id="post-description-preview" style="
-                                 margin-left: 5px;
-                                 font-size: 15px;
-                                 font-size-adjust: inherit;
-                                 font-variant-caps: titling-caps;
-                                 font-weight: bold;
-                                 ">${metadata.title}</span>
-                             </div>
-                             </div>
-                         <!-- Safe zone ends -->
-                         </div>
-                         </div>                        
-                         `
+                              <div class="item">
+                              <div class="item-content" id="post" data-type="${linkType}" style="opacity: 1; transform: scale(1);">
+                                    <!-- Safe zone, enter your custom markup -->
+                                      <div class="link-content" id="link-master" style="
+                                      position: relative;
+                                      display: inline-block;">
+  
+                                      <a href="${metadata.url}">
+                                      <img src="${metadata.image}">
+                                      </a>
+                                          <div class="post-description" id="post-description-master" style="
+                                              position: absolute;
+                                              z-index: 999;
+                                              left: 0;
+                                              bottom: 0;
+                                              text-align: left;
+                                              font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                                              padding-bottom: 10px;
+                                              padding-left: 5px;
+                                              padding-top: 5px;
+                                              text-size-adjust: auto;
+                                              margin-right: 10px;
+                                              margin-bottom: 5px;
+                                              margin-left: 5px;
+                                              padding-right: 3px;
+                                              box-shadow: 3px -3px 0px 3px #00000052;
+                                              background-color: #8f3cb96b;
+                                              display:none;
+                                              /* background-color: #ff5c4ca3; */">
+  
+                                              <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
+  
+                                              <span id="post-description" style="
+                                              margin-left: 5px;
+                                              font-size: 15px;
+                                              font-size-adjust: inherit;
+                                              font-variant-caps: titling-caps;
+                                              font-weight: bold;
+                                              ">${document.getElementById('link-description-input-Box').value}</span>
+                                          </div>
+                                          </div>
+                                      <!-- Safe zone ends -->
+                                          </div>
+                                  </div>
+                              `
+                              
                             } else {
                               var columnHTML = 
                               `<div class="item">
@@ -1407,7 +1522,7 @@ var socket = io();
 
                                       <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>LINK</b></span>
 
-                                      <span id="post-description-preview" style="
+                                      <span id="post-description" style="
                                       margin-left: 5px;
                                       font-size: 15px;
                                       font-size-adjust: inherit;

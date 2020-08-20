@@ -50,22 +50,40 @@ io.on('connection', (socket) => {
     const targetUrl = data;
 
     //Scrapes the data for the Metadata
-    (async () => {
+    async function run() { 
+      
+      //Successful MetaData
+      try {
+
       const { body: html, url } = await got(targetUrl)
       const metadata = await metascraper({ html, url })
-      // console.log('metadata below')
-      // console.log(metadata)
+      console.log('metadata below')
+      console.log(metadata)
 
       //Sends new post metadata back to original client
       socket.emit('newPostData', metadata);
 
       //Sends new post metadata to everyone connected to update immediately
       // socket.broadcast.emit('someoneElseAddedNewPost', metadata);
-    })()
+
+      }
+      //No MetaData found
+      catch(e){
+        metadata = "no dice"
+        socket.emit('newPostData', metadata);
+        // console.log(e)
+      }
+      finally {
+        console.log('The MetaData has been sent back')
+      }
+
+    }
+
+    run()
 
 
+    })
   })
-})
 
 
 //This Code works from here on down
