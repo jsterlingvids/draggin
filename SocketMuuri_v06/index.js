@@ -475,6 +475,89 @@ var socket = io();
         moveDataServerUpdate()
 
 
+//Clicking Posts
+
+      document.getElementById('main-grid').addEventListener('click', postBuildOut)
+
+      function postBuildOut(e){
+        e.preventDefault();
+        console.log('I`M CLICKING')
+        console.log(e)
+
+        //Post Type
+        let postType = e.path[3].attributes[2].nodeValue
+
+        //Post Image
+        let postImage = e.path[2].childNodes[1].childNodes[1].src
+
+        //Post Link
+        let postLink = e.path[2].childNodes[1].href
+
+        //Post Description
+        let postDescription = e.path[2].childNodes[3].childNodes[3].textContent
+
+        //Post Description Type
+        let postDescriptionType = e.path[2].childNodes[3].childNodes[1].textContent
+
+        //Build Out Wrapper HTML
+        var buildOutWrapper = document.createElement('div');
+        buildOutWrapper.id = "post-buildout-wrapper"
+
+        let postBuildOutHTML = `
+        <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
+
+          <div id = "post-buildout-image" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
+            <img src = "${postImage}"></img>
+          </div>
+
+          <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
+          <div id = "messages-holder">
+          <ul class="messages" style ="
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          overflow: hidden;
+          overflow-y: auto;  
+          padding-bottom: 100px;
+          padding-left: 10px;
+          " id= "chat-messages"></ul>
+          </div>
+          <input class="inputMessage" id = "chat-input" style = "position: relative;top: 225px;width: 100%;height: 60px;" placeholder="Type here..."/>
+          </div>
+          
+        </div>
+        `
+
+        buildOutWrapper.innerHTML = postBuildOutHTML
+
+        document.getElementById('master-div').appendChild(buildOutWrapper)
+
+        document.getElementById('main-grid').style = "filter: blur(4px);"
+
+        //
+        document.getElementById('chat-input').addEventListener('keyup', function(){
+          if (event.keyCode === 13) {
+            console.log(document.getElementById('chat-input').value)
+            var chatMessageNode = document.createElement("LI"); 
+            let chatMessageText = document.getElementById('chat-input').value
+            let chatMessageTextNode = document.createTextNode(chatMessageText)
+            chatMessageNode.appendChild(chatMessageTextNode);
+            document.getElementById('chat-messages').appendChild(chatMessageNode)
+
+            // $messages[0].scrollTop = $messages[0].scrollHeight;
+            document.getElementById('chat-messages').scrollTop = 
+            document.getElementById('chat-messages').scrollHeight
+
+            document.getElementById('chat-input').value = "";
+
+
+          }
+
+        })
+
+      }
+
+
 //Adding Links
 
           let addSomethingButton = document.getElementById('add-something')
