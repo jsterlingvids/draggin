@@ -475,6 +475,165 @@ var socket = io();
         moveDataServerUpdate()
 
 
+//Clicking Posts
+
+      document.getElementById('main-grid').addEventListener('click', postBuildOut)
+
+      function postBuildOut(e){
+        e.preventDefault();
+        console.log('I`M CLICKING')
+        console.log(e)
+
+        //Create username based on emojis
+        let emojis = [
+          '😄','😃','😀','😊','☺','😉','😍','😘','😚','😗','😙','😜','😝','😛','😳','😁','😔','😌','😒','😞','😣','😢','😂','😭','😪','😥','😰','😅','😓','😩','😫','😨','😱','😠','😡','😤','😖','😆','😋','😷','😎','😴','😵','😲','😟','😦','😧','😈','👿','😮','😬','😐','😕','😯','😶','😇','😏','😑','👲','👳','👮','👷','💂','👶','👦','👧','👨','👩','👴','👵','👱','👼','👸','😺','😸','😻','😽','😼','🙀','😿','😹','😾','👹','👺','🙈','🙉','🙊','💀','👽','💩','🔥','✨','🌟','💫','💥','💢','💦','💧','💤','💨','👂','👀','👃','👅','👄','👍','👎','👌','👊','✊','✌','👋','✋','👐','👆','👇','👉','👈','🙌','🙏','☝','👏','💪','🚶','🏃','💃','👫','👪','👬','👭','💏','💑','👯','🙆','🙅','💁','🙋','💆','💇','💅','👰','🙎','🙍','🙇','🎩','👑','👒','👟','👞','👡','👠','👢','👕','👔','👚','👗','🎽','👖','👘','👙','💼','👜','👝','👛','👓','🎀','🌂','💄','💛','💙','💜','💚','❤','💔','💗','💓','💕','💖','💞','💘','💌','💋','💍','💎','👤','👥','💬','👣','💭','🐶','🐺','🐱','🐭','🐹','🐰','🐸','🐯','🐨','🐻','🐷','🐽','🐮','🐗','🐵','🐒','🐴','🐑','🐘','🐼','🐧','🐦','🐤','🐥','🐣','🐔','🐍','🐢','🐛','🐝','🐜','🐞','🐌','🐙','🐚','🐠','🐟','🐬','🐳','🐋','🐄','🐏','🐀','🐃','🐅','🐇','🐉','🐎','🐐','🐓','🐕','🐖','🐁','🐂','🐲','🐡','🐊','🐫','🐪','🐆','🐈','🐩','🐾','💐','🌸','🌷','🍀','🌹','🌻','🌺','🍁','🍃','🍂','🌿','🌾','🍄','🌵','🌴','🌲','🌳','🌰','🌱','🌼','🌐','🌞','🌝','🌚','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌜','🌛','🌙','🌍','🌎','🌏','🌋','🌌','🌠','⭐','☀','⛅','☁','⚡','☔','❄','⛄','🌀','🌁','🌈','🌊','🎍','💝','🎎','🎒','🎓','🎏','🎆','🎇','🎐','🎑','🎃','👻','🎅','🎄','🎁','🎋','🎉','🎊','🎈','🎌','🔮','🎥','📷','📹','📼','💿','📀','💽','💾','💻','📱','☎','📞','📟','📠','📡','📺','📻','🔊','🔉','🔈','🔇','🔔','🔕','📢','📣','⏳','⌛','⏰','⌚','🔓','🔒','🔏','🔐','🔑','🔎','💡','🔦','🔆','🔅','🔌','🔋','🔍','🛁','🛀','🚿','🚽','🔧','🔩','🔨','🚪','🚬','💣','🔫','🔪','💊','💉','💰','💴','💵','💷','💶','💳','💸','📲','📧','📥','📤','✉','📩','📨','📯','📫','📪','📬','📭','📮','📦','📝','📄','📃','📑','📊','📈','📉','📜','📋','📅','📆','📇','📁','📂','✂','📌','📎','✒','✏','📏','📐','📕','📗','📘','📙','📓','📔','📒','📚','📖','🔖','📛','🔬','🔭','📰','🎨','🎬','🎤','🎧','🎼','🎵','🎶','🎹','🎻','🎺','🎷','🎸','👾','🎮','🃏','🎴','🀄','🎲','🎯','🏈','🏀','⚽','⚾','🎾','🎱','🏉','🎳','⛳','🚵','🚴','🏁','🏇','🏆','🎿','🏂','🏊','🏄','🎣','☕','🍵','🍶','🍼','🍺','🍻','🍸','🍹','🍷','🍴','🍕','🍔','🍟','🍗','🍖','🍝','🍛','🍤','🍱','🍣','🍥','🍙','🍘','🍚','🍜','🍲','🍢','🍡','🍳','🍞','🍩','🍮','🍦','🍨','🍧','🎂','🍰','🍪','🍫','🍬','🍭','🍯','🍎','🍏','🍊','🍋','🍒','🍇','🍉','🍓','🍑','🍈','🍌','🍐','🍍','🍠','🍆','🍅','🌽','🏠','🏡','🏫','🏢','🏣','🏥','🏦','🏪','🏩','🏨','💒','⛪','🏬','🏤','🌇','🌆','🏯','🏰','⛺','🏭','🗼','🗾','🗻','🌄','🌅','🌃','🗽','🌉','🎠','🎡','⛲','🎢','🚢','⛵','🚤','🚣','⚓','🚀','✈','💺','🚁','🚂','🚊','🚉','🚞','🚆','🚄','🚅','🚈','🚇','🚝','🚋','🚃','🚎','🚌','🚍','🚙','🚘','🚗','🚕','🚖','🚛','🚚','🚨','🚓','🚔','🚒','🚑','🚐','🚲','🚡','🚟','🚠','🚜','💈','🚏','🎫','🚦','🚥','⚠','🚧','🔰','⛽','🏮','🎰','♨','🗿','🎪','🎭','📍','🚩','⬆','⬇','⬅','➡','🔠','🔡','🔤','↗','↖','↘','↙','↔','↕','🔄','◀','▶','🔼','🔽','↩','↪','ℹ','⏪','⏩','⏫','⏬','⤵','⤴','🆗','🔀','🔁','🔂','🆕','🆙','🆒','🆓','🆖','📶','🎦','🈁','🈯','🈳','🈵','🈴','🈲','🉐','🈹','🈺','🈶','🈚','🚻','🚹','🚺','🚼','🚾','🚰','🚮','🅿','♿','🚭','🈷','🈸','🈂','Ⓜ','🛂','🛄','🛅','🛃','🉑','㊙','㊗','🆑','🆘','🆔','🚫','🔞','📵','🚯','🚱','🚳','🚷','🚸','⛔','✳','❇','❎','✅','✴','💟','🆚','📳','📴','🅰','🅱','🆎','🅾','💠','➿','♻','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','⛎','🔯','🏧','💹','💲','💱','©','®','™','〽','〰','🔝','🔚','🔙','🔛','🔜','❌','⭕','❗','❓','❕','❔','🔃','🕛','🕧','🕐','🕜','🕑','🕝','🕒','🕞','🕓','🕟','🕔','🕠','🕕','🕖','🕗','🕘','🕙','🕚','🕡','🕢','🕣','🕤','🕥','🕦','✖','➕','➖','➗','♠','♥','♣','♦','💮','💯','✔','☑','🔘','🔗','➰','🔱','🔲','🔳','◼','◻','◾','◽','▪','▫','🔺','⬜','⬛','⚫','⚪','🔴','🔵','🔻','🔶','🔷','🔸','🔹'
+        ];
+
+
+        let username = emojis[Math.floor(Math.random() * emojis.length)] + emojis[Math.floor(Math.random() * emojis.length)] + emojis[Math.floor(Math.random() * emojis.length)]
+        
+        console.log(username)
+
+        //Post Type
+        let postType = e.path[3].attributes[2].nodeValue
+
+        //Post Image
+        let postImage = e.path[2].childNodes[1].childNodes[1].src
+
+        //Post Link
+        let postLink = e.path[2].childNodes[1].href
+
+        //Post Description
+        let postDescription = e.path[2].childNodes[3].childNodes[3].textContent
+
+        //Post Description Type
+        let postDescriptionType = e.path[2].childNodes[3].childNodes[1].textContent
+
+        //Build Out Wrapper HTML
+        var buildOutWrapper = document.createElement('div');
+        buildOutWrapper.id = "post-buildout-wrapper"
+
+        let postBuildOutHTML = `
+        <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
+
+        <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
+        <i class="fas fa-times-circle" aria-hidden="true"></i>
+        </button>
+
+          <div id = "post-buildout-image" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
+            <img src = "${postImage}"></img>
+          </div>
+
+          <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
+          <div id = "messages-holder">
+          <ul class="messages" style ="
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          overflow: hidden;
+          overflow-y: auto;  
+          padding-bottom: 100px;
+          padding-left: 10px;
+          " id= "chat-messages"></ul>
+          </div>
+          <div id = "username-display" style="
+          position: absolute;
+          top: 225px;
+          background: white;
+          padding-top: 20px;
+          padding-bottom: 15px;
+          padding-left: 5px;
+          font-size: 20px;
+          padding-right: 5px;
+          ">${username}</div>
+          <input class="inputMessage" id = "chat-input" style = "position: relative;top: 225px;width: 82.3%;height: 65px;left: 72px;" placeholder="says....">
+          </div>
+          
+        </div>
+        `
+
+        buildOutWrapper.innerHTML = postBuildOutHTML
+
+        document.getElementById('master-div').appendChild(buildOutWrapper)
+
+        //Blur the background
+        document.getElementById('main-grid').style = "filter: blur(4px);"
+
+        document.getElementById('exit-button').addEventListener('click', buildOutExit)
+
+        //Exit button clicked
+        function buildOutExit(){
+          console.log('exit button')
+          document.getElementById('post-buildout-wrapper').remove()
+          document.getElementById('main-grid').style = ""
+
+        }
+
+
+        //When the buildout is opened, socket will join the specific chatroom based on the link URL
+        let room = postLink;
+        socket.emit('join-room', room)
+
+        //DON'T FORGET TO ADD LEAVE LATER
+        //socket.leave('room1');
+
+        // Chat Input
+        document.getElementById('chat-input').focus()
+
+        document.getElementById('chat-input').addEventListener('keyup', function(){
+
+          //Get the value of the chat input box, and send it on pressing enter
+          if (event.keyCode === 13) {
+            
+            console.log(document.getElementById('chat-input').value)
+            console.log(username)
+            
+            console.log(room)
+
+            //Create nodes to properly append to the UI
+            var chatMessageNode = document.createElement("LI"); 
+            let chatMessageText = document.getElementById('chat-input').value
+            let chatMessageTextNode = document.createTextNode(username + ": " + chatMessageText)
+            chatMessageNode.appendChild(chatMessageTextNode);
+            document.getElementById('chat-messages').appendChild(chatMessageNode)
+
+            // $messages[0].scrollTop = $messages[0].scrollHeight;
+            document.getElementById('chat-messages').scrollTop = 
+            document.getElementById('chat-messages').scrollHeight
+
+            let message = document.getElementById('chat-input').value
+
+            //Send the message to the server
+            socket.emit('chat-message-sent', username, message, room)
+
+
+            //Clear the input
+            document.getElementById('chat-input').value = "";
+
+          }
+
+        })
+
+        //When a message is sent from someone else, this is what the server sends to you
+        socket.on('send-message-to-all', function(otherUsername, message){
+          // console.log(otherUsername)
+          // console.log(message);
+
+          //The message is add to a created element and appended
+          var receivedChatMessageNode = document.createElement("LI");
+          let receivedChatMessageTextNode = document.createTextNode(otherUsername + ": " + message)
+
+          receivedChatMessageNode.appendChild(receivedChatMessageTextNode);
+          document.getElementById('chat-messages').appendChild(receivedChatMessageNode)
+
+          //ChEck
+
+
+        })
+
+      }
+
+
 //Adding Links
 
           let addSomethingButton = document.getElementById('add-something')
