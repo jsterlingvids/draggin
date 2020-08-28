@@ -626,6 +626,8 @@ var socket = io();
           receivedChatMessageNode.appendChild(receivedChatMessageTextNode);
           document.getElementById('chat-messages').appendChild(receivedChatMessageNode)
 
+          //ChEck
+
 
         })
 
