@@ -516,6 +516,10 @@ var socket = io();
         let postBuildOutHTML = `
         <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
 
+        <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
+        <i class="fas fa-times-circle" aria-hidden="true"></i>
+        </button>
+
           <div id = "post-buildout-image" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
             <img src = "${postImage}"></img>
           </div>
@@ -552,9 +556,30 @@ var socket = io();
 
         document.getElementById('master-div').appendChild(buildOutWrapper)
 
+        //Blur the background
         document.getElementById('main-grid').style = "filter: blur(4px);"
 
+        document.getElementById('exit-button').addEventListener('click', buildOutExit)
+
+        //Exit button clicked
+        function buildOutExit(){
+          console.log('exit button')
+          document.getElementById('post-buildout-wrapper').remove()
+          document.getElementById('main-grid').style = ""
+
+        }
+
+
+        //When the buildout is opened, socket will join the specific chatroom based on the link URL
+        let room = postLink;
+        socket.emit('join-room', room)
+
+        //DON'T FORGET TO ADD LEAVE LATER
+        //socket.leave('room1');
+
         // Chat Input
+        document.getElementById('chat-input').focus()
+
         document.getElementById('chat-input').addEventListener('keyup', function(){
 
           //Get the value of the chat input box, and send it on pressing enter
@@ -562,6 +587,8 @@ var socket = io();
             
             console.log(document.getElementById('chat-input').value)
             console.log(username)
+            
+            console.log(room)
 
             //Create nodes to properly append to the UI
             var chatMessageNode = document.createElement("LI"); 
@@ -574,10 +601,31 @@ var socket = io();
             document.getElementById('chat-messages').scrollTop = 
             document.getElementById('chat-messages').scrollHeight
 
+            let message = document.getElementById('chat-input').value
+
+            //Send the message to the server
+            socket.emit('chat-message-sent', username, message, room)
+
+
+            //Clear the input
             document.getElementById('chat-input').value = "";
 
-
           }
+
+        })
+
+        //When a message is sent from someone else, this is what the server sends to you
+        socket.on('send-message-to-all', function(otherUsername, message){
+          // console.log(otherUsername)
+          // console.log(message);
+
+          //The message is add to a created element and appended
+          var receivedChatMessageNode = document.createElement("LI");
+          let receivedChatMessageTextNode = document.createTextNode(otherUsername + ": " + message)
+
+          receivedChatMessageNode.appendChild(receivedChatMessageTextNode);
+          document.getElementById('chat-messages').appendChild(receivedChatMessageNode)
+
 
         })
 

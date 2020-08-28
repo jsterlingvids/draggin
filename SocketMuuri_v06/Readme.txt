@@ -2,7 +2,9 @@
 
 Styling! Styling the posts
 
-Adding and distinguishing between specific post types: video, article and image and gif (line 561)
+- Saving/Retreiving Chat Messages To/From the server
+- Different buildouts for different post types
+- Livestreams on Buildout and Server Logic for retrieving streams
 
 
 How it works (refresher):

@@ -120,6 +120,22 @@ io.on('connection', (socket) => {
 //   });
 // });
 
+//Chat Message Handling
+io.on('connection', (socket) => {
+  socket.on('join-room', function(room){
+    socket.join(room)
+  })
+
+  socket.on('chat-message-sent', function(username, message, room){
+    console.log(room);
+    console.log(username);
+    console.log(message);
+    socket.join(room)
+
+    socket.broadcast.to(room).emit('send-message-to-all', username, message)
+  })
+})
+
 //Mongo DB Stuff
 MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mongodb.net/test?retryWrites=true&w=majority", {useUnifiedTopology: true}) 
   .then(client => {
