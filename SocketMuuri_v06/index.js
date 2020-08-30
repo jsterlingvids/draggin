@@ -509,6 +509,11 @@ var socket = io();
         //Post Description Type
         let postDescriptionType = e.path[2].childNodes[3].childNodes[1].textContent
 
+        //Retrive Previous Messages from the Server
+        socket.emit('retrieve-chat-messages', postLink)
+
+       
+
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
         buildOutWrapper.id = "post-buildout-wrapper"
@@ -569,6 +574,20 @@ var socket = io();
 
         }
 
+        //Append incoming server messages
+        socket.on('archived-chat-messages-from-server', function(data){
+          // console.log(data[0].message_and_username)
+
+          //Loops through each message on the server and creates a node to load into the window
+          data[0].message_and_username.forEach(data => {
+            // console.log(data)
+            var chatMessageNode = document.createElement("LI"); 
+            let chatMessageTextNode = document.createTextNode(data[0].username + ": " + data[0].message)
+            chatMessageNode.appendChild(chatMessageTextNode);
+            document.getElementById('chat-messages').appendChild(chatMessageNode)
+          })  
+        })
+
 
         //When the buildout is opened, socket will join the specific chatroom based on the link URL
         let room = postLink;
@@ -603,8 +622,12 @@ var socket = io();
 
             let message = document.getElementById('chat-input').value
 
-            //Send the message to the server
+            //Send the message to the server and to others
             socket.emit('chat-message-sent', username, message, room)
+
+            let chatMessageToSendToServer = [{'username': username, 'message': message, 'room': room}]
+            console.log(chatMessageToSendToServer[0].username)
+            socket.emit('chat-message-to-server', chatMessageToSendToServer)
 
 
             //Clear the input

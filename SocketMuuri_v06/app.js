@@ -141,7 +141,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   .then(client => {
   console.log('Connected to Database')
   const collection = client.db("test").collection("test");
-  const position = client.db("test").collection("position");
+  const chatMessages = client.db("test").collection("chat-messages");
 
   // On load get gif data
   io.on('connection', (socket) => {
@@ -232,6 +232,33 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   
 })
 })
+
+//Getting and loading chat messages
+io.on('connection', (socket) => {
+  // console.log('Grabbing chat messages...');
+
+  //When a user connects to a page, chat messages are retrieved
+  socket.on('retrieve-chat-messages', function(data){
+    chatMessages.find({'room_id': data}).toArray()
+    .then(res => {
+    socket.emit('archived-chat-messages-from-server', res)
+    console.log(res)})
+    .catch(err => console.log(err))
+  })
+
+
+  //When a user sends a message, the server is updated with the messages
+  socket.on('chat-message-to-server', function(data){
+    console.log(data[0].username)
+    chatMessages.findOneAndUpdate(
+      {"room_id": data[0].room },
+      { $push:  {'message_and_username':[{'message': data[0].message, 'username': data[0].username}]}}, {upsert: true}).then(res => console.log(res)).catch(err => console.log(err))
+  })
+
+
+});
+
+
 
 })
 .catch(error => console.error(error))

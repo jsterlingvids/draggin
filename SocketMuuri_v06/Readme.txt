@@ -2,9 +2,11 @@
 
 Styling! Styling the posts
 
-- Saving/Retreiving Chat Messages To/From the server
+- Exiting rooms on disconnection
 - Different buildouts for different post types
 - Livestreams on Buildout and Server Logic for retrieving streams
+
+- Deleting posts once there are more than 150
 
 
 How it works (refresher):
