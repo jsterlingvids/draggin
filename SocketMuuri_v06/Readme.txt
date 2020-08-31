@@ -2,10 +2,9 @@
 
 Styling! Styling the posts
 
-- Exiting rooms on disconnection
+- Updating livestream post images
+- Deleting Livestreams when they're done
 - Different buildouts for different post types
-- Livestreams on Buildout and Server Logic for retrieving streams
-
 - Deleting posts once there are more than 150
 
 

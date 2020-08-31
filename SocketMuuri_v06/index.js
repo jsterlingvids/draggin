@@ -1,5 +1,7 @@
 //Declaring constants
 
+// const Peer = require("peerjs");
+
 // const { link } = require("fs");
 
 const videoURL = "youtube.com" || "youtu.be";
@@ -189,7 +191,66 @@ var socket = io();
 
         
             
-          } else {
+          } else if(newData[i]["Post Type"] === 'live-stream'){
+
+            var wrapper = document.createElement('div');
+        
+        
+            var columnHTML = `
+            <div class="item">
+            <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
+                  <!-- Safe zone, enter your custom markup -->
+                    <div class="link-content" id="link-master" style="
+                    position: relative;
+                    display: inline-block;">
+    
+                    <a href="${newData[i]["Post Link"]}">
+                    <img src="${newData[i]["Post Image"]}">
+                    </a>
+                        <div class="post-description" id="post-description-master" style="
+                            position: absolute;
+                            z-index: 999;
+                            left: 0;
+                            bottom: 0;
+                            text-align: left;
+                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                            padding-bottom: 10px;
+                            padding-left: 5px;
+                            padding-top: 5px;
+                            text-size-adjust: auto;
+                            margin-right: 10px;
+                            margin-bottom: 5px;
+                            margin-left: 5px;
+                            padding-right: 3px;
+                            box-shadow: 3px -3px 0px 3px #00000052;
+                            background-color: #8f3cb96b;
+                            display: none;
+                            /* background-color: #ff5c4ca3; */">
+    
+                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
+    
+                            <span id="post-description" style="
+                            margin-left: 5px;
+                            font-size: 15px;
+                            font-size-adjust: inherit;
+                            font-variant-caps: titling-caps;
+                            font-weight: bold;
+                            ">${newData[i]["Post Description"]}</span>
+                        </div>
+                        </div>
+                    <!-- Safe zone ends -->
+                        </div>
+                </div>
+            `
+    
+            //Grid.add function to properly add to grid
+            wrapper.innerHTML = columnHTML;
+            var columnElem = wrapper.children[0]; 
+            grid.add([columnElem]);
+
+          }
+          
+          else {
 
             var wrapper = document.createElement('div');
         
@@ -481,7 +542,7 @@ var socket = io();
 
       function postBuildOut(e){
         e.preventDefault();
-        console.log('I`M CLICKING')
+        // console.log('I`M CLICKING')
         console.log(e)
 
         //Create username based on emojis
@@ -512,7 +573,101 @@ var socket = io();
         //Retrive Previous Messages from the Server
         socket.emit('retrieve-chat-messages', postLink)
 
-       
+        //If post is livestream emit from socket to get info
+        if (postType === "live-stream"){
+          console.log('we got a livestream on our hands')
+
+        //Build Out Wrapper HTML
+        var buildOutWrapper = document.createElement('div');
+        buildOutWrapper.id = "post-buildout-wrapper"
+
+        let postBuildOutHTML = `
+        <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
+
+        <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
+        <i class="fas fa-times-circle" aria-hidden="true"></i>
+        </button>
+
+          <div id = "video-grid-stream" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
+            
+          </div>
+
+          <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
+          <div id = "messages-holder">
+          <ul class="messages" style ="
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          overflow: hidden;
+          overflow-y: auto;  
+          padding-bottom: 100px;
+          padding-left: 10px;
+          " id= "chat-messages"></ul>
+          </div>
+          <div id = "username-display" style="
+          position: absolute;
+          top: 225px;
+          background: white;
+          padding-top: 20px;
+          padding-bottom: 15px;
+          padding-left: 5px;
+          font-size: 20px;
+          padding-right: 5px;
+          ">${username}</div>
+          <input class="inputMessage" id = "chat-input" style = "position: relative;top: 225px;width: 82.3%;height: 65px;left: 72px;" placeholder="says....">
+          </div>
+          
+        </div>
+        `
+
+        buildOutWrapper.innerHTML = postBuildOutHTML
+
+        document.getElementById('master-div').appendChild(buildOutWrapper)
+
+        let videoGrid = document.getElementById('video-grid-stream')
+
+
+          let visitorPeer = new Peer();
+
+          //Seperate out Socket ID and Peer ID from Link
+          let IdsPath = e.path[1].href
+          let IdsPathSplitSlash = IdsPath.split('/')
+          let IdsPathSplitComma = IdsPathSplitSlash[3].split(',')
+          console.log(IdsPathSplitComma)
+
+          //I need the socketID to emit directly to the person livestreaming
+          let OtherPeerId = IdsPathSplitComma[0]
+          let OtherSocketId = IdsPathSplitComma[1]
+
+          //Once the page is open, it generates a PeerId for the person who wants to get the stream
+          visitorPeer.on('open', function(id) {
+            console.log('My peer ID is: ' + id);
+            myVisitorPeerId = id;
+
+            socket.emit('i-want-to-watch-livestream', myVisitorPeerId, OtherSocketId)
+          
+          })
+
+          //The Person sending the stream sends back the info once a call is initiated, the stream plays in the windows
+          visitorPeer.on('call', function(call){
+            console.log('callll')
+            call.answer();
+            const video = document.createElement('video')
+            video.id = "video-play"
+            video.style = "width:100%; height:100%;"
+            call.on('stream', function(stream){
+              console.log(stream)
+              video.srcObject = stream
+              video.play().then(_ => {
+                videoGrid.append(video)
+              })
+            } )
+
+          })
+
+          
+          
+        } else {
 
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
@@ -560,6 +715,7 @@ var socket = io();
         buildOutWrapper.innerHTML = postBuildOutHTML
 
         document.getElementById('master-div').appendChild(buildOutWrapper)
+      }
 
         //Blur the background
         document.getElementById('main-grid').style = "filter: blur(4px);"
@@ -571,7 +727,6 @@ var socket = io();
           console.log('exit button')
           document.getElementById('post-buildout-wrapper').remove()
           document.getElementById('main-grid').style = ""
-
         }
 
         //Append incoming server messages
@@ -1772,7 +1927,7 @@ var socket = io();
             //Add LiveStream function
             function addLiveStream(){
 
-              console.log('notessss')
+              console.log('LiveStream')
               overlay.innerHTML = `
                      <div id="wrapper" style=" 
                      width: 100%;
@@ -1849,24 +2004,26 @@ var socket = io();
                           console.log('heyyy')
                           console.log(stream)
 
+                          exitButton()
+
                           //Taking screenshot of Stream
                           let video2 = document.getElementById("video-play");
                           let canvas = document.getElementById('thumbnail')
                           let width = '200px'
                           let height = '200px'
                           var context = canvas.getContext('2d');
-                          context.drawImage(video2, 10, 10);
-                          var data = canvas.toDataURL('image/png');
-                          console.log(data)
+                          context.drawImage(video2, 1, 1);
+                          var screenShot = canvas.toDataURL('image/jpg');
+                          console.log(screenShot)
                          
           
-          
+                          //Adding to grid with Screenshot as Image
                           var columnHTML = `
                           <div class="item">
                           <div class="item-content" id="post" data-type="live-stream" style="opacity: 1; transform: scale(1);">
                                 <!-- Safe zone, enter your custom markup -->
                                 <div id= "video-grid">
-                                <img src="${data}"></img>
+                                <img src="${screenShot}"></img>
                                 </div>
                                   <!-- Safe zone ends -->
                                       </div>
@@ -1879,9 +2036,39 @@ var socket = io();
                           wrapper.innerHTML = columnHTML;
                           var columnElem = wrapper.children[0]; 
                           console.log(wrapper)
-                          grid.add([columnElem]);
+                          grid.add([columnElem], { index: 0 });
+
+                          setTimeout(respaceItems, 300);
+
+                          //This creates the little mini stream in the bottom left hand
+                          let streamingVideoGrid = document.createElement('div')
+                          streamingVideoGrid.id = "my-streaming-video-div"
+                          streamingVideoGrid.style = "position: fixed;bottom: 0; z-index: 3;"
+                          let myStreamingVideo = document.createElement('video')
+                          myStreamingVideo.muted = true;
+                          myStreamingVideo.style = "width: 250px;"
+                          myStreamingVideo.id = "streaming-video-play"
+                          myStreamingVideo.srcObject = stream;
+                          streamingVideoGrid.append(myStreamingVideo)
+                          myStreamingVideo.play()
+
+                          document.getElementById('master-div').append(streamingVideoGrid)
+
+                          //Submitting to Server
+                          //NEW [[peer ID, Socket.id], Post Image, Post Description, Post Type]
+                          let newPostInfo = [[peer.id, socket.id], screenShot, null, 'live-stream']
+                          console.log(newPostInfo)
+
+                          socket.emit('postAddedUpdateDatabase', newPostInfo);
 
 
+                          //Message from server when someone wants to connect to my stream, contains the PeerID of the person who wants to connect
+                          socket.on('someoneWantsMyStream', function(data){
+                            console.log(data)
+                            //A call is initiated, the data is the destination ID of the client
+                            var call = peer.call(data, stream)
+                          })
+                          
 
                         })
 

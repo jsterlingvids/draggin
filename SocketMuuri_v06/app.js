@@ -264,6 +264,20 @@ io.on('connection', (socket) => {
 .catch(error => console.error(error))
 
 
+//Requesting a LiveStream
+io.on('connection',(socket) => {
+  socket.on('i-want-to-watch-livestream', function(myVisitorPeerId, OthersocketId){
+    //myVisitorPeerId is the Peer ID of the person who wants the stream
+    console.log(myVisitorPeerId)
+    
+    //OthersocketId is the Socket ID of the person streaming, so this event goes directly to them
+    console.log(OthersocketId)
+
+    socket.to(OthersocketId).emit('someoneWantsMyStream', myVisitorPeerId)
+    })
+  })
+
+
 
 http.listen(3000, () => {
   console.log('listening on *:3000');
