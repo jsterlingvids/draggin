@@ -4,7 +4,8 @@ Styling! Styling the posts
 
 - Updating livestream post images
 - Deleting Livestreams when they're done
-    - MUST GET MUURI TO DELETE SPECIFIC ITEM BASED ON ID
+    - Deleting a livestream messes up the whole MongoDB
+        - I think I need to delete the post, and then reorder the Database
     - peer.on('disconnect'......)
     - Delete Stream on refresh!
 - Different buildouts for different post types

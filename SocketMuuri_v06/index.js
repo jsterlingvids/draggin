@@ -200,7 +200,7 @@ var socket = io();
             <div class="item">
             <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
                   <!-- Safe zone, enter your custom markup -->
-                    <div class="link-content" id="${newData[i]["Post Link"]}" style="
+                    <div class="link-content" id="${newData[i]["Post Link"]}" data-type="${newData[i]["Post Link"]}" style="
                     position: relative;
                     display: inline-block;">
     
@@ -1977,6 +1977,7 @@ var socket = io();
             //Add LiveStream function
             function addLiveStream(){
 
+              
               console.log('LiveStream')
               overlay.innerHTML = `
                      <div id="wrapper" style=" 
@@ -2074,7 +2075,7 @@ var socket = io();
                           <div class="item">
                           <div class="item-content" id="${postID}" data-type="live-stream" style="opacity: 1; transform: scale(1);">
                                 <!-- Safe zone, enter your custom markup -->
-                                <div id= "video-grid">
+                                <div id= "video-grid" data-type="${postID}">
                                 <img src="${screenShot}"></img>
                                 </div>
                                   <!-- Safe zone ends -->
@@ -2220,18 +2221,29 @@ var socket = io();
             socket.on('someone-has-stopped-livestreaming', function(data)
             {
               console.log(data)
-              const parent = document.getElementById(data);
               
-              console.log(document.querySelector("#" + data))
-              let elementToRemove = document.querySelector("#" + data)
-              console.log(elementToRemove.parentElement)
-              console.log(grid.getItem(elementToRemove.parentNode)._element)
+              console.log(grid.getItems())
+
+              //Loop through all grid items to find the one that matches the data and remove
+              let i;
+
+              for(i = 0; i < grid.getItems().length; i++){
+                if(grid.getItems()[i]._element.children[0].lastElementChild.attributes[1].nodeValue === data){
+                  console.log('remove it!')
+                  console.log(i)
+                  // console.log(grid.getItem(i))
+                  grid.remove(grid.getItems(i), { removeElements: true })
+                } else {
+                  
+                  console.log('don`t remove it')
+                }
+              }
               
               // console.log()
 
               
               
-              grid.remove(grid.getItem(elementToRemove.parentNode)._element)
+              // grid.remove(grid.getItem(elementToRemove.parentNode)._element)
             })
 
 
