@@ -31,15 +31,15 @@ var host = process.env.HOST || '0.0.0.0';
 // Listen on a specific port via the PORT environment variable
 var port = process.env.PORT || 8080;
  
-var cors_proxy = require('cors-anywhere');
-const { resolve } = require('path');
-cors_proxy.createServer({
-    originWhitelist: [], // Allow all origins
-    requireHeader: ['origin', 'x-requested-with'],
-    removeHeaders: ['cookie', 'cookie2']
-}).listen(port, host, function() {
-    console.log('Running CORS Anywhere on ' + host + ':' + port);
-});
+// var cors_proxy = require('cors-anywhere');
+// const { resolve } = require('path');
+// cors_proxy.createServer({
+//     originWhitelist: [], // Allow all origins
+//     requireHeader: ['origin', 'x-requested-with'],
+//     removeHeaders: ['cookie', 'cookie2']
+// }).listen(port, host, function() {
+//     console.log('Running CORS Anywhere on ' + host + ':' + port);
+// });
 
 // Get metadata from post url after new link is submitted
 io.on('connection', (socket) => {
@@ -127,9 +127,9 @@ io.on('connection', (socket) => {
   })
 
   socket.on('chat-message-sent', function(username, message, room){
-    console.log(room);
-    console.log(username);
-    console.log(message);
+    // console.log(room);
+    // console.log(username);
+    // console.log(message);
     socket.join(room)
 
     socket.broadcast.to(room).emit('send-message-to-all', username, message)
@@ -180,7 +180,22 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
   //Adding new Post to Database logic
   io.on('connection', (socket) => 
-  {socket.on('postAddedUpdateDatabase', function(newPostInfo){
+
+  {
+
+    //Deleting Livestream from Database on End
+    socket.on('stream-has-stopped', function(data){
+      console.log('yahhhoooo')
+      console.log(data)
+      collection.deleteOne({"Post Link": data})
+
+      io.emit('someone-has-stopped-livestreaming', data)
+    })
+    
+    
+    
+    
+    socket.on('postAddedUpdateDatabase', function(newPostInfo){
 
     //Sends new post metadata to everyone connected to update immediately
     socket.broadcast.emit('someoneElseAddedNewPost', newPostInfo);
@@ -220,8 +235,6 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
         // console.log('item')
         collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Link": item[1], "Post Image": item[2], "Post Description": item[3], "Post Type": item[4]}}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
       })
-
-      
 
     
   })
@@ -266,6 +279,7 @@ io.on('connection', (socket) => {
 
 //Requesting a LiveStream
 io.on('connection',(socket) => {
+
   socket.on('i-want-to-watch-livestream', function(myVisitorPeerId, OthersocketId){
     //myVisitorPeerId is the Peer ID of the person who wants the stream
     console.log(myVisitorPeerId)
@@ -274,6 +288,11 @@ io.on('connection',(socket) => {
     console.log(OthersocketId)
 
     socket.to(OthersocketId).emit('someoneWantsMyStream', myVisitorPeerId)
+    })
+
+    //Update Stream Screenshot
+    socket.on('update-stream-screenshot', function(data1, data2){
+      io.emit('new-stream-screenshot', data1, data2)
     })
   })
 

@@ -200,7 +200,7 @@ var socket = io();
             <div class="item">
             <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
                   <!-- Safe zone, enter your custom markup -->
-                    <div class="link-content" id="link-master" style="
+                    <div class="link-content" id="${newData[i]["Post Link"]}" style="
                     position: relative;
                     display: inline-block;">
     
@@ -963,8 +963,58 @@ var socket = io();
                 <!-- Safe zone ends -->
                 </div>
               </div>
-              `    }  else {
-                            //Create html element with new GIF URL in it
+              `    }  else if (data[3] === "live-stream"){
+                console.log('live-streaminggg')
+                var wrapper = document.createElement('div');
+                var columnHTML = `
+                <div class="item">
+                <div class="item-content" id="post" data-type="${data[3]}" style="opacity: 1; transform: scale(1);">
+                      <!-- Safe zone, enter your custom markup -->
+                        <div class="link-content" id="${data[0]}" style="
+                        position: relative;
+                        display: inline-block;">
+        
+                        <a href="${data[0]}">
+                        <img src="${data[1]}">
+                        </a>
+                            <div class="post-description" id="post-description-master" style="
+                                position: absolute;
+                                z-index: 999;
+                                left: 0;
+                                bottom: 0;
+                                text-align: left;
+                                font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
+                                padding-bottom: 10px;
+                                padding-left: 5px;
+                                padding-top: 5px;
+                                text-size-adjust: auto;
+                                margin-right: 10px;
+                                margin-bottom: 5px;
+                                margin-left: 5px;
+                                padding-right: 3px;
+                                box-shadow: 3px -3px 0px 3px #00000052;
+                                background-color: #8f3cb96b;
+                                display: none;
+                                /* background-color: #ff5c4ca3; */">
+        
+                                <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
+        
+                                <span id="post-description" style="
+                                margin-left: 5px;
+                                font-size: 15px;
+                                font-size-adjust: inherit;
+                                font-variant-caps: titling-caps;
+                                font-weight: bold;
+                                ">${data[2]}</span>
+                            </div>
+                            </div>
+                        <!-- Safe zone ends -->
+                            </div>
+                    </div>
+                `
+              }
+              else {
+            //Create html element with new GIF URL in it
             var wrapper = document.createElement('div');
             var columnHTML = `
             <div class="item">
@@ -2016,11 +2066,13 @@ var socket = io();
                           var screenShot = canvas.toDataURL('image/jpg');
                           console.log(screenShot)
                          
+                          //Create unique post id
+                          let postID = socket.id
           
                           //Adding to grid with Screenshot as Image
                           var columnHTML = `
                           <div class="item">
-                          <div class="item-content" id="post" data-type="live-stream" style="opacity: 1; transform: scale(1);">
+                          <div class="item-content" id="${postID}" data-type="live-stream" style="opacity: 1; transform: scale(1);">
                                 <!-- Safe zone, enter your custom markup -->
                                 <div id= "video-grid">
                                 <img src="${screenShot}"></img>
@@ -2054,9 +2106,34 @@ var socket = io();
 
                           document.getElementById('master-div').append(streamingVideoGrid)
 
+                          //Stop Stream button
+                          let stopStreamingButton = document.createElement('button')
+                          stopStreamingButton.innerHTML = `<i class="fas fa-arrow-alt-circle-left"></i>`
+                          stopStreamingButton.style = "width: 10%;position: fixed;bottom: 0;z-index: 3;height: 10%;left: 20%;"
+                          stopStreamingButton.className = "btn btn-primary"
+                          stopStreamingButton.id = "stop-streaming"
+
+                          document.getElementById('master-div').append(stopStreamingButton)
+
+                          
+
+                          //Create canvas element for Thumbnails
+                          let thumbnailCanvas = document.createElement('canvas')
+                          thumbnailCanvas.id = "thumbnail-update-canvas"
+                          thumbnailCanvas.style = "width:300px; height: 300px;position: fixed; bottom: 0px; display: none;"
+
+                          document.getElementById('master-div').append(thumbnailCanvas)
+
+
                           //Submitting to Server
                           //NEW [[peer ID, Socket.id], Post Image, Post Description, Post Type]
-                          let newPostInfo = [[peer.id, socket.id], screenShot, null, 'live-stream']
+
+                          //Before we can send, we need to join the IDs to create a unique post ID that we can use in the database
+                          // let postLinkToJoin = [peer.id, socket.id]
+                          // let postLinkJoined = postLinkToJoin.join();
+                          // console.log(postLinkJoined)
+
+                          let newPostInfo = [postID, screenShot, null, 'live-stream']
                           console.log(newPostInfo)
 
                           socket.emit('postAddedUpdateDatabase', newPostInfo);
@@ -2067,16 +2144,97 @@ var socket = io();
                             console.log(data)
                             //A call is initiated, the data is the destination ID of the client
                             var call = peer.call(data, stream)
+
+                          })
+
+                          //Function to take a screenshot every 10 (15?) seconds and update
+                          function canvasUpdate(){
+                          let videoThumbUpdate = document.getElementById("streaming-video-play");
+                          let videoThumbUpdateCanvas = document.getElementById('thumbnail-update-canvas')
+                          // let width = '200px'
+                          // let height = '200px'
+                          var contextUpdate = videoThumbUpdateCanvas.getContext('2d');
+                          contextUpdate.drawImage(videoThumbUpdate, 1, 1);
+                          var screenShot = videoThumbUpdateCanvas.toDataURL('image/jpg');
+                          // console.log(screenShot)
+
+                         
+
+                          socket.emit('update-stream-screenshot', screenShot, postID)
+                        
+                        }
+
+
+                          //Function is run on an interval
+                          let screenshotUpdateInterval = setInterval(canvasUpdate, 5000)
+
+                          //Stop the stream
+                          document.getElementById('stop-streaming').addEventListener('click', function(){
+                            
+                            console.log('stop stream')
+                            
+                            stream.getTracks().forEach(track => track.stop());
+
+                            peer.disconnect();
+
+                            clearInterval(screenshotUpdateInterval)
+
+                            
+
+                            socket.emit('stream-has-stopped', postID)
+
                           })
                           
 
                         })
+
+
 
                     
                       })
 
 
             }
+
+
+            //When a new screenshot comes in
+            socket.on('new-stream-screenshot', function(screenshot, pageID){
+              console.log('guess a screenshot is coming in!')
+              // console.log(screenshot)
+              console.log(pageID)
+
+              //Convert to the right pageID
+              // let pageIDString = pageID.join()
+              // console.log(pageIDString)
+
+              //Grab the page ID
+              screenshotChange = document.getElementById(pageID)
+              console.log(screenshotChange.children)
+
+              // //Update the Screenshot
+              screenshotChange.children[0].childNodes[1].src = screenshot
+
+            })
+
+            //When a livestream has stopped message comes in
+            socket.on('someone-has-stopped-livestreaming', function(data)
+            {
+              console.log(data)
+              const parent = document.getElementById(data);
+              
+              console.log(document.querySelector("#" + data))
+              let elementToRemove = document.querySelector("#" + data)
+              console.log(elementToRemove.parentElement)
+              console.log(grid.getItem(elementToRemove.parentNode)._element)
+              
+              // console.log()
+
+              
+              
+              grid.remove(grid.getItem(elementToRemove.parentNode)._element)
+            })
+
+
           
           
 

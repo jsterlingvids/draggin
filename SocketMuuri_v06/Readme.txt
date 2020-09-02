@@ -4,6 +4,9 @@ Styling! Styling the posts
 
 - Updating livestream post images
 - Deleting Livestreams when they're done
+    - MUST GET MUURI TO DELETE SPECIFIC ITEM BASED ON ID
+    - peer.on('disconnect'......)
+    - Delete Stream on refresh!
 - Different buildouts for different post types
 - Deleting posts once there are more than 150
 
