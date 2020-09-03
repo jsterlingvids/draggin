@@ -521,6 +521,14 @@ var socket = io();
 
               else if (postingType === 'live-stream'){
 
+                let postLink = gridItems[i]._element.childNodes[1].children[0].attributes[1].value.split(',');
+                // console.log(postLink)
+                let postDescription = null
+                let postImage = gridItems[i]._element.children[0].children[0].children[0].children[0].currentSrc;
+                let postType = postingType;
+
+                gridItemSnapShotAfterDrag.push([i, postLink, postImage, postDescription, postType])
+
               }
             }
            
@@ -2229,10 +2237,10 @@ var socket = io();
 
               //Grab the page ID
               screenshotChange = document.getElementById(pageID)
-              console.log(screenshotChange.children)
+              console.log(screenshotChange.children[0])
 
-              // //Update the Screenshot
-              screenshotChange.children[0].childNodes[1].src = screenshot
+              //Update the Screenshot
+              screenshotChange.children[0].children[0].childNodes[1].src = screenshot
 
             })
 

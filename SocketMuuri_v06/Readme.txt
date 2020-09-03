@@ -4,10 +4,12 @@ Styling! Styling the posts
 
 - Updating livestream post images
 - Deleting Livestreams when they're done
-    - Fixing Moving
     - peer.on('disconnect'......)
-    - Delete Stream on refresh!
+    - Make the video stream window disappear
+    - What happens when someone is watching the chat and a stream ends?
+    - Delete Stream on refresh (and back)!
 - Different buildouts for different post types
+    - Notes
 - Deleting posts once there are more than 150
 
 
