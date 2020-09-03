@@ -185,10 +185,44 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
     //Deleting Livestream from Database on End
     socket.on('stream-has-stopped', function(data){
-      console.log('yahhhoooo')
-      console.log(data)
-      collection.deleteOne({"Post Link": data})
+      // console.log('yahhhoooo')
+      // console.log(data)
 
+      //First an Async Function to properly delete from Database and return an array of the new Database
+      async function deleteDatabase(){
+        let databaseDelete = await collection.deleteOne({"Post Link": data})
+
+        let databaseRecompile = await collection.find().toArray()
+
+        let databaseReUpload = await databaseRecompile.map(item => [item["Post Link"], item["Post Image"], item["Post Description"], item["Post Type"]])
+
+
+        return databaseReUpload
+      }
+
+      //After the Async function is run, the database is numerated and reuploaded (just like posting)
+
+      deleteDatabase().then(res => {
+
+        //Adds a number to the array
+        let i;
+        for(i = 0; i < res.length; i++){
+          // console.log(updateDatabaseArray[i])
+          res[i].splice(0,0,i)
+        }
+
+        // console.log(res)
+
+        //Then goes through each item and updates based on the link content (for some reason the index number would not work)
+        res.forEach(item => {
+          // console.log(item)
+          collection.findOneAndUpdate({"Post Link": item[1]}, {$set: {"index": item[0], "Post Link": item[1], "Post Image": item[2], "Post Description": item[3], "Post Type": item[4]}}).then(res=> console.log("These posts are updated")).catch(err => console.log(err))
+        })
+
+      })
+      
+
+      //Emit to everyone that the live stream is gone
       io.emit('someone-has-stopped-livestreaming', data)
     })
     
@@ -200,15 +234,14 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
     //Sends new post metadata to everyone connected to update immediately
     socket.broadcast.emit('someoneElseAddedNewPost', newPostInfo);
     //New Post Data [Post HTML content]
-    console.log('----CHECK IT OUT-----')
-    console.log(newPostInfo)
+    // console.log('----CHECK IT OUT-----')
+    // console.log(newPostInfo)
 
     //Get current database
     collection.find().toArray().then(res => {
       console.log('here')
       // console.log(res)
       let databaseEntries = res;
-      // console.log(databaseEntries)
 
       //Map current Database entries to new array to easily add new link info
       let updateDatabaseArray = databaseEntries.map(item => [item["Post Link"], item["Post Image"], item["Post Description"], item["Post Type"]]);
@@ -240,8 +273,6 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   })
     .catch(err => console.log(err))
   
-
-  //Adds new post to database
   
 })
 })
