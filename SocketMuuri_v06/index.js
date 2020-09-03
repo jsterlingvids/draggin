@@ -442,6 +442,17 @@ var socket = io();
                 gridItemSnapShotBeforeDrag.push([i, postLink, null, postDescription, postType])
 
 
+              } 
+              else if (postingType === 'live-stream'){
+
+                let postLink = gridItems[i]._element.childNodes[1].children[0].attributes[1].value.split(',');
+                // console.log(postLink)
+                let postDescription = null
+                let postImage = gridItems[i]._element.children[0].children[0].children[0].children[0].currentSrc;
+                let postType = postingType;
+
+                gridItemSnapShotBeforeDrag.push([i, postLink, postImage, postDescription, postType])
+                
               }
             }
 
@@ -505,6 +516,10 @@ var socket = io();
 
                 gridItemSnapShotAfterDrag.push([i, postLink, null, postDescription, postType])
 
+
+              }
+
+              else if (postingType === 'live-stream'){
 
               }
             }
@@ -2077,7 +2092,9 @@ var socket = io();
                           <div class="item-content" id="${postID}" data-type="live-stream" style="opacity: 1; transform: scale(1);">
                                 <!-- Safe zone, enter your custom markup -->
                                 <div id= "video-grid" data-type="${postID}">
+                                <a href = "${postID}">
                                 <img src="${screenShot}"></img>
+                                </a>
                                 </div>
                                   <!-- Safe zone ends -->
                                       </div>
@@ -2223,6 +2240,8 @@ var socket = io();
             socket.on('someone-has-stopped-livestreaming', function(data)
             {
               console.log(data)
+              idToRemove = data.join()
+              console.log(idToRemove)
               
               console.log(grid.getItems())
 
@@ -2230,7 +2249,7 @@ var socket = io();
               let i;
 
               for(i = 0; i < grid.getItems().length; i++){
-                if(grid.getItems()[i]._element.children[0].lastElementChild.attributes[1].nodeValue === data){
+                if(grid.getItems()[i]._element.children[0].lastElementChild.attributes[1].nodeValue === idToRemove){
                   console.log('remove it!')
                   console.log(i)
                   // console.log(grid.getItem(i))

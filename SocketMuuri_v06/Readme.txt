@@ -5,7 +5,6 @@ Styling! Styling the posts
 - Updating livestream post images
 - Deleting Livestreams when they're done
     - Fixing Moving
-    - Fix the actual information that is shared to get a call working
     - peer.on('disconnect'......)
     - Delete Stream on refresh!
 - Different buildouts for different post types
