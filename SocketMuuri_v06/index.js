@@ -2068,7 +2068,8 @@ var socket = io();
                           console.log(screenShot)
                          
                           //Create unique post id
-                          let postID = socket.id
+                          let postID = [peer.id, socket.id]
+                          console.log(postID)
           
                           //Adding to grid with Screenshot as Image
                           var columnHTML = `
@@ -2178,6 +2179,7 @@ var socket = io();
 
                             peer.disconnect();
 
+                            //Stop the stream from sending screenshots
                             clearInterval(screenshotUpdateInterval)
 
                             
