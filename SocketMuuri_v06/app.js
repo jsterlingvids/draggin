@@ -120,10 +120,47 @@ io.on('connection', (socket) => {
 //   });
 // });
 
+// let numUsers = 0;
+
 //Chat Message Handling
 io.on('connection', (socket) => {
-  socket.on('join-room', function(room){
-    socket.join(room)
+  
+  let numClients = {};
+  socket.on('join-room', function(room, username){
+
+    socket.join(room);
+
+    //This produces an object with the client IDs
+    clients = io.sockets.adapter.rooms[room].sockets
+    // console.log(clients)
+
+    //To get the number of clients
+    var numClients = Object.keys(clients).length
+    console.log(numClients)
+
+    io.to(room).emit('a-user-connected-to-room', numClients)
+    // return numClients[room]
+
+  })
+
+  //When users leave the room
+  socket.on('leave-room', function(room){
+    socket.leave(room);
+
+
+        //When there are no clients, this produces an error, so we need an if statement to handle an undefined 0 user situation
+        if (io.sockets.adapter.rooms[room] === undefined){
+          console.log('there is nothing here')
+        } else {
+          clients = io.sockets.adapter.rooms[room].sockets
+          // console.log(clients)
+          var numClients = Object.keys(clients).length
+          console.log(numClients)
+        }
+        
+
+        io.to(room).emit('a-user-left-the-room', numClients)
+
   })
 
   socket.on('chat-message-sent', function(username, message, room){
@@ -224,6 +261,8 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
       //Emit to everyone that the live stream is gone
       io.emit('someone-has-stopped-livestreaming', data)
+      //Need to send this to room
+      io.emit('the-stream-has-stopped', data)
     })
     
     

@@ -2,14 +2,21 @@
 
 Styling! Styling the posts
 
-- Updating livestream post images
+- Updating livestream post images (broken at the moment)
+
 - Deleting Livestreams when they're done
-    - peer.on('disconnect'......)
+    - When the streamer stops streaming, have the event send out correctly and change the element to say "This person has stopped streaming"
     - Make the video stream window disappear
-    - What happens when someone is watching the chat and a stream ends?
     - Delete Stream on refresh (and back)!
+
 - Different buildouts for different post types
     - Notes
+    - And adding a chat window for the streaming guy
+
+- Adding Screensharing
+
+- Adding the nude.js protection
+
 - Deleting posts once there are more than 150
 
 

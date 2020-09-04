@@ -684,7 +684,17 @@ var socket = io();
               video.play().then(_ => {
                 videoGrid.append(video)
               })
+
             } )
+
+          })
+
+
+
+          socket.on('the-stream-has-stopped',function(data){
+            console.log('hey - did my buddy stop streaming?')
+            // visitorPeer.disconnect();
+
 
           })
 
@@ -745,12 +755,27 @@ var socket = io();
 
         document.getElementById('exit-button').addEventListener('click', buildOutExit)
 
+        //When the buildout is opened, socket will join the specific chatroom based on the link URL
+        let room = postLink;
+        socket.emit('join-room', room, username)
+        
         //Exit button clicked
         function buildOutExit(){
           console.log('exit button')
           document.getElementById('post-buildout-wrapper').remove()
           document.getElementById('main-grid').style = ""
+          socket.emit('leave-room', room)
         }
+
+                //Joining the room and getting the number of users in it
+                socket.on('a-user-connected-to-room', function(numClients){
+                  console.log(numClients)
+                })
+
+                //When a user leaves the room
+                socket.on('a-user-left-the-room', function(numClients){
+                  console.log(numClients)
+                })
 
         //Append incoming server messages
         socket.on('archived-chat-messages-from-server', function(data){
@@ -766,13 +791,6 @@ var socket = io();
           })  
         })
 
-
-        //When the buildout is opened, socket will join the specific chatroom based on the link URL
-        let room = postLink;
-        socket.emit('join-room', room)
-
-        //DON'T FORGET TO ADD LEAVE LATER
-        //socket.leave('room1');
 
         // Chat Input
         document.getElementById('chat-input').focus()
@@ -2203,6 +2221,7 @@ var socket = io();
                             stream.getTracks().forEach(track => track.stop());
 
                             peer.disconnect();
+                            peer.destroy();
 
                             //Stop the stream from sending screenshots
                             clearInterval(screenshotUpdateInterval)
