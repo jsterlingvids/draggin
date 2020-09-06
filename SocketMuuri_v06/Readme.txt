@@ -5,13 +5,13 @@ Styling! Styling the posts
 - Updating livestream post images (broken at the moment)
 
 - Deleting Livestreams when they're done
-    - When the streamer stops streaming, have the event send out correctly and change the element to say "This person has stopped streaming"
-    - Make the video stream window disappear
+    - And adding a chat window for the streaming guy
+    - Make the video stream window disappear on close
     - Delete Stream on refresh (and back)!
 
 - Different buildouts for different post types
     - Notes
-    - And adding a chat window for the streaming guy
+
 
 - Adding Screensharing
 

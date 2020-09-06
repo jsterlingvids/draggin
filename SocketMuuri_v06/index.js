@@ -596,6 +596,10 @@ var socket = io();
         //Retrive Previous Messages from the Server
         socket.emit('retrieve-chat-messages', postLink)
 
+        //When the buildout is opened, socket will join the specific chatroom based on the link URL
+        let room = postLink;
+        socket.emit('join-room', room, username)
+
         //If post is livestream emit from socket to get info
         if (postType === "live-stream"){
           console.log('we got a livestream on our hands')
@@ -610,10 +614,23 @@ var socket = io();
         <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
         <i class="fas fa-times-circle" aria-hidden="true"></i>
         </button>
+        
+        <div id = "number of clients" style = "
+        position: absolute;
+        top: 450px;
+        left: 200px;
+        font-size: 20px;
+        color: white;
+        font-family: helvetica;
+        ">
+
+        </div>
 
           <div id = "video-grid-stream" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
             
           </div>
+
+          
 
           <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
           <div id = "messages-holder">
@@ -689,13 +706,16 @@ var socket = io();
 
           })
 
-
-
+          //When the stream has stopped
           socket.on('the-stream-has-stopped',function(data){
             console.log('hey - did my buddy stop streaming?')
+            console.log(data)
             // visitorPeer.disconnect();
-
-
+            document.getElementById('video-grid-stream').innerHTML =`
+            <div id = "user-has-stopped-streaming">
+            <span id = "user-has-stopped-span">The Stream has stopped</span>
+            </div> 
+            `
           })
 
           
@@ -715,6 +735,17 @@ var socket = io();
 
           <div id = "post-buildout-image" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
             <img src = "${postImage}"></img>
+          </div>
+
+          <div id = "number of clients" style = "
+          position: absolute;
+          top: 600px;
+          left: 200px;
+          font-size: 20px;
+          color: white;
+          font-family: helvetica;
+          ">
+
           </div>
 
           <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
@@ -755,9 +786,7 @@ var socket = io();
 
         document.getElementById('exit-button').addEventListener('click', buildOutExit)
 
-        //When the buildout is opened, socket will join the specific chatroom based on the link URL
-        let room = postLink;
-        socket.emit('join-room', room, username)
+
         
         //Exit button clicked
         function buildOutExit(){
@@ -770,11 +799,18 @@ var socket = io();
                 //Joining the room and getting the number of users in it
                 socket.on('a-user-connected-to-room', function(numClients){
                   console.log(numClients)
+                  //Change the HTML of the span to numClients
+                  let span = `<span>There is currently ${numClients} other person in this room</span>`
+                  document.getElementById('number of clients').innerHTML = span
                 })
 
                 //When a user leaves the room
                 socket.on('a-user-left-the-room', function(numClients){
                   console.log(numClients)
+                  //Change the HTML of the span to numClients
+                  let span = `<span>There is currently ${numClients} other person in this room</span>`
+                  document.getElementById('number of clients').innerHTML = span
+                  
                 })
 
         //Append incoming server messages
@@ -803,6 +839,7 @@ var socket = io();
             console.log(document.getElementById('chat-input').value)
             console.log(username)
             
+            console.log('this room is below' + room)
             console.log(room)
 
             //Create nodes to properly append to the UI
@@ -2222,13 +2259,18 @@ var socket = io();
 
                             peer.disconnect();
                             peer.destroy();
+                            
 
                             //Stop the stream from sending screenshots
                             clearInterval(screenshotUpdateInterval)
 
+                            // Send info to server so HTML can be changed
+                            postIDJoined = postID.join()
+                            let postLink = 'http://localhost:3000/' + postIDJoined
+                            // console.log(postLink)
                             
-
-                            socket.emit('stream-has-stopped', postID)
+                            socket.emit('stream-has-stopped', postID, postLink)
+                            socket.emit('leave-room', postLink)
 
                           })
                           

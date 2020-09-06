@@ -167,7 +167,7 @@ io.on('connection', (socket) => {
     // console.log(room);
     // console.log(username);
     // console.log(message);
-    socket.join(room)
+    // socket.join(room)
 
     socket.broadcast.to(room).emit('send-message-to-all', username, message)
   })
@@ -221,9 +221,10 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
   {
 
     //Deleting Livestream from Database on End
-    socket.on('stream-has-stopped', function(data){
-      // console.log('yahhhoooo')
-      // console.log(data)
+    socket.on('stream-has-stopped', function(data, postLink){
+      console.log('yahhhoooo')
+      console.log(data)
+      console.log(postLink)
 
       //First an Async Function to properly delete from Database and return an array of the new Database
       async function deleteDatabase(){
@@ -261,8 +262,9 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
       //Emit to everyone that the live stream is gone
       io.emit('someone-has-stopped-livestreaming', data)
-      //Need to send this to room
-      io.emit('the-stream-has-stopped', data)
+      //Need to send this to room to change visuals once stream has stopped
+      io.to(postLink).emit('the-stream-has-stopped', data)
+
     })
     
     
