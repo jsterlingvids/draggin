@@ -5,15 +5,16 @@ Styling! Styling the posts
 - Updating livestream post images (broken at the moment)
 
 - Deleting Livestreams when they're done
-    - And adding a chat window for the streaming guy
-    - Make the video stream window disappear on close
     - Delete Stream on refresh (and back)!
 
 - Different buildouts for different post types
-    - Notes
-
+    - Links
+    - Images
 
 - Adding Screensharing
+
+- Deleting Chat on end of livestream
+- Not loading chat if text already exists (or clearing chat on exit)
 
 - Adding the nude.js protection
 

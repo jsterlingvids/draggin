@@ -21,6 +21,17 @@ var socket = io();
       });
 
 
+      //Create username based on emojis
+      let emojis = [
+        '😄','😃','😀','😊','☺','😉','😍','😘','😚','😗','😙','😜','😝','😛','😳','😁','😔','😌','😒','😞','😣','😢','😂','😭','😪','😥','😰','😅','😓','😩','😫','😨','😱','😠','😡','😤','😖','😆','😋','😷','😎','😴','😵','😲','😟','😦','😧','😈','👿','😮','😬','😐','😕','😯','😶','😇','😏','😑','👲','👳','👮','👷','💂','👶','👦','👧','👨','👩','👴','👵','👱','👼','👸','😺','😸','😻','😽','😼','🙀','😿','😹','😾','👹','👺','🙈','🙉','🙊','💀','👽','💩','🔥','✨','🌟','💫','💥','💢','💦','💧','💤','💨','👂','👀','👃','👅','👄','👍','👎','👌','👊','✊','✌','👋','✋','👐','👆','👇','👉','👈','🙌','🙏','☝','👏','💪','🚶','🏃','💃','👫','👪','👬','👭','💏','💑','👯','🙆','🙅','💁','🙋','💆','💇','💅','👰','🙎','🙍','🙇','🎩','👑','👒','👟','👞','👡','👠','👢','👕','👔','👚','👗','🎽','👖','👘','👙','💼','👜','👝','👛','👓','🎀','🌂','💄','💛','💙','💜','💚','❤','💔','💗','💓','💕','💖','💞','💘','💌','💋','💍','💎','👤','👥','💬','👣','💭','🐶','🐺','🐱','🐭','🐹','🐰','🐸','🐯','🐨','🐻','🐷','🐽','🐮','🐗','🐵','🐒','🐴','🐑','🐘','🐼','🐧','🐦','🐤','🐥','🐣','🐔','🐍','🐢','🐛','🐝','🐜','🐞','🐌','🐙','🐚','🐠','🐟','🐬','🐳','🐋','🐄','🐏','🐀','🐃','🐅','🐇','🐉','🐎','🐐','🐓','🐕','🐖','🐁','🐂','🐲','🐡','🐊','🐫','🐪','🐆','🐈','🐩','🐾','💐','🌸','🌷','🍀','🌹','🌻','🌺','🍁','🍃','🍂','🌿','🌾','🍄','🌵','🌴','🌲','🌳','🌰','🌱','🌼','🌐','🌞','🌝','🌚','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌜','🌛','🌙','🌍','🌎','🌏','🌋','🌌','🌠','⭐','☀','⛅','☁','⚡','☔','❄','⛄','🌀','🌁','🌈','🌊','🎍','💝','🎎','🎒','🎓','🎏','🎆','🎇','🎐','🎑','🎃','👻','🎅','🎄','🎁','🎋','🎉','🎊','🎈','🎌','🔮','🎥','📷','📹','📼','💿','📀','💽','💾','💻','📱','☎','📞','📟','📠','📡','📺','📻','🔊','🔉','🔈','🔇','🔔','🔕','📢','📣','⏳','⌛','⏰','⌚','🔓','🔒','🔏','🔐','🔑','🔎','💡','🔦','🔆','🔅','🔌','🔋','🔍','🛁','🛀','🚿','🚽','🔧','🔩','🔨','🚪','🚬','💣','🔫','🔪','💊','💉','💰','💴','💵','💷','💶','💳','💸','📲','📧','📥','📤','✉','📩','📨','📯','📫','📪','📬','📭','📮','📦','📝','📄','📃','📑','📊','📈','📉','📜','📋','📅','📆','📇','📁','📂','✂','📌','📎','✒','✏','📏','📐','📕','📗','📘','📙','📓','📔','📒','📚','📖','🔖','📛','🔬','🔭','📰','🎨','🎬','🎤','🎧','🎼','🎵','🎶','🎹','🎻','🎺','🎷','🎸','👾','🎮','🃏','🎴','🀄','🎲','🎯','🏈','🏀','⚽','⚾','🎾','🎱','🏉','🎳','⛳','🚵','🚴','🏁','🏇','🏆','🎿','🏂','🏊','🏄','🎣','☕','🍵','🍶','🍼','🍺','🍻','🍸','🍹','🍷','🍴','🍕','🍔','🍟','🍗','🍖','🍝','🍛','🍤','🍱','🍣','🍥','🍙','🍘','🍚','🍜','🍲','🍢','🍡','🍳','🍞','🍩','🍮','🍦','🍨','🍧','🎂','🍰','🍪','🍫','🍬','🍭','🍯','🍎','🍏','🍊','🍋','🍒','🍇','🍉','🍓','🍑','🍈','🍌','🍐','🍍','🍠','🍆','🍅','🌽','🏠','🏡','🏫','🏢','🏣','🏥','🏦','🏪','🏩','🏨','💒','⛪','🏬','🏤','🌇','🌆','🏯','🏰','⛺','🏭','🗼','🗾','🗻','🌄','🌅','🌃','🗽','🌉','🎠','🎡','⛲','🎢','🚢','⛵','🚤','🚣','⚓','🚀','✈','💺','🚁','🚂','🚊','🚉','🚞','🚆','🚄','🚅','🚈','🚇','🚝','🚋','🚃','🚎','🚌','🚍','🚙','🚘','🚗','🚕','🚖','🚛','🚚','🚨','🚓','🚔','🚒','🚑','🚐','🚲','🚡','🚟','🚠','🚜','💈','🚏','🎫','🚦','🚥','⚠','🚧','🔰','⛽','🏮','🎰','♨','🗿','🎪','🎭','📍','🚩','⬆','⬇','⬅','➡','🔠','🔡','🔤','↗','↖','↘','↙','↔','↕','🔄','◀','▶','🔼','🔽','↩','↪','ℹ','⏪','⏩','⏫','⏬','⤵','⤴','🆗','🔀','🔁','🔂','🆕','🆙','🆒','🆓','🆖','📶','🎦','🈁','🈯','🈳','🈵','🈴','🈲','🉐','🈹','🈺','🈶','🈚','🚻','🚹','🚺','🚼','🚾','🚰','🚮','🅿','♿','🚭','🈷','🈸','🈂','Ⓜ','🛂','🛄','🛅','🛃','🉑','㊙','㊗','🆑','🆘','🆔','🚫','🔞','📵','🚯','🚱','🚳','🚷','🚸','⛔','✳','❇','❎','✅','✴','💟','🆚','📳','📴','🅰','🅱','🆎','🅾','💠','➿','♻','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','⛎','🔯','🏧','💹','💲','💱','©','®','™','〽','〰','🔝','🔚','🔙','🔛','🔜','❌','⭕','❗','❓','❕','❔','🔃','🕛','🕧','🕐','🕜','🕑','🕝','🕒','🕞','🕓','🕟','🕔','🕠','🕕','🕖','🕗','🕘','🕙','🕚','🕡','🕢','🕣','🕤','🕥','🕦','✖','➕','➖','➗','♠','♥','♣','♦','💮','💯','✔','☑','🔘','🔗','➰','🔱','🔲','🔳','◼','◻','◾','◽','▪','▫','🔺','⬜','⬛','⚫','⚪','🔴','🔵','🔻','🔶','🔷','🔸','🔹'
+      ];
+
+
+      const username = emojis[Math.floor(Math.random() * emojis.length)] + emojis[Math.floor(Math.random() * emojis.length)] + emojis[Math.floor(Math.random() * emojis.length)]
+      
+      console.log(username)
+
+
 
 //On loadup
 
@@ -568,18 +579,12 @@ var socket = io();
         // console.log('I`M CLICKING')
         console.log(e)
 
-        //Create username based on emojis
-        let emojis = [
-          '😄','😃','😀','😊','☺','😉','😍','😘','😚','😗','😙','😜','😝','😛','😳','😁','😔','😌','😒','😞','😣','😢','😂','😭','😪','😥','😰','😅','😓','😩','😫','😨','😱','😠','😡','😤','😖','😆','😋','😷','😎','😴','😵','😲','😟','😦','😧','😈','👿','😮','😬','😐','😕','😯','😶','😇','😏','😑','👲','👳','👮','👷','💂','👶','👦','👧','👨','👩','👴','👵','👱','👼','👸','😺','😸','😻','😽','😼','🙀','😿','😹','😾','👹','👺','🙈','🙉','🙊','💀','👽','💩','🔥','✨','🌟','💫','💥','💢','💦','💧','💤','💨','👂','👀','👃','👅','👄','👍','👎','👌','👊','✊','✌','👋','✋','👐','👆','👇','👉','👈','🙌','🙏','☝','👏','💪','🚶','🏃','💃','👫','👪','👬','👭','💏','💑','👯','🙆','🙅','💁','🙋','💆','💇','💅','👰','🙎','🙍','🙇','🎩','👑','👒','👟','👞','👡','👠','👢','👕','👔','👚','👗','🎽','👖','👘','👙','💼','👜','👝','👛','👓','🎀','🌂','💄','💛','💙','💜','💚','❤','💔','💗','💓','💕','💖','💞','💘','💌','💋','💍','💎','👤','👥','💬','👣','💭','🐶','🐺','🐱','🐭','🐹','🐰','🐸','🐯','🐨','🐻','🐷','🐽','🐮','🐗','🐵','🐒','🐴','🐑','🐘','🐼','🐧','🐦','🐤','🐥','🐣','🐔','🐍','🐢','🐛','🐝','🐜','🐞','🐌','🐙','🐚','🐠','🐟','🐬','🐳','🐋','🐄','🐏','🐀','🐃','🐅','🐇','🐉','🐎','🐐','🐓','🐕','🐖','🐁','🐂','🐲','🐡','🐊','🐫','🐪','🐆','🐈','🐩','🐾','💐','🌸','🌷','🍀','🌹','🌻','🌺','🍁','🍃','🍂','🌿','🌾','🍄','🌵','🌴','🌲','🌳','🌰','🌱','🌼','🌐','🌞','🌝','🌚','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌜','🌛','🌙','🌍','🌎','🌏','🌋','🌌','🌠','⭐','☀','⛅','☁','⚡','☔','❄','⛄','🌀','🌁','🌈','🌊','🎍','💝','🎎','🎒','🎓','🎏','🎆','🎇','🎐','🎑','🎃','👻','🎅','🎄','🎁','🎋','🎉','🎊','🎈','🎌','🔮','🎥','📷','📹','📼','💿','📀','💽','💾','💻','📱','☎','📞','📟','📠','📡','📺','📻','🔊','🔉','🔈','🔇','🔔','🔕','📢','📣','⏳','⌛','⏰','⌚','🔓','🔒','🔏','🔐','🔑','🔎','💡','🔦','🔆','🔅','🔌','🔋','🔍','🛁','🛀','🚿','🚽','🔧','🔩','🔨','🚪','🚬','💣','🔫','🔪','💊','💉','💰','💴','💵','💷','💶','💳','💸','📲','📧','📥','📤','✉','📩','📨','📯','📫','📪','📬','📭','📮','📦','📝','📄','📃','📑','📊','📈','📉','📜','📋','📅','📆','📇','📁','📂','✂','📌','📎','✒','✏','📏','📐','📕','📗','📘','📙','📓','📔','📒','📚','📖','🔖','📛','🔬','🔭','📰','🎨','🎬','🎤','🎧','🎼','🎵','🎶','🎹','🎻','🎺','🎷','🎸','👾','🎮','🃏','🎴','🀄','🎲','🎯','🏈','🏀','⚽','⚾','🎾','🎱','🏉','🎳','⛳','🚵','🚴','🏁','🏇','🏆','🎿','🏂','🏊','🏄','🎣','☕','🍵','🍶','🍼','🍺','🍻','🍸','🍹','🍷','🍴','🍕','🍔','🍟','🍗','🍖','🍝','🍛','🍤','🍱','🍣','🍥','🍙','🍘','🍚','🍜','🍲','🍢','🍡','🍳','🍞','🍩','🍮','🍦','🍨','🍧','🎂','🍰','🍪','🍫','🍬','🍭','🍯','🍎','🍏','🍊','🍋','🍒','🍇','🍉','🍓','🍑','🍈','🍌','🍐','🍍','🍠','🍆','🍅','🌽','🏠','🏡','🏫','🏢','🏣','🏥','🏦','🏪','🏩','🏨','💒','⛪','🏬','🏤','🌇','🌆','🏯','🏰','⛺','🏭','🗼','🗾','🗻','🌄','🌅','🌃','🗽','🌉','🎠','🎡','⛲','🎢','🚢','⛵','🚤','🚣','⚓','🚀','✈','💺','🚁','🚂','🚊','🚉','🚞','🚆','🚄','🚅','🚈','🚇','🚝','🚋','🚃','🚎','🚌','🚍','🚙','🚘','🚗','🚕','🚖','🚛','🚚','🚨','🚓','🚔','🚒','🚑','🚐','🚲','🚡','🚟','🚠','🚜','💈','🚏','🎫','🚦','🚥','⚠','🚧','🔰','⛽','🏮','🎰','♨','🗿','🎪','🎭','📍','🚩','⬆','⬇','⬅','➡','🔠','🔡','🔤','↗','↖','↘','↙','↔','↕','🔄','◀','▶','🔼','🔽','↩','↪','ℹ','⏪','⏩','⏫','⏬','⤵','⤴','🆗','🔀','🔁','🔂','🆕','🆙','🆒','🆓','🆖','📶','🎦','🈁','🈯','🈳','🈵','🈴','🈲','🉐','🈹','🈺','🈶','🈚','🚻','🚹','🚺','🚼','🚾','🚰','🚮','🅿','♿','🚭','🈷','🈸','🈂','Ⓜ','🛂','🛄','🛅','🛃','🉑','㊙','㊗','🆑','🆘','🆔','🚫','🔞','📵','🚯','🚱','🚳','🚷','🚸','⛔','✳','❇','❎','✅','✴','💟','🆚','📳','📴','🅰','🅱','🆎','🅾','💠','➿','♻','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓','⛎','🔯','🏧','💹','💲','💱','©','®','™','〽','〰','🔝','🔚','🔙','🔛','🔜','❌','⭕','❗','❓','❕','❔','🔃','🕛','🕧','🕐','🕜','🕑','🕝','🕒','🕞','🕓','🕟','🕔','🕠','🕕','🕖','🕗','🕘','🕙','🕚','🕡','🕢','🕣','🕤','🕥','🕦','✖','➕','➖','➗','♠','♥','♣','♦','💮','💯','✔','☑','🔘','🔗','➰','🔱','🔲','🔳','◼','◻','◾','◽','▪','▫','🔺','⬜','⬛','⚫','⚪','🔴','🔵','🔻','🔶','🔷','🔸','🔹'
-        ];
-
-
-        let username = emojis[Math.floor(Math.random() * emojis.length)] + emojis[Math.floor(Math.random() * emojis.length)] + emojis[Math.floor(Math.random() * emojis.length)]
         
-        console.log(username)
 
         //Post Type
-        let postType = e.path[3].attributes[2].nodeValue
+       
+        // let postType = e.path[3].attributes[2].nodeValue
+        // let postTypeNote = e.path[1].attributes[2].nodeValue
 
         //Post Image
         let postImage = e.path[2].childNodes[1].childNodes[1].src
@@ -588,10 +593,14 @@ var socket = io();
         let postLink = e.path[2].childNodes[1].href
 
         //Post Description
-        let postDescription = e.path[2].childNodes[3].childNodes[3].textContent
+        // if(!e.path[2].childNodes[3].childNodes[3].textContent === null){
+        //   // let postDescription = e.path[2].childNodes[3].childNodes[3].textContent
+        //   console.log('hey theres no description')
+        // } 
+        
 
-        //Post Description Type
-        let postDescriptionType = e.path[2].childNodes[3].childNodes[1].textContent
+        // //Post Description Type
+        // let postDescriptionType = e.path[2].childNodes[3].childNodes[1].textContent
 
         //Retrive Previous Messages from the Server
         socket.emit('retrieve-chat-messages', postLink)
@@ -601,7 +610,7 @@ var socket = io();
         socket.emit('join-room', room, username)
 
         //If post is livestream emit from socket to get info
-        if (postType === "live-stream"){
+        if (e.path[3].attributes[2].nodeValue === "live-stream"){
           console.log('we got a livestream on our hands')
 
         //Build Out Wrapper HTML
@@ -720,7 +729,7 @@ var socket = io();
 
           
           
-        } else {
+        }  else if (e.path[3].attributes[2].nodeValue === 'link-img') {
 
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
@@ -779,6 +788,70 @@ var socket = io();
         buildOutWrapper.innerHTML = postBuildOutHTML
 
         document.getElementById('master-div').appendChild(buildOutWrapper)
+        
+      } else if (e.path[1].attributes[2].nodeValue === "note"){
+        console.log('you just clicked a note')
+        let noteText = e.path[0].lastElementChild.outerText
+        var buildOutWrapper = document.createElement('div');
+        buildOutWrapper.id = "post-buildout-wrapper"
+
+        let postBuildOutHTML = `
+        <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
+
+        <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
+        <i class="fas fa-times-circle" aria-hidden="true"></i>
+        </button>
+
+          <div id = "post-buildout-note-content" style = "background: white;width: 30%;position: absolute;top: 100px;left: 200px;height:10%;padding: 10px;text-align: center;text-justify: auto;background: deepskyblue;color: white;font-family: helvetica;">
+          ${noteText}
+          </div>
+
+          <div id = "number of clients" style = "
+          position: absolute;
+          top: 600px;
+          left: 200px;
+          font-size: 20px;
+          color: white;
+          font-family: helvetica;
+          ">
+
+          </div>
+
+          <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
+          <div id = "messages-holder">
+          <ul class="messages" style ="
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          overflow: hidden;
+          overflow-y: auto;  
+          padding-bottom: 100px;
+          padding-left: 10px;
+          " id= "chat-messages"></ul>
+          </div>
+          <div id = "username-display" style="
+          position: absolute;
+          top: 225px;
+          background: white;
+          padding-top: 20px;
+          padding-bottom: 15px;
+          padding-left: 5px;
+          font-size: 20px;
+          padding-right: 5px;
+          ">${username}</div>
+          <input class="inputMessage" id = "chat-input" style = "position: relative;top: 225px;width: 82.3%;height: 65px;left: 72px;" placeholder="says....">
+          </div>
+          
+        </div>
+        `
+
+        buildOutWrapper.innerHTML = postBuildOutHTML
+
+        document.getElementById('master-div').appendChild(buildOutWrapper)
+
+        //Fit the Text
+        textFit(document.getElementById('post-buildout-note-content'), {minFontSize:14, maxFontSize: 100, multiLine: true})
+
       }
 
         //Blur the background
@@ -2206,7 +2279,130 @@ var socket = io();
 
                           document.getElementById('master-div').append(thumbnailCanvas)
 
+                          //Chat in the bottom left for streaming guy
+                          let streamingChatDiv = document.createElement('div');
+                          streamingChatDiv.id = "streaming-chat-holder"
+                          streamingChatDiv.style = `
+                          position: fixed;
+                          background: purple;
+                          z-index: 4;
+                          width: 50%;
+                          height: 20%;
+                          left: 500px;
+                          bottom: 0px;
+                          ` 
+                          streamingChatDiv.innerHTML = `
+                          <div id = "post-buildout-chat" style = "               
+                            top: 100px;
+                            position: absolute;
+                            left: 50px;
+                            width: 100%;
+                            /* height: 100%; */
+                            ">
 
+                          <div id = "messages-holder" style ="
+                          position: fixed;
+                          left: 500px;
+                          width: 50%;
+                          bottom: 40px;
+                          height: 15%;
+                          background: turquoise;
+                          ">
+                          <ul class="messages" style ="
+                          " id= "streaming-chat-messages"></ul>
+
+                          </div>
+
+                          <div id = "username-display" style="
+                          bottom: 0px;
+                          background: skyblue;
+                          padding-bottom: 15px;
+                          padding-left: 5px;
+                          font-size: 20px;
+                          padding-right: 5px;
+                          position: fixed;
+                          left: 500px;
+                          height: 5%;
+                          padding-top: 5px;
+                          ">${username}</div>
+
+          
+
+                          <input class="inputMessage" id = "streaming-chat-input" style = "
+                          position: fixed;
+                          bottom: 0px;
+                          width: 44%;
+                          left: 570px;
+                          height: 5%;
+                          " placeholder="says....">
+                          </input>
+
+                          </div>`
+
+                          //Creating the PostID to join
+                          let postIDJoined = postID.join()
+                          let postLink = 'http://localhost:3000/' + postIDJoined
+                          console.log(postLink)
+
+                          //Emiting to the server that I've joined
+                          let room = postLink;
+                          socket.emit('join-room', room, username)
+                         
+                          document.getElementById('master-div').append(streamingChatDiv)
+
+                          //Sending a message in the chat
+                          document.getElementById('streaming-chat-input').addEventListener('keyup', function(){
+
+                            //Get the value of the chat input box, and send it on pressing enter
+                            if (event.keyCode === 13) {
+                              
+                              console.log(document.getElementById('streaming-chat-input').value)
+                              // console.log(username)
+                              
+                              // console.log('this room is below' + room)
+                              // console.log(room)
+                  
+                              //Create nodes to properly append to the UI
+                              var chatMessageNode = document.createElement("LI"); 
+                              let chatMessageText = document.getElementById('streaming-chat-input').value
+                              let chatMessageTextNode = document.createTextNode(username + ": " + chatMessageText)
+                              chatMessageNode.appendChild(chatMessageTextNode);
+                              document.getElementById('streaming-chat-messages').appendChild(chatMessageNode)
+                  
+                              // $messages[0].scrollTop = $messages[0].scrollHeight;
+                              document.getElementById('streaming-chat-messages').scrollTop = 
+                              document.getElementById('streaming-chat-messages').scrollHeight
+                  
+                              let message = document.getElementById('streaming-chat-input').value
+                  
+                              //Send the message to the server and to others
+                              socket.emit('chat-message-sent', username, message, room)
+                  
+                              let chatMessageToSendToServer = [{'username': username, 'message': message, 'room': room}]
+                              console.log(chatMessageToSendToServer[0].username)
+                              socket.emit('chat-message-to-server', chatMessageToSendToServer)
+                  
+                  
+                              //Clear the input
+                              document.getElementById('streaming-chat-input').value = "";
+                            }
+                          })
+
+                          //When a message is sent from someone else, this is what the server sends to you
+                          socket.on('send-message-to-all', function(otherUsername, message){
+                            // console.log(otherUsername)
+                            // console.log(message);
+
+                            //The message is added to a created element and appended
+                            var receivedChatMessageNode = document.createElement("LI");
+                            let receivedChatMessageTextNode = document.createTextNode(otherUsername + ": " + message)
+
+                            receivedChatMessageNode.appendChild(receivedChatMessageTextNode);
+                            document.getElementById('streaming-chat-messages').appendChild(receivedChatMessageNode)
+
+                          })
+                          
+                        
                           //Submitting to Server
                           //NEW [[peer ID, Socket.id], Post Image, Post Description, Post Type]
 
@@ -2268,6 +2464,12 @@ var socket = io();
                             postIDJoined = postID.join()
                             let postLink = 'http://localhost:3000/' + postIDJoined
                             // console.log(postLink)
+
+                            //Destroy DOM Elements
+                            document.getElementById('thumbnail-update-canvas').remove()
+                            document.getElementById('stop-streaming').remove()
+                            document.getElementById('streaming-chat-holder').remove()
+                            document.getElementById('my-streaming-video-div').remove()
                             
                             socket.emit('stream-has-stopped', postID, postLink)
                             socket.emit('leave-room', postLink)
