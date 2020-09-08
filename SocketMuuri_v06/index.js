@@ -1281,7 +1281,9 @@ var socket = io();
 
                 <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">Add Link!</button>
                 <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;">Add Note!</button>
-                <button type="button" class="btn btn-primary btn-lg" id="live-stream" style="padding: 3%; margin: 2%;">Stream!</button>
+                <button type="button" class="btn btn-primary btn-lg" id="live-stream" style="padding: 3%; margin: 2%;">Stream Yourself!</button>
+                <button type="button" class="btn btn-primary btn-lg" id="screen-share" style="padding: 3%; margin: 2%;">Share Your Screen!</button>
+
                 
                 </div>
                 
@@ -1317,6 +1319,9 @@ var socket = io();
 
         //Live Stream button Clicked
         document.getElementById('live-stream').addEventListener('click', addLiveStream)
+
+        //Live Stream button Clicked
+        document.getElementById('screen-share').addEventListener('click', addScreenShare)
       }
 
 
@@ -1367,6 +1372,7 @@ var socket = io();
                 <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">Add Link!</button>
                 <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;">Add Note!</button>
                 <button type="button" class="btn btn-primary btn-lg" id="live-stream" style="padding: 3%; margin: 2%;">Stream!</button>
+                <button type="button" class="btn btn-primary btn-lg" id="screen-share" style="padding: 3%; margin: 2%;">Share Your Screen!</button>
                 </div>
         `
 
@@ -1391,6 +1397,9 @@ var socket = io();
 
         //Live Stream button Clicked
         document.getElementById('live-stream').addEventListener('click', addLiveStream)
+
+        //Screenshare button clicked
+        document.getElementById('screen-share').addEventListener('click', addScreenShare)
       }
 
       //Add Notes  
@@ -2151,7 +2160,7 @@ var socket = io();
                      </button>
 
                      <div id = "video-grid"></div>
-
+                     
                      <button type = "button" class="btn btn-primary" id="start-stream-button">Start The Stream?</button>
 
                      <canvas id = "thumbnail" style = "display:none;"></canvas>
@@ -2180,7 +2189,7 @@ var socket = io();
                     });
 
 
-
+                     //Start the stream from a camera 
                      navigator.mediaDevices.getUserMedia({
                       video: true,
                       audio: true
@@ -2483,16 +2492,27 @@ var socket = io();
 
                     
                       })
+                                              // navigator.mediaDevices.getDisplayMedia({
+                        //   video: {
+                        //     cursor: "always"},
+                        //   audio: {
+                        //     echoCancellation: true,
+                        //     noiseSuppression: true,
+                        //     sampleRate: 44100
+                        //   }
+                        //   //From here we can use the stream
+                        //   })
 
 
-            }
+
+
 
 
             //When a new screenshot comes in
             socket.on('new-stream-screenshot', function(screenshot, pageID){
               console.log('guess a screenshot is coming in!')
               // console.log(screenshot)
-              console.log(pageID)
+              // console.log(pageID)
 
               //Convert to the right pageID
               // let pageIDString = pageID.join()
@@ -2500,10 +2520,15 @@ var socket = io();
 
               //Grab the page ID
               screenshotChange = document.getElementById(pageID)
-              console.log(screenshotChange.children[0])
+              // console.log(screenshotChange.childNodes[1].children[0].src)
 
               //Update the Screenshot
-              screenshotChange.children[0].children[0].childNodes[1].src = screenshot
+              if(socket.id === pageID[1]){
+                // console.log('I`m taking a screen of myself')
+              screenshotChange.children[0].children[0].childNodes[1].src = screenshot}
+              else if (socket.id !== pageID[1]){
+                // console.log('screen coming from elsewhere')
+              screenshotChange.childNodes[1].children[0].src = screenshot}
 
             })
 
@@ -2537,7 +2562,444 @@ var socket = io();
               
               // grid.remove(grid.getItem(elementToRemove.parentNode)._element)
             })
+          }
 
+
+
+
+          //Add Screenshare Functio 
+          function addScreenShare(){
+
+              
+            console.log('Screenshare')
+            overlay.innerHTML = `
+                   <div id="wrapper" style=" 
+                   width: 100%;
+                   height: 100%;
+                   border: 2px solid lightblue;
+                   display: flex;
+                   flex-direction: column;
+                   justify-content:center;
+                   align-items: center;
+                   justify-content: center;
+                   font-family: helvetica, sans-serif;">
+
+                   <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
+                   <i class="fas fa-times-circle" aria-hidden="true"></i>
+                   </button>
+
+                   <button type="button" class="btn btn-primary" id="back-button" style="position: absolute; top: 20px; left: 20px; font-size: 20px;">
+                   <i class="fas fa-arrow-alt-circle-left"></i>
+                   </button>
+
+                   <div id = "video-grid"></div>
+                   
+                   <button type = "button" class="btn btn-primary" id="start-stream-button">Start The Stream?</button>
+
+                   <canvas id = "thumbnail" style = "display:none;"></canvas>
+                   
+
+              
+                   </div>
+
+                   `;
+
+                   //Exit Button Clicked
+                   document.getElementById('exit-button').addEventListener('click', exitButton)
+
+                   //Back Button Clicked
+                   document.getElementById('back-button').addEventListener('click', backButton)
+
+                   //Getting Video
+                   let videoGrid = document.getElementById('video-grid')
+                   let startStreamButton = document.getElementById('start-stream-button')
+
+                   //Create Peer
+                   var peer = new Peer();
+
+                   peer.on('open', function(id) {
+                    console.log('My peer ID is: ' + id);
+                  });
+
+
+                   //Start the screenshare stream
+                   navigator.mediaDevices.getDisplayMedia({
+                    video: {
+                          cursor: "always"},
+                    audio: {
+                           echoCancellation: true,
+                           noiseSuppression: true,
+                           sampleRate: 44100
+                          }
+                          //From here we can use the stream
+                          }).then(stream => {
+                      //This code puts the stream on your preview page
+                      let myVideo = document.createElement('video')
+                      myVideo.muted = true;
+                      myVideo.style = "width: 400px;"
+                      myVideo.id = "video-play"
+                      myVideo.srcObject = stream;
+                      videoGrid.append(myVideo)
+                      myVideo.play()
+
+                      console.log(videoGrid)
+                      
+                      console.log(stream)
+
+                      //Posting the Stream
+                      startStreamButton.addEventListener('click', function(){
+                        // var wrapper = document.createElement('div');
+                        console.log('heyyy')
+                        console.log(stream)
+
+                        exitButton()
+
+                        //Taking screenshot of Stream
+                        let video2 = document.getElementById("video-play");
+                        let canvas = document.getElementById('thumbnail')
+                        let width = '200px'
+                        let height = '200px'
+                        var context = canvas.getContext('2d');
+                        context.drawImage(video2, 1, 1);
+                        var screenShot = canvas.toDataURL('image/jpg');
+                        console.log(screenShot)
+                       
+                        //Create unique post id
+                        let postID = [peer.id, socket.id]
+                        console.log(postID)
+        
+                        //Adding to grid with Screenshot as Image
+                        var columnHTML = `
+                        <div class="item">
+                        <div class="item-content" id="${postID}" data-type="live-stream" style="opacity: 1; transform: scale(1);">
+                              <!-- Safe zone, enter your custom markup -->
+                              <div id= "video-grid" data-type="${postID}">
+                              <a href = "${postID}">
+                              <img src="${screenShot}"></img>
+                              </a>
+                              </div>
+                                <!-- Safe zone ends -->
+                                    </div>
+                            </div>
+                          `
+
+                       
+                        //NOTE: If I want to add my stream to the grid, it all must be done after grid.add is called
+                        //Grid.add function to properly add to grid
+                        wrapper.innerHTML = columnHTML;
+                        var columnElem = wrapper.children[0]; 
+                        console.log(wrapper)
+                        grid.add([columnElem], { index: 0 });
+
+                        setTimeout(respaceItems, 300);
+
+                        //This creates the little mini stream in the bottom left hand
+                        let streamingVideoGrid = document.createElement('div')
+                        streamingVideoGrid.id = "my-streaming-video-div"
+                        streamingVideoGrid.style = "position: fixed;bottom: 0; z-index: 3;"
+                        let myStreamingVideo = document.createElement('video')
+                        myStreamingVideo.muted = true;
+                        myStreamingVideo.style = "width: 250px;"
+                        myStreamingVideo.id = "streaming-video-play"
+                        myStreamingVideo.srcObject = stream;
+                        streamingVideoGrid.append(myStreamingVideo)
+                        myStreamingVideo.play()
+
+                        document.getElementById('master-div').append(streamingVideoGrid)
+
+                        //Stop Stream button
+                        let stopStreamingButton = document.createElement('button')
+                        stopStreamingButton.innerHTML = `<i class="fas fa-arrow-alt-circle-left"></i>`
+                        stopStreamingButton.style = "width: 10%;position: fixed;bottom: 0;z-index: 3;height: 10%;left: 20%;"
+                        stopStreamingButton.className = "btn btn-primary"
+                        stopStreamingButton.id = "stop-streaming"
+
+                        document.getElementById('master-div').append(stopStreamingButton)
+
+                        
+
+                        //Create canvas element for Thumbnails
+                        let thumbnailCanvas = document.createElement('canvas')
+                        thumbnailCanvas.id = "thumbnail-update-canvas"
+                        thumbnailCanvas.style = "width:300px; height: 300px;position: fixed; bottom: 0px; display: none;"
+
+                        document.getElementById('master-div').append(thumbnailCanvas)
+
+                        //Chat in the bottom left for streaming guy
+                        let streamingChatDiv = document.createElement('div');
+                        streamingChatDiv.id = "streaming-chat-holder"
+                        streamingChatDiv.style = `
+                        position: fixed;
+                        background: purple;
+                        z-index: 4;
+                        width: 50%;
+                        height: 20%;
+                        left: 500px;
+                        bottom: 0px;
+                        ` 
+                        streamingChatDiv.innerHTML = `
+                        <div id = "post-buildout-chat" style = "               
+                          top: 100px;
+                          position: absolute;
+                          left: 50px;
+                          width: 100%;
+                          /* height: 100%; */
+                          ">
+
+                        <div id = "messages-holder" style ="
+                        position: fixed;
+                        left: 500px;
+                        width: 50%;
+                        bottom: 40px;
+                        height: 15%;
+                        background: turquoise;
+                        ">
+                        <ul class="messages" style ="
+                        " id= "streaming-chat-messages"></ul>
+
+                        </div>
+
+                        <div id = "username-display" style="
+                        bottom: 0px;
+                        background: skyblue;
+                        padding-bottom: 15px;
+                        padding-left: 5px;
+                        font-size: 20px;
+                        padding-right: 5px;
+                        position: fixed;
+                        left: 500px;
+                        height: 5%;
+                        padding-top: 5px;
+                        ">${username}</div>
+
+        
+
+                        <input class="inputMessage" id = "streaming-chat-input" style = "
+                        position: fixed;
+                        bottom: 0px;
+                        width: 44%;
+                        left: 570px;
+                        height: 5%;
+                        " placeholder="says....">
+                        </input>
+
+                        </div>`
+
+                        //Creating the PostID to join
+                        let postIDJoined = postID.join()
+                        let postLink = 'http://localhost:3000/' + postIDJoined
+                        console.log(postLink)
+
+                        //Emiting to the server that I've joined
+                        let room = postLink;
+                        socket.emit('join-room', room, username)
+                       
+                        document.getElementById('master-div').append(streamingChatDiv)
+
+                        //Sending a message in the chat
+                        document.getElementById('streaming-chat-input').addEventListener('keyup', function(){
+
+                          //Get the value of the chat input box, and send it on pressing enter
+                          if (event.keyCode === 13) {
+                            
+                            console.log(document.getElementById('streaming-chat-input').value)
+                            // console.log(username)
+                            
+                            // console.log('this room is below' + room)
+                            // console.log(room)
+                
+                            //Create nodes to properly append to the UI
+                            var chatMessageNode = document.createElement("LI"); 
+                            let chatMessageText = document.getElementById('streaming-chat-input').value
+                            let chatMessageTextNode = document.createTextNode(username + ": " + chatMessageText)
+                            chatMessageNode.appendChild(chatMessageTextNode);
+                            document.getElementById('streaming-chat-messages').appendChild(chatMessageNode)
+                
+                            // $messages[0].scrollTop = $messages[0].scrollHeight;
+                            document.getElementById('streaming-chat-messages').scrollTop = 
+                            document.getElementById('streaming-chat-messages').scrollHeight
+                
+                            let message = document.getElementById('streaming-chat-input').value
+                
+                            //Send the message to the server and to others
+                            socket.emit('chat-message-sent', username, message, room)
+                
+                            let chatMessageToSendToServer = [{'username': username, 'message': message, 'room': room}]
+                            console.log(chatMessageToSendToServer[0].username)
+                            socket.emit('chat-message-to-server', chatMessageToSendToServer)
+                
+                
+                            //Clear the input
+                            document.getElementById('streaming-chat-input').value = "";
+                          }
+                        })
+
+                        //When a message is sent from someone else, this is what the server sends to you
+                        socket.on('send-message-to-all', function(otherUsername, message){
+                          // console.log(otherUsername)
+                          // console.log(message);
+
+                          //The message is added to a created element and appended
+                          var receivedChatMessageNode = document.createElement("LI");
+                          let receivedChatMessageTextNode = document.createTextNode(otherUsername + ": " + message)
+
+                          receivedChatMessageNode.appendChild(receivedChatMessageTextNode);
+                          document.getElementById('streaming-chat-messages').appendChild(receivedChatMessageNode)
+
+                        })
+                        
+                      
+                        //Submitting to Server
+                        //NEW [[peer ID, Socket.id], Post Image, Post Description, Post Type]
+
+                        //Before we can send, we need to join the IDs to create a unique post ID that we can use in the database
+                        // let postLinkToJoin = [peer.id, socket.id]
+                        // let postLinkJoined = postLinkToJoin.join();
+                        // console.log(postLinkJoined)
+
+                        let newPostInfo = [postID, screenShot, null, 'live-stream']
+                        console.log(newPostInfo)
+
+                        socket.emit('postAddedUpdateDatabase', newPostInfo);
+
+
+                        //Message from server when someone wants to connect to my stream, contains the PeerID of the person who wants to connect
+                        socket.on('someoneWantsMyStream', function(data){
+                          console.log(data)
+                          //A call is initiated, the data is the destination ID of the client
+                          var call = peer.call(data, stream)
+
+                        })
+
+                        //Function to take a screenshot every 10 (15?) seconds and update
+                        function canvasUpdate(){
+                        let videoThumbUpdate = document.getElementById("streaming-video-play");
+                        let videoThumbUpdateCanvas = document.getElementById('thumbnail-update-canvas')
+                        // let width = '200px'
+                        // let height = '200px'
+                        var contextUpdate = videoThumbUpdateCanvas.getContext('2d');
+                        contextUpdate.drawImage(videoThumbUpdate, 1, 1);
+                        var screenShot = videoThumbUpdateCanvas.toDataURL('image/jpg');
+                        // console.log(screenShot)
+
+                       
+
+                        socket.emit('update-stream-screenshot', screenShot, postID)
+                      
+                      }
+
+
+                        //Function is run on an interval
+                        let screenshotUpdateInterval = setInterval(canvasUpdate, 5000)
+
+                        //Stop the stream
+                        document.getElementById('stop-streaming').addEventListener('click', function(){
+                          
+                          console.log('stop stream')
+                          
+                          stream.getTracks().forEach(track => track.stop());
+
+                          peer.disconnect();
+                          peer.destroy();
+                          
+
+                          //Stop the stream from sending screenshots
+                          clearInterval(screenshotUpdateInterval)
+
+                          // Send info to server so HTML can be changed
+                          postIDJoined = postID.join()
+                          let postLink = 'http://localhost:3000/' + postIDJoined
+                          // console.log(postLink)
+
+                          //Destroy DOM Elements
+                          document.getElementById('thumbnail-update-canvas').remove()
+                          document.getElementById('stop-streaming').remove()
+                          document.getElementById('streaming-chat-holder').remove()
+                          document.getElementById('my-streaming-video-div').remove()
+                          
+                          socket.emit('stream-has-stopped', postID, postLink)
+                          socket.emit('leave-room', postLink)
+
+                        })
+                        
+
+                      })
+
+
+
+                  
+                    })
+                                            // navigator.mediaDevices.getDisplayMedia({
+                      //   video: {
+                      //     cursor: "always"},
+                      //   audio: {
+                      //     echoCancellation: true,
+                      //     noiseSuppression: true,
+                      //     sampleRate: 44100
+                      //   }
+                      //   //From here we can use the stream
+                      //   })
+
+
+
+
+
+
+          //When a new screenshot comes in
+          socket.on('new-stream-screenshot', function(screenshot, pageID){
+            console.log('guess a screenshot is coming in!')
+            // console.log(screenshot)
+            // console.log(pageID)
+
+            //Convert to the right pageID
+            // let pageIDString = pageID.join()
+            // console.log(pageIDString)
+
+            //Grab the page ID
+            screenshotChange = document.getElementById(pageID)
+            // console.log(screenshotChange.childNodes[1].children[0].src)
+
+            //Update the Screenshot
+            if(socket.id === pageID[1]){
+              // console.log('I`m taking a screen of myself')
+            screenshotChange.children[0].children[0].childNodes[1].src = screenshot}
+            else if (socket.id !== pageID[1]){
+              // console.log('screen coming from elsewhere')
+            screenshotChange.childNodes[1].children[0].src = screenshot}
+
+          })
+
+          //When a livestream has stopped message comes in
+          socket.on('someone-has-stopped-livestreaming', function(data)
+          {
+            console.log(data)
+            idToRemove = data.join()
+            console.log(idToRemove)
+            
+            console.log(grid.getItems())
+
+            //Loop through all grid items to find the one that matches the data and remove
+            let i;
+
+            for(i = 0; i < grid.getItems().length; i++){
+              if(grid.getItems()[i]._element.children[0].lastElementChild.attributes[1].nodeValue === idToRemove){
+                console.log('remove it!')
+                console.log(i)
+                // console.log(grid.getItem(i))
+                grid.remove(grid.getItems(i), { removeElements: true })
+              } else {
+                
+                console.log('don`t remove it')
+              }
+            }
+            
+            // console.log()
+
+            
+            
+            // grid.remove(grid.getItem(elementToRemove.parentNode)._element)
+          })
+        }
 
           
           

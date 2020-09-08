@@ -2,7 +2,7 @@
 
 Styling! Styling the posts
 
-- Updating livestream post images (broken at the moment)
+- Deleting Chat on end of livestream
 
 - Deleting Livestreams when they're done
     - Delete Stream on refresh (and back)!
@@ -11,9 +11,8 @@ Styling! Styling the posts
     - Links
     - Images
 
-- Adding Screensharing
+- Loading icon when selecting screenshare?
 
-- Deleting Chat on end of livestream
 - Not loading chat if text already exists (or clearing chat on exit)
 
 - Adding the nude.js protection
