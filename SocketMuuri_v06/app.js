@@ -228,6 +228,9 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
       //First an Async Function to properly delete from Database and return an array of the new Database
       async function deleteDatabase(){
+        
+
+        //Delete post from database
         let databaseDelete = await collection.deleteOne({"Post Link": data})
 
         let databaseRecompile = await collection.find().toArray()
@@ -259,6 +262,8 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
 
       })
       
+      //Delete the corresponding chat messages
+      chatMessages.deleteOne({"room_id": postLink})
 
       //Emit to everyone that the live stream is gone
       io.emit('someone-has-stopped-livestreaming', data)

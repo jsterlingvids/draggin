@@ -211,6 +211,7 @@ var socket = io();
             <div class="item">
             <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
                   <!-- Safe zone, enter your custom markup -->
+
                     <div class="link-content" id="${newData[i]["Post Link"]}" data-type="${newData[i]["Post Link"]}" style="
                     position: relative;
                     display: inline-block;">
@@ -218,37 +219,14 @@ var socket = io();
                     <a href="${newData[i]["Post Link"]}">
                     <img src="${newData[i]["Post Image"]}">
                     </a>
-                        <div class="post-description" id="post-description-master" style="
-                            position: absolute;
-                            z-index: 999;
-                            left: 0;
-                            bottom: 0;
-                            text-align: left;
-                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                            padding-bottom: 10px;
-                            padding-left: 5px;
-                            padding-top: 5px;
-                            text-size-adjust: auto;
-                            margin-right: 10px;
-                            margin-bottom: 5px;
-                            margin-left: 5px;
-                            padding-right: 3px;
-                            box-shadow: 3px -3px 0px 3px #00000052;
-                            background-color: #8f3cb96b;
-                            display: none;
-                            /* background-color: #ff5c4ca3; */">
-    
-                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
-    
-                            <span id="post-description" style="
-                            margin-left: 5px;
-                            font-size: 15px;
-                            font-size-adjust: inherit;
-                            font-variant-caps: titling-caps;
-                            font-weight: bold;
-                            ">${newData[i]["Post Description"]}</span>
+
+                    <div id = "live-stream-description" style= "display:none;">${newData[i]["Post Description"]}</div>
+                        
+                        
                         </div>
-                        </div>
+
+
+
                     <!-- Safe zone ends -->
                         </div>
                 </div>
@@ -616,6 +594,8 @@ var socket = io();
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
         buildOutWrapper.id = "post-buildout-wrapper"
+        console.log(e.path[2].childNodes[3].textContent)
+        
 
         let postBuildOutHTML = `
         <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
@@ -634,6 +614,14 @@ var socket = io();
         ">
 
         </div>
+
+          <div id ="live-stream-buildout-description" style= "
+          background: white;
+          width: 20%;
+          top: 25px;
+          position: absolute;
+          left: 200px;
+          "><span>${e.path[2].childNodes[3].textContent}</span></div>
 
           <div id = "video-grid-stream" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
             
@@ -674,6 +662,14 @@ var socket = io();
         document.getElementById('master-div').appendChild(buildOutWrapper)
 
         let videoGrid = document.getElementById('video-grid-stream')
+
+
+        //Description
+        // let liveStreamDescription = document.getElementById('live-stream-description')
+        // let liveStreamDescriptionContent = document.createTextNode(e.path[2].childNodes[3].textContent)
+        // console.log(liveStreamDescriptionContent)
+        // liveStreamDescription.appendChild(liveStreamDescriptionContent)
+
 
 
           let visitorPeer = new Peer();
@@ -789,7 +785,86 @@ var socket = io();
 
         document.getElementById('master-div').appendChild(buildOutWrapper)
         
-      } else if (e.path[1].attributes[2].nodeValue === "note"){
+      } else if (e.path[3].attributes[2].nodeValue  === 'link'){
+        console.log('just a link')
+        //The Post Description
+        let postDescription = e.path[2].childNodes[3].childNodes[3].textContent
+        //Build Out Wrapper HTML
+        var buildOutWrapper = document.createElement('div');
+        buildOutWrapper.id = "post-buildout-wrapper"
+
+        let postBuildOutHTML = `
+        <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
+
+        <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
+        <i class="fas fa-times-circle" aria-hidden="true"></i>
+        </button>
+
+          <div id = "post-buildout-description" style = "
+          position: absolute;
+          width: 10%;
+          left: 200px;
+          top: 75px;
+          font-size: 20px;
+          font-family: helvetica;
+          color: white;
+          ">
+          <span>${postDescription}</span>
+          </div>
+          <div id = "post-buildout-image" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
+            <img src = "${postImage}"></img>
+          </div>
+
+          <div id = "number of clients" style = "
+          position: absolute;
+          top: 600px;
+          left: 200px;
+          font-size: 20px;
+          color: white;
+          font-family: helvetica;
+          ">
+
+          </div>
+
+          <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
+          <div id = "messages-holder">
+          <ul class="messages" style ="
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          overflow: hidden;
+          overflow-y: auto;  
+          padding-bottom: 100px;
+          padding-left: 10px;
+          " id= "chat-messages"></ul>
+          </div>
+          <div id = "username-display" style="
+          position: absolute;
+          top: 225px;
+          background: white;
+          padding-top: 20px;
+          padding-bottom: 15px;
+          padding-left: 5px;
+          font-size: 20px;
+          padding-right: 5px;
+          ">${username}</div>
+          <input class="inputMessage" id = "chat-input" style = "position: relative;top: 225px;width: 82.3%;height: 65px;left: 72px;" placeholder="says....">
+          </div>
+          
+        </div>
+        `
+
+        buildOutWrapper.innerHTML = postBuildOutHTML
+
+        document.getElementById('master-div').appendChild(buildOutWrapper)
+
+
+
+
+
+
+      }
+        else if (e.path[1].attributes[2].nodeValue === "note"){
         console.log('you just clicked a note')
         let noteText = e.path[0].lastElementChild.outerText
         var buildOutWrapper = document.createElement('div');
@@ -852,7 +927,7 @@ var socket = io();
         //Fit the Text
         textFit(document.getElementById('post-buildout-note-content'), {minFontSize:14, maxFontSize: 100, multiLine: true})
 
-      }
+      } 
 
         //Blur the background
         document.getElementById('main-grid').style = "filter: blur(4px);"
@@ -1128,37 +1203,11 @@ var socket = io();
                         <a href="${data[0]}">
                         <img src="${data[1]}">
                         </a>
-                            <div class="post-description" id="post-description-master" style="
-                                position: absolute;
-                                z-index: 999;
-                                left: 0;
-                                bottom: 0;
-                                text-align: left;
-                                font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                                padding-bottom: 10px;
-                                padding-left: 5px;
-                                padding-top: 5px;
-                                text-size-adjust: auto;
-                                margin-right: 10px;
-                                margin-bottom: 5px;
-                                margin-left: 5px;
-                                padding-right: 3px;
-                                box-shadow: 3px -3px 0px 3px #00000052;
-                                background-color: #8f3cb96b;
-                                display: none;
-                                /* background-color: #ff5c4ca3; */">
-        
-                                <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
-        
-                                <span id="post-description" style="
-                                margin-left: 5px;
-                                font-size: 15px;
-                                font-size-adjust: inherit;
-                                font-variant-caps: titling-caps;
-                                font-weight: bold;
-                                ">${data[2]}</span>
+                        <div id = "live-stream-description" style = "display:none;">
+                        <span>${data[2]}</span>
+                        </div>
                             </div>
-                            </div>
+
                         <!-- Safe zone ends -->
                             </div>
                     </div>
@@ -1178,7 +1227,7 @@ var socket = io();
                     <a href="${data[0]}">
                     <img src="${data[1]}">
                     </a>
-                        <div class="post-description" id="post-description-master" style="
+                    <div class="post-description" id="post-description-master" style="
                             position: absolute;
                             z-index: 999;
                             left: 0;
@@ -1197,7 +1246,7 @@ var socket = io();
                             background-color: #8f3cb96b;
                             /* background-color: #ff5c4ca3; */">
 
-                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>LINK</b></span>
+                            <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
 
                             <span id="post-description" style="
                             margin-left: 5px;
@@ -1207,6 +1256,7 @@ var socket = io();
                             font-weight: bold;
                             ">${data[2]}</span>
                         </div>
+
                         </div>
                     <!-- Safe zone ends -->
                         </div>
@@ -2160,6 +2210,8 @@ var socket = io();
                      </button>
 
                      <div id = "video-grid"></div>
+
+                     <textarea id ="live-stream-description-input"></textarea>
                      
                      <button type = "button" class="btn btn-primary" id="start-stream-button">Start The Stream?</button>
 
@@ -2215,6 +2267,9 @@ var socket = io();
                           console.log('heyyy')
                           console.log(stream)
 
+                          //Getting Description Value
+                          let liveStreamDescription = document.getElementById('live-stream-description-input').value
+
                           exitButton()
 
                           //Taking screenshot of Stream
@@ -2240,7 +2295,11 @@ var socket = io();
                                 <a href = "${postID}">
                                 <img src="${screenShot}"></img>
                                 </a>
+                                <div id = "live-stream-description" style = "display:none;">
+                                <span>${liveStreamDescription}</span>
                                 </div>
+                                </div>
+
                                   <!-- Safe zone ends -->
                                       </div>
                               </div>
@@ -2269,6 +2328,33 @@ var socket = io();
                           myStreamingVideo.play()
 
                           document.getElementById('master-div').append(streamingVideoGrid)
+
+                          //Number of Clients
+                          let streamingNumberofClients = document.createElement('div')
+                          streamingNumberofClients.id = "number-of-clients-streaming"
+                          streamingNumberofClients.style = "position: absolute; top: 600px; left: 200px; font-size: 20px; color: white; font-family: helvetica;"
+
+                                          //Joining the room and getting the number of users in it
+                                          socket.on('a-user-connected-to-room', function(numClients){
+                                            console.log(numClients)
+                                            //Change the HTML of the span to numClients
+                                            let span = `<span>There is currently ${numClients} other person in this room</span>`
+                                            document.getElementById('number-of-clients-streaming').innerHTML = span
+                                          })
+
+                                          //When a user leaves the room
+                                          socket.on('a-user-left-the-room', function(numClients){
+                                            console.log(numClients)
+                                            //Change the HTML of the span to numClients
+                                            let span = `<span>There is currently ${numClients} other person in this room</span>`
+                                            document.getElementById('number-of-clients-streaming').innerHTML = span
+                                            
+                                          })
+
+                            document.getElementById('master-div').append(streamingNumberofClients)
+
+
+
 
                           //Stop Stream button
                           let stopStreamingButton = document.createElement('button')
@@ -2420,7 +2506,7 @@ var socket = io();
                           // let postLinkJoined = postLinkToJoin.join();
                           // console.log(postLinkJoined)
 
-                          let newPostInfo = [postID, screenShot, null, 'live-stream']
+                          let newPostInfo = [postID, screenShot, liveStreamDescription, 'live-stream']
                           console.log(newPostInfo)
 
                           socket.emit('postAddedUpdateDatabase', newPostInfo);
@@ -2479,6 +2565,7 @@ var socket = io();
                             document.getElementById('stop-streaming').remove()
                             document.getElementById('streaming-chat-holder').remove()
                             document.getElementById('my-streaming-video-div').remove()
+                            document.getElementById('number-of-clients-streaming').remove()
                             
                             socket.emit('stream-has-stopped', postID, postLink)
                             socket.emit('leave-room', postLink)
@@ -2492,82 +2579,14 @@ var socket = io();
 
                     
                       })
-                                              // navigator.mediaDevices.getDisplayMedia({
-                        //   video: {
-                        //     cursor: "always"},
-                        //   audio: {
-                        //     echoCancellation: true,
-                        //     noiseSuppression: true,
-                        //     sampleRate: 44100
-                        //   }
-                        //   //From here we can use the stream
-                        //   })
 
 
-
-
-
-
-            //When a new screenshot comes in
-            socket.on('new-stream-screenshot', function(screenshot, pageID){
-              console.log('guess a screenshot is coming in!')
-              // console.log(screenshot)
-              // console.log(pageID)
-
-              //Convert to the right pageID
-              // let pageIDString = pageID.join()
-              // console.log(pageIDString)
-
-              //Grab the page ID
-              screenshotChange = document.getElementById(pageID)
-              // console.log(screenshotChange.childNodes[1].children[0].src)
-
-              //Update the Screenshot
-              if(socket.id === pageID[1]){
-                // console.log('I`m taking a screen of myself')
-              screenshotChange.children[0].children[0].childNodes[1].src = screenshot}
-              else if (socket.id !== pageID[1]){
-                // console.log('screen coming from elsewhere')
-              screenshotChange.childNodes[1].children[0].src = screenshot}
-
-            })
-
-            //When a livestream has stopped message comes in
-            socket.on('someone-has-stopped-livestreaming', function(data)
-            {
-              console.log(data)
-              idToRemove = data.join()
-              console.log(idToRemove)
-              
-              console.log(grid.getItems())
-
-              //Loop through all grid items to find the one that matches the data and remove
-              let i;
-
-              for(i = 0; i < grid.getItems().length; i++){
-                if(grid.getItems()[i]._element.children[0].lastElementChild.attributes[1].nodeValue === idToRemove){
-                  console.log('remove it!')
-                  console.log(i)
-                  // console.log(grid.getItem(i))
-                  grid.remove(grid.getItems(i), { removeElements: true })
-                } else {
-                  
-                  console.log('don`t remove it')
-                }
-              }
-              
-              // console.log()
-
-              
-              
-              // grid.remove(grid.getItem(elementToRemove.parentNode)._element)
-            })
           }
 
 
 
 
-          //Add Screenshare Functio 
+          //Add Screenshare Function
           function addScreenShare(){
 
               
@@ -2593,6 +2612,8 @@ var socket = io();
                    </button>
 
                    <div id = "video-grid"></div>
+
+                   <textarea id ="live-stream-description-input"></textarea>
                    
                    <button type = "button" class="btn btn-primary" id="start-stream-button">Start The Stream?</button>
 
@@ -2609,7 +2630,7 @@ var socket = io();
 
                    //Back Button Clicked
                    document.getElementById('back-button').addEventListener('click', backButton)
-
+                   
                    //Getting Video
                    let videoGrid = document.getElementById('video-grid')
                    let startStreamButton = document.getElementById('start-stream-button')
@@ -2652,6 +2673,9 @@ var socket = io();
                         console.log('heyyy')
                         console.log(stream)
 
+                        //Getting Description Value
+                        let liveStreamDescription = document.getElementById('live-stream-description-input').value
+
                         exitButton()
 
                         //Taking screenshot of Stream
@@ -2677,7 +2701,11 @@ var socket = io();
                               <a href = "${postID}">
                               <img src="${screenShot}"></img>
                               </a>
+                              <div id = "live-stream-description" style = "display:none;">
+                              <span>${liveStreamDescription}</span>
                               </div>
+                              </div>
+
                                 <!-- Safe zone ends -->
                                     </div>
                             </div>
@@ -2706,6 +2734,30 @@ var socket = io();
                         myStreamingVideo.play()
 
                         document.getElementById('master-div').append(streamingVideoGrid)
+
+                        //Number of Clients
+                        let streamingNumberofClients = document.createElement('div')
+                        streamingNumberofClients.id = "number-of-clients-streaming"
+                        streamingNumberofClients.style = "position: absolute; top: 600px; left: 200px; font-size: 20px; color: white; font-family: helvetica;"
+
+                                        //Joining the room and getting the number of users in it
+                                        socket.on('a-user-connected-to-room', function(numClients){
+                                          console.log(numClients)
+                                          //Change the HTML of the span to numClients
+                                          let span = `<span>There is currently ${numClients} other person in this room</span>`
+                                          document.getElementById('number-of-clients-streaming').innerHTML = span
+                                        })
+
+                                        //When a user leaves the room
+                                        socket.on('a-user-left-the-room', function(numClients){
+                                          console.log(numClients)
+                                          //Change the HTML of the span to numClients
+                                          let span = `<span>There is currently ${numClients} other person in this room</span>`
+                                          document.getElementById('number-of-clients-streaming').innerHTML = span
+                                          
+                                        })
+
+                          document.getElementById('master-div').append(streamingNumberofClients)
 
                         //Stop Stream button
                         let stopStreamingButton = document.createElement('button')
@@ -2857,7 +2909,9 @@ var socket = io();
                         // let postLinkJoined = postLinkToJoin.join();
                         // console.log(postLinkJoined)
 
-                        let newPostInfo = [postID, screenShot, null, 'live-stream']
+                        
+
+                        let newPostInfo = [postID, screenShot, liveStreamDescription, 'live-stream']
                         console.log(newPostInfo)
 
                         socket.emit('postAddedUpdateDatabase', newPostInfo);
@@ -2916,6 +2970,7 @@ var socket = io();
                           document.getElementById('stop-streaming').remove()
                           document.getElementById('streaming-chat-holder').remove()
                           document.getElementById('my-streaming-video-div').remove()
+                          document.getElementById('number-of-clients-streaming').remove()
                           
                           socket.emit('stream-has-stopped', postID, postLink)
                           socket.emit('leave-room', postLink)
@@ -2929,27 +2984,14 @@ var socket = io();
 
                   
                     })
-                                            // navigator.mediaDevices.getDisplayMedia({
-                      //   video: {
-                      //     cursor: "always"},
-                      //   audio: {
-                      //     echoCancellation: true,
-                      //     noiseSuppression: true,
-                      //     sampleRate: 44100
-                      //   }
-                      //   //From here we can use the stream
-                      //   })
 
-
-
-
-
+        }
 
           //When a new screenshot comes in
           socket.on('new-stream-screenshot', function(screenshot, pageID){
             console.log('guess a screenshot is coming in!')
             // console.log(screenshot)
-            // console.log(pageID)
+            console.log(pageID)
 
             //Convert to the right pageID
             // let pageIDString = pageID.join()
@@ -2982,13 +3024,17 @@ var socket = io();
             let i;
 
             for(i = 0; i < grid.getItems().length; i++){
-              if(grid.getItems()[i]._element.children[0].lastElementChild.attributes[1].nodeValue === idToRemove){
+              if(grid.getItems()[i]._element.childNodes[1].id === idToRemove){
+                console.log('remove it!')
+                console.log(i)
+                // console.log(grid.getItem(i))
+                grid.remove(grid.getItems(i), { removeElements: true })
+              } else if (grid.getItems()[i]._element.childNodes[1].childNodes[3].id === idToRemove) {
                 console.log('remove it!')
                 console.log(i)
                 // console.log(grid.getItem(i))
                 grid.remove(grid.getItems(i), { removeElements: true })
               } else {
-                
                 console.log('don`t remove it')
               }
             }
@@ -2999,7 +3045,6 @@ var socket = io();
             
             // grid.remove(grid.getItem(elementToRemove.parentNode)._element)
           })
-        }
 
           
           

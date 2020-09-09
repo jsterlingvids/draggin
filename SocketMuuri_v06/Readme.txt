@@ -2,22 +2,22 @@
 
 Styling! Styling the posts
 
-- Deleting Chat on end of livestream
+
+- The person streaming cannot enter their stream
+    - Add if statement to the buildout
+- Not loading chat if text already exists (or clearing chat on exit)
+- Add video options (fullscreen, etc)
 
 - Deleting Livestreams when they're done
     - Delete Stream on refresh (and back)!
 
-- Different buildouts for different post types
-    - Links
-    - Images
-
 - Loading icon when selecting screenshare?
 
-- Not loading chat if text already exists (or clearing chat on exit)
-
 - Adding the nude.js protection
+- Google Analytics API
 
 - Deleting posts once there are more than 150
+- Adding error messages and alerts
 
 
 How it works (refresher):
