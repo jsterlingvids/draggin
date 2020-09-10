@@ -548,7 +548,7 @@ var socket = io();
         moveDataServerUpdate()
 
 
-//Clicking Posts
+//Clicking Posts - Post Buildout
 
       document.getElementById('main-grid').addEventListener('click', postBuildOut)
 
@@ -590,6 +590,18 @@ var socket = io();
         //If post is livestream emit from socket to get info
         if (e.path[3].attributes[2].nodeValue === "live-stream"){
           console.log('we got a livestream on our hands')
+
+
+
+
+
+
+          
+
+
+
+
+
 
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
@@ -673,7 +685,7 @@ var socket = io();
 
 
           let visitorPeer = new Peer();
-
+        
           //Seperate out Socket ID and Peer ID from Link
           let IdsPath = e.path[1].href
           let IdsPathSplitSlash = IdsPath.split('/')
@@ -699,6 +711,7 @@ var socket = io();
             call.answer();
             const video = document.createElement('video')
             video.id = "video-play"
+            video.controls = true;
             video.style = "width:100%; height:100%;"
             call.on('stream', function(stream){
               console.log(stream)
@@ -730,6 +743,7 @@ var socket = io();
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
         buildOutWrapper.id = "post-buildout-wrapper"
+        let postLink = e.path[1].href
 
         let postBuildOutHTML = `
         <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
@@ -739,7 +753,9 @@ var socket = io();
         </button>
 
           <div id = "post-buildout-image" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
+            <a href = "${postLink}">
             <img src = "${postImage}"></img>
+            </a>
           </div>
 
           <div id = "number of clients" style = "
@@ -793,6 +809,8 @@ var socket = io();
         var buildOutWrapper = document.createElement('div');
         buildOutWrapper.id = "post-buildout-wrapper"
 
+        let postLink = e.path[1].href
+
         let postBuildOutHTML = `
         <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
 
@@ -812,7 +830,9 @@ var socket = io();
           <span>${postDescription}</span>
           </div>
           <div id = "post-buildout-image" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
+            <a href ="${postLink}">
             <img src = "${postImage}"></img>
+            </a>
           </div>
 
           <div id = "number of clients" style = "
@@ -857,10 +877,6 @@ var socket = io();
         buildOutWrapper.innerHTML = postBuildOutHTML
 
         document.getElementById('master-div').appendChild(buildOutWrapper)
-
-
-
-
 
 
       }
@@ -964,6 +980,11 @@ var socket = io();
         //Append incoming server messages
         socket.on('archived-chat-messages-from-server', function(data){
           // console.log(data[0].message_and_username)
+          let chatMessageDiv = document.getElementById('chat-messages')
+
+          if(chatMessageDiv.hasChildNodes()) {
+            chatMessageDiv.innerHTML = ""
+          }
 
           //Loops through each message on the server and creates a node to load into the window
           data[0].message_and_username.forEach(data => {
@@ -1026,6 +1047,7 @@ var socket = io();
           //The message is add to a created element and appended
           var receivedChatMessageNode = document.createElement("LI");
           let receivedChatMessageTextNode = document.createTextNode(otherUsername + ": " + message)
+          console.log(receivedChatMessageTextNode)
 
           receivedChatMessageNode.appendChild(receivedChatMessageTextNode);
           document.getElementById('chat-messages').appendChild(receivedChatMessageNode)
@@ -2321,6 +2343,7 @@ var socket = io();
                           streamingVideoGrid.style = "position: fixed;bottom: 0; z-index: 3;"
                           let myStreamingVideo = document.createElement('video')
                           myStreamingVideo.muted = true;
+                          myStreamingVideo.controls = true;
                           myStreamingVideo.style = "width: 250px;"
                           myStreamingVideo.id = "streaming-video-play"
                           myStreamingVideo.srcObject = stream;
@@ -2727,6 +2750,7 @@ var socket = io();
                         streamingVideoGrid.style = "position: fixed;bottom: 0; z-index: 3;"
                         let myStreamingVideo = document.createElement('video')
                         myStreamingVideo.muted = true;
+                        myStreamingVideo.controls = true;
                         myStreamingVideo.style = "width: 250px;"
                         myStreamingVideo.id = "streaming-video-play"
                         myStreamingVideo.srcObject = stream;

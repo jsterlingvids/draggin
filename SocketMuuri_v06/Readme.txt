@@ -2,11 +2,9 @@
 
 Styling! Styling the posts
 
-
 - The person streaming cannot enter their stream
     - Add if statement to the buildout
-- Not loading chat if text already exists (or clearing chat on exit)
-- Add video options (fullscreen, etc)
+
 
 - Deleting Livestreams when they're done
     - Delete Stream on refresh (and back)!
