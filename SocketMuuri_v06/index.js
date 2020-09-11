@@ -66,24 +66,7 @@ var socket = io();
                   <a href="${newData[i]["Post Link"]}">
                   <img src="${newData[i]["Post Image"]}">
                   </a>
-                      <div class="post-description" id="post-description-master" style="
-                          position: absolute;
-                          z-index: 999;
-                          left: 0;
-                          bottom: 0;
-                          text-align: left;
-                          font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                          padding-bottom: 10px;
-                          padding-left: 5px;
-                          padding-top: 5px;
-                          text-size-adjust: auto;
-                          margin-right: 10px;
-                          margin-bottom: 5px;
-                          margin-left: 5px;
-                          padding-right: 3px;
-                          box-shadow: 3px -3px 0px 3px #00000052;
-                          background-color: #8f3cb96b;
-                          /* background-color: #ff5c4ca3; */">
+                      <div class="post-description" id="post-description-master">
 
                           <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
 
@@ -120,25 +103,7 @@ var socket = io();
                     <a href="${newData[i]["Post Link"]}">
                     <img src="${newData[i]["Post Image"]}">
                     </a>
-                        <div class="post-description" id="post-description-master" style="
-                            position: absolute;
-                            z-index: 999;
-                            left: 0;
-                            bottom: 0;
-                            text-align: left;
-                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                            padding-bottom: 10px;
-                            padding-left: 5px;
-                            padding-top: 5px;
-                            text-size-adjust: auto;
-                            margin-right: 10px;
-                            margin-bottom: 5px;
-                            margin-left: 5px;
-                            padding-right: 3px;
-                            box-shadow: 3px -3px 0px 3px #00000052;
-                            background-color: #8f3cb96b;
-                            display: none;
-                            /* background-color: #ff5c4ca3; */">
+                        <div class="post-description" id="post-description-master">
     
                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
     
@@ -255,24 +220,7 @@ var socket = io();
                     <a href="${newData[i]["Post Link"]}">
                     <img src="${newData[i]["Post Image"]}">
                     </a>
-                        <div class="post-description" id="post-description-master" style="
-                            position: absolute;
-                            z-index: 999;
-                            left: 0;
-                            bottom: 0;
-                            text-align: left;
-                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                            padding-bottom: 10px;
-                            padding-left: 5px;
-                            padding-top: 5px;
-                            text-size-adjust: auto;
-                            margin-right: 10px;
-                            margin-bottom: 5px;
-                            margin-left: 5px;
-                            padding-right: 3px;
-                            box-shadow: 3px -3px 0px 3px #00000052;
-                            background-color: #8f3cb96b;
-                            /* background-color: #ff5c4ca3; */">
+                        <div class="post-description" id="post-description-master">
 
                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>LINK</b></span>
 
@@ -557,6 +505,8 @@ var socket = io();
         // console.log('I`M CLICKING')
         console.log(e)
 
+        document.body.style.overflow = 'hidden'
+
         
 
         //Post Type
@@ -610,20 +560,13 @@ var socket = io();
         
 
         let postBuildOutHTML = `
-        <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
+        <div id = "post-buildout-background">
 
         <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
         <i class="fas fa-times-circle" aria-hidden="true"></i>
         </button>
         
-        <div id = "number of clients" style = "
-        position: absolute;
-        top: 450px;
-        left: 200px;
-        font-size: 20px;
-        color: white;
-        font-family: helvetica;
-        ">
+        <div id = "number-of-clients">
 
         </div>
 
@@ -643,27 +586,10 @@ var socket = io();
 
           <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
           <div id = "messages-holder">
-          <ul class="messages" style ="
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          overflow: hidden;
-          overflow-y: auto;  
-          padding-bottom: 100px;
-          padding-left: 10px;
-          " id= "chat-messages"></ul>
+          <ul class="messages" id= "chat-messages"></ul>
           </div>
-          <div id = "username-display" style="
-          position: absolute;
-          top: 225px;
-          background: white;
-          padding-top: 20px;
-          padding-bottom: 15px;
-          padding-left: 5px;
-          font-size: 20px;
-          padding-right: 5px;
-          ">${username}</div>
-          <input class="inputMessage" id = "chat-input" style = "position: relative;top: 225px;width: 82.3%;height: 65px;left: 72px;" placeholder="says....">
+          <div id = "username-display">${username}</div>
+          <input class="inputMessage" id = "chat-input" placeholder="says....">
           </div>
           
         </div>
@@ -746,52 +672,28 @@ var socket = io();
         let postLink = e.path[1].href
 
         let postBuildOutHTML = `
-        <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
+        <div id = "post-buildout-background">
 
         <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
         <i class="fas fa-times-circle" aria-hidden="true"></i>
         </button>
 
-          <div id = "post-buildout-image" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
+          <div id = "post-buildout-image">
             <a href = "${postLink}">
             <img src = "${postImage}"></img>
             </a>
           </div>
 
-          <div id = "number of clients" style = "
-          position: absolute;
-          top: 600px;
-          left: 200px;
-          font-size: 20px;
-          color: white;
-          font-family: helvetica;
-          ">
+          <div id = "number-of-clients">
 
           </div>
 
           <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
           <div id = "messages-holder">
-          <ul class="messages" style ="
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          overflow: hidden;
-          overflow-y: auto;  
-          padding-bottom: 100px;
-          padding-left: 10px;
-          " id= "chat-messages"></ul>
+          <ul class="messages" id= "chat-messages"></ul>
           </div>
-          <div id = "username-display" style="
-          position: absolute;
-          top: 225px;
-          background: white;
-          padding-top: 20px;
-          padding-bottom: 15px;
-          padding-left: 5px;
-          font-size: 20px;
-          padding-right: 5px;
-          ">${username}</div>
-          <input class="inputMessage" id = "chat-input" style = "position: relative;top: 225px;width: 82.3%;height: 65px;left: 72px;" placeholder="says....">
+          <div id = "username-display" >${username}</div>
+          <input class="inputMessage" id = "chat-input"  placeholder="says....">
           </div>
           
         </div>
@@ -812,7 +714,7 @@ var socket = io();
         let postLink = e.path[1].href
 
         let postBuildOutHTML = `
-        <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
+        <div id = "post-buildout-background">
 
         <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
         <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -829,46 +731,22 @@ var socket = io();
           ">
           <span>${postDescription}</span>
           </div>
-          <div id = "post-buildout-image" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
+          <div id = "post-buildout-image" >
             <a href ="${postLink}">
             <img src = "${postImage}"></img>
             </a>
           </div>
 
-          <div id = "number of clients" style = "
-          position: absolute;
-          top: 600px;
-          left: 200px;
-          font-size: 20px;
-          color: white;
-          font-family: helvetica;
-          ">
+          <div id = "number-of-clients">
 
           </div>
 
           <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
           <div id = "messages-holder">
-          <ul class="messages" style ="
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          overflow: hidden;
-          overflow-y: auto;  
-          padding-bottom: 100px;
-          padding-left: 10px;
-          " id= "chat-messages"></ul>
+          <ul class="messages" id= "chat-messages"></ul>
           </div>
-          <div id = "username-display" style="
-          position: absolute;
-          top: 225px;
-          background: white;
-          padding-top: 20px;
-          padding-bottom: 15px;
-          padding-left: 5px;
-          font-size: 20px;
-          padding-right: 5px;
-          ">${username}</div>
-          <input class="inputMessage" id = "chat-input" style = "position: relative;top: 225px;width: 82.3%;height: 65px;left: 72px;" placeholder="says....">
+          <div id = "username-display">${username}</div>
+          <input class="inputMessage" id = "chat-input"  placeholder="says....">
           </div>
           
         </div>
@@ -876,7 +754,8 @@ var socket = io();
 
         buildOutWrapper.innerHTML = postBuildOutHTML
 
-        document.getElementById('master-div').appendChild(buildOutWrapper)
+        // document.getElementById('master-div').appendChild(buildOutWrapper)
+        document.body.appendChild(buildOutWrapper)
 
 
       }
@@ -887,7 +766,7 @@ var socket = io();
         buildOutWrapper.id = "post-buildout-wrapper"
 
         let postBuildOutHTML = `
-        <div id = "post-buildout-background" style = "width: 100%;height: 300%;position: absolute;background: rgba(0, 0, 0, 0.5);top: 0px;z-index: 3;">
+        <div id = "post-buildout-background">
 
         <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
         <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -897,40 +776,16 @@ var socket = io();
           ${noteText}
           </div>
 
-          <div id = "number of clients" style = "
-          position: absolute;
-          top: 600px;
-          left: 200px;
-          font-size: 20px;
-          color: white;
-          font-family: helvetica;
-          ">
+          <div id = "number-of-clients">
 
           </div>
 
           <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
           <div id = "messages-holder">
-          <ul class="messages" style ="
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          overflow: hidden;
-          overflow-y: auto;  
-          padding-bottom: 100px;
-          padding-left: 10px;
-          " id= "chat-messages"></ul>
+          <ul class="messages" id= "chat-messages"></ul>
           </div>
-          <div id = "username-display" style="
-          position: absolute;
-          top: 225px;
-          background: white;
-          padding-top: 20px;
-          padding-bottom: 15px;
-          padding-left: 5px;
-          font-size: 20px;
-          padding-right: 5px;
-          ">${username}</div>
-          <input class="inputMessage" id = "chat-input" style = "position: relative;top: 225px;width: 82.3%;height: 65px;left: 72px;" placeholder="says....">
+          <div id = "username-display">${username}</div>
+          <input class="inputMessage" id = "chat-input"  placeholder="says....">
           </div>
           
         </div>
@@ -953,8 +808,10 @@ var socket = io();
 
         
         //Exit button clicked
-        function buildOutExit(){
-          console.log('exit button')
+        function buildOutExit(e){
+          e.preventDefault()
+          console.log('exit button buildOut')
+          document.body.style.overflow = ''
           document.getElementById('post-buildout-wrapper').remove()
           document.getElementById('main-grid').style = ""
           socket.emit('leave-room', room)
@@ -965,7 +822,7 @@ var socket = io();
                   console.log(numClients)
                   //Change the HTML of the span to numClients
                   let span = `<span>There is currently ${numClients} other person in this room</span>`
-                  document.getElementById('number of clients').innerHTML = span
+                  document.getElementById('number-of-clients').innerHTML = span
                 })
 
                 //When a user leaves the room
@@ -973,7 +830,7 @@ var socket = io();
                   console.log(numClients)
                   //Change the HTML of the span to numClients
                   let span = `<span>There is currently ${numClients} other person in this room</span>`
-                  document.getElementById('number of clients').innerHTML = span
+                  document.getElementById('number-of-clients').innerHTML = span
                   
                 })
 
@@ -1094,24 +951,7 @@ var socket = io();
                     <a href="${data[0]}">
                     <img src="${data[1]}">
                     </a>
-                        <div class="post-description" id="post-description-master" style="
-                            position: absolute;
-                            z-index: 999;
-                            left: 0;
-                            bottom: 0;
-                            text-align: left;
-                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                            padding-bottom: 10px;
-                            padding-left: 5px;
-                            padding-top: 5px;
-                            text-size-adjust: auto;
-                            margin-right: 10px;
-                            margin-bottom: 5px;
-                            margin-left: 5px;
-                            padding-right: 3px;
-                            box-shadow: 3px -3px 0px 3px #00000052;
-                            background-color: #8f3cb96b;
-                            /* background-color: #ff5c4ca3; */">
+                        <div class="post-description" id="post-description-master">
 
                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
 
@@ -1144,25 +984,7 @@ var socket = io();
                                       <a href="${data[0]}">
                                       <img src="${data[1]}">
                                       </a>
-                                          <div class="post-description" id="post-description-master" style="
-                                              position: absolute;
-                                              z-index: 999;
-                                              left: 0;
-                                              bottom: 0;
-                                              text-align: left;
-                                              font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                                              padding-bottom: 10px;
-                                              padding-left: 5px;
-                                              padding-top: 5px;
-                                              text-size-adjust: auto;
-                                              margin-right: 10px;
-                                              margin-bottom: 5px;
-                                              margin-left: 5px;
-                                              padding-right: 3px;
-                                              box-shadow: 3px -3px 0px 3px #00000052;
-                                              background-color: #8f3cb96b;
-                                              display:none;
-                                              /* background-color: #ff5c4ca3; */">
+                                          <div class="post-description" id="post-description-master">
   
                                               <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
   
@@ -1249,24 +1071,7 @@ var socket = io();
                     <a href="${data[0]}">
                     <img src="${data[1]}">
                     </a>
-                    <div class="post-description" id="post-description-master" style="
-                            position: absolute;
-                            z-index: 999;
-                            left: 0;
-                            bottom: 0;
-                            text-align: left;
-                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                            padding-bottom: 10px;
-                            padding-left: 5px;
-                            padding-top: 5px;
-                            text-size-adjust: auto;
-                            margin-right: 10px;
-                            margin-bottom: 5px;
-                            margin-left: 5px;
-                            padding-right: 3px;
-                            box-shadow: 3px -3px 0px 3px #00000052;
-                            background-color: #8f3cb96b;
-                            /* background-color: #ff5c4ca3; */">
+                    <div class="post-description" id="post-description-master">
 
                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
 
@@ -1784,24 +1589,7 @@ var socket = io();
                      <a href="${metadata.url}">
                      <img src="${metadata.image}">
                      </a>
-                         <div class="post-description" id="post-description-master" style="
-                             position: absolute;
-                             z-index: 999;
-                             left: 0;
-                             bottom: 0;
-                             text-align: left;
-                             font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                             padding-bottom: 10px;
-                             padding-left: 5px;
-                             padding-top: 5px;
-                             text-size-adjust: auto;
-                             margin-right: 10px;
-                             margin-bottom: 5px;
-                             margin-left: 5px;
-                             padding-right: 3px;
-                             box-shadow: 3px -3px 0px 3px #00000052;
-                             background-color: #8f3cb96b;
-                             /* background-color: #ff5c4ca3; */">
+                         <div class="post-description" id="post-description-master">
 
                              <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
 
@@ -1864,25 +1652,7 @@ var socket = io();
                      <a href="${metadata.url}">
                      <img src="${metadata.image}">
                      </a>
-                         <div class="post-description" id="post-description-master" style="
-                             position: absolute;
-                             z-index: 999;
-                             left: 0;
-                             bottom: 0;
-                             text-align: left;
-                             font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                             padding-bottom: 10px;
-                             padding-left: 5px;
-                             padding-top: 5px;
-                             text-size-adjust: auto;
-                             margin-right: 10px;
-                             margin-bottom: 5px;
-                             margin-left: 5px;
-                             padding-right: 3px;
-                             box-shadow: 3px -3px 0px 3px #00000052;
-                             background-color: #8f3cb96b;
-                             display: none;
-                             /* background-color: #ff5c4ca3; */">
+                         <div class="post-description" id="post-description-master">
 
                              <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
 
@@ -1946,24 +1716,7 @@ var socket = io();
                      <a href="${metadata.url}">
                      <img src="${metadata.image}">
                      </a>
-                         <div class="post-description" id="post-description-master" style="
-                             position: absolute;
-                             z-index: 999;
-                             left: 0;
-                             bottom: 0;
-                             text-align: left;
-                             font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                             padding-bottom: 10px;
-                             padding-left: 5px;
-                             padding-top: 5px;
-                             text-size-adjust: auto;
-                             margin-right: 10px;
-                             margin-bottom: 5px;
-                             margin-left: 5px;
-                             padding-right: 3px;
-                             box-shadow: 3px -3px 0px 3px #00000052;
-                             background-color: #8f3cb96b;
-                             /* background-color: #ff5c4ca3; */">
+                         <div class="post-description" id="post-description-master">
 
                              <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>LINK</b></span>
 
@@ -2035,24 +1788,7 @@ var socket = io();
                                     <a href="${metadata.url}">
                                     <img src="${metadata.image}">
                                     </a>
-                                        <div class="post-description" id="post-description-master" style="
-                                            position: absolute;
-                                            z-index: 999;
-                                            left: 0;
-                                            bottom: 0;
-                                            text-align: left;
-                                            font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                                            padding-bottom: 10px;
-                                            padding-left: 5px;
-                                            padding-top: 5px;
-                                            text-size-adjust: auto;
-                                            margin-right: 10px;
-                                            margin-bottom: 5px;
-                                            margin-left: 5px;
-                                            padding-right: 3px;
-                                            box-shadow: 3px -3px 0px 3px #00000052;
-                                            background-color: #8f3cb96b;
-                                            /* background-color: #ff5c4ca3; */">
+                                        <div class="post-description" id="post-description-master">
 
                                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
 
@@ -2082,25 +1818,7 @@ var socket = io();
                                       <a href="${metadata.url}">
                                       <img src="${metadata.image}">
                                       </a>
-                                          <div class="post-description" id="post-description-master" style="
-                                              position: absolute;
-                                              z-index: 999;
-                                              left: 0;
-                                              bottom: 0;
-                                              text-align: left;
-                                              font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                                              padding-bottom: 10px;
-                                              padding-left: 5px;
-                                              padding-top: 5px;
-                                              text-size-adjust: auto;
-                                              margin-right: 10px;
-                                              margin-bottom: 5px;
-                                              margin-left: 5px;
-                                              padding-right: 3px;
-                                              box-shadow: 3px -3px 0px 3px #00000052;
-                                              background-color: #8f3cb96b;
-                                              display:none;
-                                              /* background-color: #ff5c4ca3; */">
+                                          <div class="post-description" id="post-description-master">
   
                                               <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
   
@@ -2130,24 +1848,7 @@ var socket = io();
                               <a href="${metadata.url}">
                               <img src="${metadata.image}">
                               </a>
-                                  <div class="post-description" id="post-description-master" style="
-                                      position: absolute;
-                                      z-index: 999;
-                                      left: 0;
-                                      bottom: 0;
-                                      text-align: left;
-                                      font-family: interface, &quot;Helvetica Neue&quot;, helvetica, sans-serif;
-                                      padding-bottom: 10px;
-                                      padding-left: 5px;
-                                      padding-top: 5px;
-                                      text-size-adjust: auto;
-                                      margin-right: 10px;
-                                      margin-bottom: 5px;
-                                      margin-left: 5px;
-                                      padding-right: 3px;
-                                      box-shadow: 3px -3px 0px 3px #00000052;
-                                      background-color: #8f3cb96b;
-                                      /* background-color: #ff5c4ca3; */">
+                                  <div class="post-description" id="post-description-master">
 
                                       <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>LINK</b></span>
 
@@ -2431,28 +2132,11 @@ var socket = io();
 
                           </div>
 
-                          <div id = "username-display" style="
-                          bottom: 0px;
-                          background: skyblue;
-                          padding-bottom: 15px;
-                          padding-left: 5px;
-                          font-size: 20px;
-                          padding-right: 5px;
-                          position: fixed;
-                          left: 500px;
-                          height: 5%;
-                          padding-top: 5px;
-                          ">${username}</div>
+                          <div id = "username-display">${username}</div>
 
           
 
-                          <input class="inputMessage" id = "streaming-chat-input" style = "
-                          position: fixed;
-                          bottom: 0px;
-                          width: 44%;
-                          left: 570px;
-                          height: 5%;
-                          " placeholder="says....">
+                          <input class="inputMessage" id = "streaming-chat-input" placeholder="says....">
                           </input>
 
                           </div>`
@@ -2835,28 +2519,11 @@ var socket = io();
 
                         </div>
 
-                        <div id = "username-display" style="
-                        bottom: 0px;
-                        background: skyblue;
-                        padding-bottom: 15px;
-                        padding-left: 5px;
-                        font-size: 20px;
-                        padding-right: 5px;
-                        position: fixed;
-                        left: 500px;
-                        height: 5%;
-                        padding-top: 5px;
-                        ">${username}</div>
+                        <div id = "username-display">${username}</div>
 
         
 
-                        <input class="inputMessage" id = "streaming-chat-input" style = "
-                        position: fixed;
-                        bottom: 0px;
-                        width: 44%;
-                        left: 570px;
-                        height: 5%;
-                        " placeholder="says....">
+                        <input class="inputMessage" id = "streaming-chat-input" placeholder="says....">
                         </input>
 
                         </div>`
