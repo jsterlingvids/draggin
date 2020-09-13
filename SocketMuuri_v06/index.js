@@ -716,19 +716,11 @@ var socket = io();
         let postBuildOutHTML = `
         <div id = "post-buildout-background">
 
-        <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
+        <button type="button" class="btn btn-primary" id="exit-button" >
         <i class="fas fa-times-circle" aria-hidden="true"></i>
         </button>
 
-          <div id = "post-buildout-description" style = "
-          position: absolute;
-          width: 10%;
-          left: 200px;
-          top: 75px;
-          font-size: 20px;
-          font-family: helvetica;
-          color: white;
-          ">
+          <div id = "post-buildout-description" >
           <span>${postDescription}</span>
           </div>
           <div id = "post-buildout-image" >
@@ -741,7 +733,7 @@ var socket = io();
 
           </div>
 
-          <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
+          <div id = "post-buildout-chat">
           <div id = "messages-holder">
           <ul class="messages" id= "chat-messages"></ul>
           </div>
@@ -802,6 +794,7 @@ var socket = io();
 
         //Blur the background
         document.getElementById('main-grid').style = "filter: blur(4px);"
+        document.getElementById('submission-start').style.filter = "blur(3px)"
 
         document.getElementById('exit-button').addEventListener('click', buildOutExit)
 
@@ -814,6 +807,7 @@ var socket = io();
           document.body.style.overflow = ''
           document.getElementById('post-buildout-wrapper').remove()
           document.getElementById('main-grid').style = ""
+          document.getElementById('submission-start').style.filter = ""
           socket.emit('leave-room', room)
         }
 

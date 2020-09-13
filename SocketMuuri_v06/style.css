@@ -157,7 +157,7 @@
 
       #post-buildout-image{
         background: white; 
-        width: 30%;
+        width: 410px;
         position: absolute; 
         top: 100px;
         left: 200px;
@@ -170,8 +170,8 @@
         width: 100%;
       }
 
-      #chat-messages.messages {
-        width: 100%;
+      #chat-messages.messages  {
+        width: 450px;
         height: 300%;
         position: absolute;
         overflow: hidden;
@@ -181,14 +181,22 @@
         background: white;
       }
 
+      #post-buildout-chat{
+        width: 30%;
+        position: relative;
+        top: 100px;
+        left: 625px;
+        height: 15%;
+      }
+
       #chat-input.inputMessage {
-        width: 290px;
+        width: 330px;
         position: absolute;
         border-radius: 20px;
         padding: 5px;
         border: 2px solid #999;
         top: 300%;
-        left: 125px;
+        left: 115px;
         height: 60px;
       }
 
@@ -208,23 +216,61 @@
         padding-bottom: 15px;
       }
 
+      #post-buildout-description{
+        position: absolute;
+        width: 410px;
+        left: 200px;
+        top: 75px;
+        font-size: 18px;
+        font-family: helvetica;
+        color: white;
+      }
+
       #number-of-clients{
         position: absolute;
         left: 200px;
         font-size: 20px;
         color: white;
         font-family: helvetica;
-        top: 22%;
+        top: 525px;
+      }
+
+      #exit-button{
+        position: inherit;
+        top: 15px;
+        right: 200px;
+        font-size: 25px;
       }
 
 
       /* Cell Phone Size */
-      @media (max-width: 480px){
+      @media (max-width: 575.98px){
+
           #post-buildout-image{
-            background: black; 
-            width: 30%;
+            background: white;
             position: absolute;
             top: 100px;
-            left: 200px;
+            left: 282px;
+            width: 350px;
           }
-      }
+
+          #chat-messages.messages {
+            width: 350px;
+            left: 81px;
+            top: -75px;
+          }
+
+          #post-buildout-chat{
+            position: absolute;
+            top: 540px;
+            left: 200px;
+            height: 30px;
+            /* width: 200px;*/
+          }
+
+        }
+          
+          
+
+
+      
