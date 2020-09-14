@@ -788,9 +788,11 @@ var socket = io();
         let postBuildOutHTML = `
         <div id = "post-buildout-background">
 
-        <button type="button" class="btn btn-primary" id="exit-button"></i>
+        <button type="button" class="btn btn-primary" id="exit-button">
+        <i class="fas fa-times-circle" aria-hidden="true"></i>
         </button>
 
+          <div id = "post-content-container">
           <div id = "post-buildout-note-content">
           ${noteText}
           </div>
@@ -804,6 +806,8 @@ var socket = io();
           </div>
           <div id = "username-display">${username}</div>
           <input class="inputMessage" id = "chat-input"  placeholder="says...."></input>
+          </div>
+
           </div>
           
         </div>
@@ -827,16 +831,7 @@ var socket = io();
 
 
         
-        //Exit button clicked
-        function buildOutExit(e){
-          e.preventDefault()
-          console.log('exit button buildOut')
-          document.body.style.overflow = ''
-          document.getElementById('post-buildout-wrapper').remove()
-          document.getElementById('main-grid').style = ""
-          document.getElementById('submission-start').style.filter = ""
-          socket.emit('leave-room', room)
-        }
+
 
                 //Joining the room and getting the number of users in it
                 socket.on('a-user-connected-to-room', function(numClients){
@@ -934,6 +929,18 @@ var socket = io();
 
 
         })
+
+                //Exit button clicked
+                function buildOutExit(e){
+                  e.preventDefault()
+                  console.log('exit button buildOut')
+                  document.body.style.overflow = ''
+                  document.getElementById('post-buildout-wrapper').remove()
+                  document.getElementById('main-grid').style = ""
+                  document.getElementById('submission-start').style.filter = ""
+                  socket.emit('leave-room', room)
+                  grid.refreshItems().layout();
+                }
 
       }
 

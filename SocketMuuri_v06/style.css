@@ -247,20 +247,24 @@
         position: absolute;
       }
 
+      /* Notes Buildout */
+
       #post-buildout-note-content{
-        background: white;
-        width: 30%;
-        position: absolute;
+        width: 400px;
+        position: relative;
         top: 100px;
         left: 200px;
-        height:10%;
+        height: 375px;
         padding: 10px;
         text-align: center;
         text-justify: auto;
         background: deepskyblue;
         color: white;
         font-family: helvetica;
+        line-height: 4.5;
       }
+
+
 
       /* Cell Phone Size */
       @media (max-width: 575.98px){
@@ -354,6 +358,22 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 15;
           }
+
+          /* Notes Buildout */
+
+          #post-buildout-note-content{
+          width: 300px;
+          position: relative;
+          top: 125px;
+          left: 90px;
+          height: 300px;
+          padding: 10px;
+          text-align: center;
+          text-justify: auto;
+          background: deepskyblue;
+          color: white;
+          font-family: helvetica;
+          line-height: 5;}
 
         }
           
