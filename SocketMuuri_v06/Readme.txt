@@ -2,6 +2,8 @@
 
 Styling! Styling the posts
 
+- Make note text unclickable in the grid
+
 - The person streaming cannot enter their stream
     - Add if statement to the buildout
 

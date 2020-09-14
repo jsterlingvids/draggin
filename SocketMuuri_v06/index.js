@@ -133,7 +133,6 @@ var socket = io();
             <div class="item">
               <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
               <!-- Safe zone, enter your custom markup -->
-
               <div class="notes-content" id = "notes-content" style= "
               width: 300px;
               height: 300px;
@@ -148,9 +147,11 @@ var socket = io();
               padding: 5px;
               overflow: hidden;
               ">
+              
               <span class="textFitted" style="${newData[i]["Post Description"]}">
               ${newData[i]["Post Link"]}
               </span>
+              
               </div>
                 
               <!-- Safe zone ends -->
@@ -507,18 +508,16 @@ var socket = io();
 
         document.body.style.overflow = 'hidden'
 
-        
-
         //Post Type
        
         // let postType = e.path[3].attributes[2].nodeValue
         // let postTypeNote = e.path[1].attributes[2].nodeValue
 
         //Post Image
-        let postImage = e.path[2].childNodes[1].childNodes[1].src
+        // let postImage = e.path[2].childNodes[1].childNodes[1].src
 
         //Post Link
-        let postLink = e.path[2].childNodes[1].href
+        // let postLink = e.path[2].childNodes[1].href
 
         //Post Description
         // if(!e.path[2].childNodes[3].childNodes[3].textContent === null){
@@ -530,6 +529,10 @@ var socket = io();
         // //Post Description Type
         // let postDescriptionType = e.path[2].childNodes[3].childNodes[1].textContent
 
+
+        let postLink = e.path[1].href || e.path[0].lastElementChild.outerText
+        console.log(postLink)
+
         //Retrive Previous Messages from the Server
         socket.emit('retrieve-chat-messages', postLink)
 
@@ -537,20 +540,10 @@ var socket = io();
         let room = postLink;
         socket.emit('join-room', room, username)
 
+
         //If post is livestream emit from socket to get info
         if (e.path[3].attributes[2].nodeValue === "live-stream"){
           console.log('we got a livestream on our hands')
-
-
-
-
-
-
-          
-
-
-
-
 
 
         //Build Out Wrapper HTML
@@ -666,52 +659,24 @@ var socket = io();
           
         }  else if (e.path[3].attributes[2].nodeValue === 'link-img') {
 
-        //Build Out Wrapper HTML
-        var buildOutWrapper = document.createElement('div');
-        buildOutWrapper.id = "post-buildout-wrapper"
-        let postLink = e.path[1].href
+        //Post Image
+        let postImage = e.path[2].childNodes[1].childNodes[1].src
 
-        let postBuildOutHTML = `
-        <div id = "post-buildout-background">
-
-        <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
-        <i class="fas fa-times-circle" aria-hidden="true"></i>
-        </button>
-
-          <div id = "post-buildout-image">
-            <a href = "${postLink}">
-            <img src = "${postImage}"></img>
-            </a>
-          </div>
-
-          <div id = "number-of-clients">
-
-          </div>
-
-          <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
-          <div id = "messages-holder">
-          <ul class="messages" id= "chat-messages"></ul>
-          </div>
-          <div id = "username-display" >${username}</div>
-          <input class="inputMessage" id = "chat-input"  placeholder="says....">
-          </div>
-          
-        </div>
-        `
-
-        buildOutWrapper.innerHTML = postBuildOutHTML
-
-        document.getElementById('master-div').appendChild(buildOutWrapper)
-        
-      } else if (e.path[3].attributes[2].nodeValue  === 'link'){
-        console.log('just a link')
         //The Post Description
         let postDescription = e.path[2].childNodes[3].childNodes[3].textContent
+
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
         buildOutWrapper.id = "post-buildout-wrapper"
 
         let postLink = e.path[1].href
+
+                //Retrive Previous Messages from the Server
+                socket.emit('retrieve-chat-messages', postLink)
+
+                //When the buildout is opened, socket will join the specific chatroom based on the link URL
+                let room = postLink;
+                socket.emit('join-room', room, username)
 
         let postBuildOutHTML = `
         <div id = "post-buildout-background">
@@ -720,6 +685,8 @@ var socket = io();
         <i class="fas fa-times-circle" aria-hidden="true"></i>
         </button>
 
+
+        <div id = "post-content-container">
           <div id = "post-buildout-description" >
           <span>${postDescription}</span>
           </div>
@@ -733,12 +700,70 @@ var socket = io();
 
           </div>
 
-          <div id = "post-buildout-chat">
+          
           <div id = "messages-holder">
           <ul class="messages" id= "chat-messages"></ul>
           </div>
           <div id = "username-display">${username}</div>
-          <input class="inputMessage" id = "chat-input"  placeholder="says....">
+          <input class="inputMessage" id = "chat-input"  placeholder="says...."></input>
+          </div>
+
+          </div>
+          
+        </div>
+        `
+
+        buildOutWrapper.innerHTML = postBuildOutHTML
+
+        // document.getElementById('master-div').appendChild(buildOutWrapper)
+        document.body.appendChild(buildOutWrapper)
+
+
+        
+      } else if (e.path[3].attributes[2].nodeValue  === 'link'){
+
+        console.log('just a link')
+
+        //Post Image
+        let postImage = e.path[2].childNodes[1].childNodes[1].src
+
+        //The Post Description
+        let postDescription = e.path[2].childNodes[3].childNodes[3].textContent
+
+        //Build Out Wrapper HTML
+        var buildOutWrapper = document.createElement('div');
+        buildOutWrapper.id = "post-buildout-wrapper"
+
+        let postBuildOutHTML = `
+        <div id = "post-buildout-background">
+
+        <button type="button" class="btn btn-primary" id="exit-button" >
+        <i class="fas fa-times-circle" aria-hidden="true"></i>
+        </button>
+
+
+        <div id = "post-content-container">
+          <div id = "post-buildout-description" >
+          <span>${postDescription}</span>
+          </div>
+          <div id = "post-buildout-image" >
+            <a href ="${postLink}">
+            <img src = "${postImage}"></img>
+            </a>
+          </div>
+
+          <div id = "number-of-clients">
+
+          </div>
+
+          
+          <div id = "messages-holder">
+          <ul class="messages" id= "chat-messages"></ul>
+          </div>
+          <div id = "username-display">${username}</div>
+          <input class="inputMessage" id = "chat-input"  placeholder="says...."></input>
+          </div>
+
           </div>
           
         </div>
@@ -753,18 +778,20 @@ var socket = io();
       }
         else if (e.path[1].attributes[2].nodeValue === "note"){
         console.log('you just clicked a note')
+        
+        //Get the text of the note from the click event
         let noteText = e.path[0].lastElementChild.outerText
+
         var buildOutWrapper = document.createElement('div');
         buildOutWrapper.id = "post-buildout-wrapper"
 
         let postBuildOutHTML = `
         <div id = "post-buildout-background">
 
-        <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
-        <i class="fas fa-times-circle" aria-hidden="true"></i>
+        <button type="button" class="btn btn-primary" id="exit-button"></i>
         </button>
 
-          <div id = "post-buildout-note-content" style = "background: white;width: 30%;position: absolute;top: 100px;left: 200px;height:10%;padding: 10px;text-align: center;text-justify: auto;background: deepskyblue;color: white;font-family: helvetica;">
+          <div id = "post-buildout-note-content">
           ${noteText}
           </div>
 
@@ -772,12 +799,11 @@ var socket = io();
 
           </div>
 
-          <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
           <div id = "messages-holder">
           <ul class="messages" id= "chat-messages"></ul>
           </div>
           <div id = "username-display">${username}</div>
-          <input class="inputMessage" id = "chat-input"  placeholder="says....">
+          <input class="inputMessage" id = "chat-input"  placeholder="says...."></input>
           </div>
           
         </div>
@@ -785,12 +811,13 @@ var socket = io();
 
         buildOutWrapper.innerHTML = postBuildOutHTML
 
-        document.getElementById('master-div').appendChild(buildOutWrapper)
+        document.body.appendChild(buildOutWrapper)
 
         //Fit the Text
         textFit(document.getElementById('post-buildout-note-content'), {minFontSize:14, maxFontSize: 100, multiLine: true})
 
       } 
+
 
         //Blur the background
         document.getElementById('main-grid').style = "filter: blur(4px);"
