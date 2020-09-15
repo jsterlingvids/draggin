@@ -137,6 +137,104 @@
         /* background-color: #ff5c4ca3; */
       }
 
+      /* Submission Overlay */
+      #overlay.overlay{
+      position: fixed;
+      right: 0px;
+      width: 50%;
+      height: 100%;
+      padding: 10px;
+      z-index: 20;
+      top: 0;
+      background-color: rgb(249,251,252);
+      transition: 1s;
+      box-shadow: 12px 1px 17px 0px black;
+      }
+
+      #wrapper{
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+      }
+
+      #add-link{
+        padding: 3%;
+        margin: 2%;
+        position: relative;
+        top: 200px;
+        left: 200px;
+        width: 115px;
+        font-size: 22px;
+        height: 100px;
+      }
+
+      #add-note{
+        padding: 3%;
+        margin: 2%;
+        position: relative;
+        top: 200px;
+        left: 180px;
+        width: 115px;
+        font-size: 22px;
+        height: 100px;
+      }
+
+      #live-stream{
+        position: relative;
+        top: 310px;
+        left: -90px;
+        width: 115px;
+        font-size: 22px;
+        height: 100px;
+      }
+
+      #screen-share{
+        padding: 3%;
+        margin: 2%;
+        position: relative;
+        width: 115px;
+        top: 310px;
+        left: -110px;
+        height: 100px;
+      }
+
+      /* Post Submission - Add Link */
+      #wrapper > div.new-post{
+        width: 350px;
+        margin: 5px;
+        color: white;
+        position: relative;
+        left: 150px;
+        top: 100px;
+      }
+
+      #link-URL-input-Box{
+        height: 10%;
+        width: 50%;
+        position: absolute;
+        top: 40%;
+        left: 25%;
+      }
+
+      #link-description-input-Box{
+        height: 10%;
+        width: 350px;
+        position: relative;
+        top: 110px;
+        left: 155px;
+      }
+
+      #submit-link{
+        width: 150px;
+        font-size: 20px;
+        position: relative;
+        top: 95px;
+        left: 230px;
+      }
+
+
+
+
       /* Post Buildout */
 
       #post-buildout-wrapper{

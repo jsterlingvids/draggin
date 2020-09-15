@@ -1152,29 +1152,8 @@ var socket = io();
 
         let overlay = document.createElement('div');
         let overlayHTML = `
-        <div class="overlay" id="overlay" style="
-        position: fixed;
-        right: 0px;
-        width: 50%;
-        height: 100%; 
-        border: 3px solid lightblue;
-        padding: 10px;
-        z-index: 2;
-        top: 0;
-        background-color: rgb(0, 0, 0);
-        background-color: rgba(0, 0, 0, 0.5);
-        transition: 1s;
-        align-items: center;
-        justify-content: center;">
-              <div id="wrapper" style=" 
-              width: 100%;
-              height: 100%;
-              border: 2px solid lightblue;
-              display: flex;
-              flex-direction: column;
-              justify-content:center;
-              align-items: center;
-              justify-content: center;">
+        <div class="overlay" id="overlay">
+              <div id="wrapper">
               
               <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px;
                 right: 20px; font-size: 20px;">
@@ -1184,10 +1163,17 @@ var socket = io();
 
 
 
-                <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">Add Link!</button>
-                <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;">Add Note!</button>
-                <button type="button" class="btn btn-primary btn-lg" id="live-stream" style="padding: 3%; margin: 2%;">Stream Yourself!</button>
-                <button type="button" class="btn btn-primary btn-lg" id="screen-share" style="padding: 3%; margin: 2%;">Share Your Screen!</button>
+                <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">
+                <i class="fas fa-link"></i>
+                <i class="fas fa-photo-video"></i>
+                </button>
+
+                <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;"><i class="fas fa-edit"></i>
+                </button>
+
+                <button type="button" class="btn btn-primary btn-lg" id="live-stream" style="padding: 3%; margin: 2%;"><i class="fas fa-video"></i></button>
+
+                <button type="button" class="btn btn-primary btn-lg" id="screen-share" style="padding: 3%; margin: 2%;"><i class="fas fa-desktop"></i></button>
 
                 
                 </div>
@@ -1198,7 +1184,7 @@ var socket = io();
 
         overlay.innerHTML = overlayHTML;
 
-        document.getElementById('master-div').appendChild(overlay)
+        document.body.appendChild(overlay)
         
         //Animate Overlay In
         document.getElementById('overlay').animate([
@@ -1257,16 +1243,8 @@ var socket = io();
         e.preventDefault();
 
         let overlayHTML = `
-       
-              <div id="wrapper" style=" 
-              width: 100%;
-              height: 100%;
-              border: 2px solid lightblue;
-              display: flex;
-              flex-direction: column;
-              justify-content:center;
-              align-items: center;
-              justify-content: center;">
+        <div class="overlay" id="overlay">
+              <div id="wrapper">
               
               <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px;
                 right: 20px; font-size: 20px;">
@@ -1274,11 +1252,25 @@ var socket = io();
               </button>
 
 
-                <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">Add Link!</button>
-                <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;">Add Note!</button>
-                <button type="button" class="btn btn-primary btn-lg" id="live-stream" style="padding: 3%; margin: 2%;">Stream!</button>
-                <button type="button" class="btn btn-primary btn-lg" id="screen-share" style="padding: 3%; margin: 2%;">Share Your Screen!</button>
+
+
+                <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 3%; margin: 2%;">
+                <i class="fas fa-link"></i>
+                <i class="fas fa-photo-video"></i>
+                </button>
+
+                <button type="button" class="btn btn-primary btn-lg" id="add-note" style="padding: 3%; margin: 2%;"><i class="fas fa-edit"></i>
+                </button>
+
+                <button type="button" class="btn btn-primary btn-lg" id="live-stream" style="padding: 3%; margin: 2%;"><i class="fas fa-video"></i></button>
+
+                <button type="button" class="btn btn-primary btn-lg" id="screen-share" style="padding: 3%; margin: 2%;"><i class="fas fa-desktop"></i></button>
+
+                
                 </div>
+                
+                
+            </div>
         `
 
         overlay.innerHTML = overlayHTML;
@@ -1463,15 +1455,7 @@ var socket = io();
               console.log('linksss')
 
               overlay.innerHTML = `
-                     <div id="wrapper" style=" 
-                     width: 100%;
-                     height: 100%;
-                     border: 2px solid lightblue;
-                     display: flex;
-                     flex-direction: column;
-                     justify-content:center;
-                     align-items: center;
-                     justify-content: center;">
+                     <div id="wrapper">
 
                      <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
                      <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -1482,7 +1466,6 @@ var socket = io();
                      </button>
 
                      <input type="text" id="link-URL-input-Box" placeholder="Copy/Paste a link here" style="height: 10%; width: 50%;">
-                     <button type="button" class="btn btn-primary btn-lg" id="add-link" style="padding: 1%; margin: 2%;">---></button>
 
 
                      </div>`;
@@ -1550,15 +1533,7 @@ var socket = io();
                   //These are the different preview builds
                   if(metadata === 'no dice'){ console.log('not gonna happen!')
                   overlay.innerHTML = `
-                     <div id="wrapper" style=" 
-                     width: 100%;
-                     height: 100%;
-                     border: 2px solid lightblue;
-                     display: flex;
-                     flex-direction: column;
-                     justify-content:center;
-                     align-items: center;
-                     justify-content: center;">
+                     <div id="wrapper">
 
                      <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
                      <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -1568,11 +1543,11 @@ var socket = io();
                      <i class="fas fa-arrow-alt-circle-left"></i>
                      </button>
                       
-                     <span id = "error-text" style="color: white; font-family:Helvetica Neue;">Unable to create a post from your pasted URL!</span>
+                     <span id = "error-text" style="color: black; font-family:Helvetica Neue;">Unable to create a post from your pasted URL!</span>
 
                      <textarea id="link-description-input-Box" placeholder="Post Description" style="height: 20%; width: 50%; display: none;">${metadata.title}</textarea>
                      <div class= "button-holder" style = "margin: 2%; display: none;">
-                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
+                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;"><i class="fas fa-check-square"></i></button>
                      </div>
                      
                      </div>
@@ -1584,15 +1559,7 @@ var socket = io();
                   else if (metadata.url.includes(videoURL)){
 
                   overlay.innerHTML = `
-                     <div id="wrapper" style=" 
-                     width: 100%;
-                     height: 100%;
-                     border: 2px solid lightblue;
-                     display: flex;
-                     flex-direction: column;
-                     justify-content:center;
-                     align-items: center;
-                     justify-content: center;">
+                     <div id="wrapper">
 
                      <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
                      <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -1603,10 +1570,7 @@ var socket = io();
                      </button>                     
 
                     <!-- Post Preview --!>
-                     <div class="new-post" style= "
-                     width: 300px;
-                     margin: 5px;
-                     color: white;">
+                     <div class="new-post">
 
                      Post Preview:<p></p>
                      <!-- Safe zone, enter your custom markup -->
@@ -1634,9 +1598,9 @@ var socket = io();
                      </div>
                      <!-- Post Preview --!>
 
-                     <textarea id="link-description-input-Box" placeholder="Post Description" style="height: 20%; width: 50%;">${metadata.title}</textarea>
+                     <textarea id="link-description-input-Box" placeholder="Post Description">${metadata.title}</textarea>
                      <div class= "button-holder" style = "margin: 2%;">
-                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
+                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;"><i class="fas fa-check-square"></i></button>
                      </div>
                    
                      </div>`
@@ -1647,15 +1611,7 @@ var socket = io();
                      else if(metadata.url.includes(imgURL)){
                        console.log("wowww")
                        overlay.innerHTML = `
-                          <div id="wrapper" style=" 
-                          width: 100%;
-                          height: 100%;
-                          border: 2px solid lightblue;
-                          display: flex;
-                          flex-direction: column;
-                          justify-content:center;
-                          align-items: center;
-                          justify-content: center;">
+                          <div id="wrapper">
 
                           <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
                           <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -1666,10 +1622,7 @@ var socket = io();
                           </button>
 
                           <!-- Post Preview --!>
-                          <div class="new-post" style= "
-                          width: 300px;
-                          margin: 5px;
-                          color: white;">
+                          <div class="new-post">
 
                           Post Preview:<p></p>
                           <!-- Safe zone, enter your custom markup -->
@@ -1682,7 +1635,7 @@ var socket = io();
                      </a>
                          <div class="post-description" id="post-description-master">
 
-                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO </b></span>
+                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>IMAGE OR GIF:</b></span>
 
                              <span id="post-description-preview" style="
                              margin-left: 5px;
@@ -1697,9 +1650,9 @@ var socket = io();
                      </div>
                      <!-- Post Preview --!>
 
-                     <textarea id="link-description-input-Box" placeholder="Post Description" style="height: 20%; width: 50%; display: none;">${metadata.title}</textarea>
+                     <textarea id="link-description-input-Box" placeholder="Post Description">${metadata.title}</textarea>
                      <div class= "button-holder" style = "margin: 2%;">
-                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
+                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;"><i class="fas fa-check-square"></i></button>
                      </div>
                    
                      </div>`
@@ -1709,15 +1662,7 @@ var socket = io();
                      else {
                        console.log('link normale')
                        overlay.innerHTML = `
-                     <div id="wrapper" style=" 
-                     width: 100%;
-                     height: 100%;
-                     border: 2px solid lightblue;
-                     display: flex;
-                     flex-direction: column;
-                     justify-content:center;
-                     align-items: center;
-                     justify-content: center;">
+                     <div id="wrapper" >
 
                      <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
                      <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -1728,10 +1673,7 @@ var socket = io();
                      </button>
 
                     <!-- Post Preview --!>
-                     <div class="new-post" style= "
-                     width: 300px;
-                     margin: 5px;
-                     color: white;">
+                     <div class="new-post">
 
                      Post Preview:<p style="
                      margin: 5px;
@@ -1763,9 +1705,9 @@ var socket = io();
 
                      <span style="margin: 2px; padding-right: 175px; color: white;">Post Description: </span>
 
-                     <textarea id="link-description-input-Box" placeholder="Post Description" style="height: 20%; width: 50%;">${metadata.title}</textarea>
+                     <textarea id="link-description-input-Box" placeholder="Post Description">${metadata.title}</textarea>
                      <div class= "button-holder" style = "margin: 2%;">
-                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;">Submit Post?</button>
+                     <button type="button" class="btn btn-primary btn-lg" id="submit-link" style="padding: 1%; margin: 2%;"><i class="fas fa-check-square"></i></button>
                      </div>
                    
                      </div>`
