@@ -1243,7 +1243,7 @@ var socket = io();
         e.preventDefault();
 
         let overlayHTML = `
-        <div class="overlay" id="overlay">
+        
               <div id="wrapper">
               
               <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px;
@@ -1270,7 +1270,7 @@ var socket = io();
                 </div>
                 
                 
-            </div>
+            
         `
 
         overlay.innerHTML = overlayHTML;
@@ -1302,17 +1302,9 @@ var socket = io();
       //Add Notes  
       function addNote(){
         console.log('notessss')
+        let overlay = document.getElementById('overlay')
               overlay.innerHTML = `
-                     <div id="wrapper" style=" 
-                     width: 100%;
-                     height: 100%;
-                     border: 2px solid lightblue;
-                     display: flex;
-                     flex-direction: column;
-                     justify-content:center;
-                     align-items: center;
-                     justify-content: center;
-                     font-family: helvetica, sans-serif;">
+                     <div id="wrapper">
 
                      <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
                      <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -1324,36 +1316,24 @@ var socket = io();
 
                      
                      <span class = "note-preview-span" style="position: relative; padding-right: 160px;
-                     color: white; font-family: Helvetica Neue; margin-top: 25px;"> 
+                     color: white; font-family: Helvetica Neue; margin-top: 25px; display: none;"> 
                      Your Note Preview:</span>
 
-                     <div class="notes-preview" id = "notes-content-preview" style= "
-                     width: 300px;
-                     height: 300px;
-                     margin: 10px;
-                     color: white;
-                     background: rgb(19 191 247);
-                     text-shadow: 2px 2px 0px black;
-                     word-wrap: break-word;
-                     display: flex;
-                     justify-content: center;
-                     align-items: center;
-                     font-weight: bold;
-                     padding: 5px;
-                     overflow: hidden;
-                     text-align: center;
-                     ">
+                     <div class="notes-preview" id = "notes-content-preview">
 
                      
                      
                      </div>
 
-                     <textarea id="note-input-Box" placeholder="What do you want to say?" style="height: 20%; width: 50%;"></textarea>
-                     <button type="button" class="btn btn-primary btn-lg" id="Add Note" style="padding: 1%; margin: 2%;">Submit Note?</button>
+                     <textarea id="note-input-Box" placeholder="What do you want to say?"></textarea>
+                     <button type="button" class="btn btn-primary btn-lg" id="add-bote-button-submit">
+                     <i class="fas fa-check-square"></i>
+                     </button>
 
 
                      </div>
                      `;
+                     
 
                      //Exit Button Clicked
                      document.getElementById('exit-button').addEventListener('click', exitButton)
@@ -1374,7 +1354,7 @@ var socket = io();
 
 
                      //This is the button click that adds the note to the grid and the database
-                     document.getElementById('Add Note').addEventListener('click', function(e){
+                     document.getElementById('add-bote-button-submit').addEventListener('click', function(e){
                       //  console.log('yeeeeee')
                       //  console.log(document.getElementById('notes-content').innerHTML)
                        //Create html element
@@ -1389,7 +1369,6 @@ var socket = io();
                             height: 300px;
                             color: white;
                             background: rgb(19 191 247);
-                            text-shadow: 2px 2px 0px black;
                             word-wrap: break-word;
                             display: flex;
                             justify-content: center;
@@ -1453,6 +1432,7 @@ var socket = io();
             //Add Links
             function addLink(){
               console.log('linksss')
+              let overlay = document.getElementById('overlay')
 
               overlay.innerHTML = `
                      <div id="wrapper">
@@ -1465,7 +1445,7 @@ var socket = io();
                      <i class="fas fa-arrow-alt-circle-left"></i>
                      </button>
 
-                     <input type="text" id="link-URL-input-Box" placeholder="Copy/Paste a link here" style="height: 10%; width: 50%;">
+                     <input type="text" id="link-URL-input-Box" placeholder="Copy/Paste a link here" >
 
 
                      </div>`;
@@ -1489,13 +1469,7 @@ var socket = io();
                   function loader(){
                     let wrapper = document.getElementById('wrapper')
                     wrapper.innerHTML = `
-
-                     <div class="loader" id= "post-loader" style = "  border: 16px solid #f3f3f3; /* Light grey */
-                     border-top: 16px solid #3498db; /* Blue */
-                     border-radius: 50%;
-                     width: 120px;
-                     height: 120px;
-                     animation: spin 2s linear infinite;"></div>
+                     <div class="loader" id= "post-loader" ></div>
                     `
                     document.getElementById('post-loader').animate([
                       {transform: 'rotate(0deg)'},
@@ -1879,20 +1853,11 @@ var socket = io();
 
             //Add LiveStream function
             function addLiveStream(){
-
+              let overlay = document.getElementById('overlay')
               
               console.log('LiveStream')
               overlay.innerHTML = `
-                     <div id="wrapper" style=" 
-                     width: 100%;
-                     height: 100%;
-                     border: 2px solid lightblue;
-                     display: flex;
-                     flex-direction: column;
-                     justify-content:center;
-                     align-items: center;
-                     justify-content: center;
-                     font-family: helvetica, sans-serif;">
+                     <div id="wrapper">
 
                      <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
                      <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -1906,7 +1871,7 @@ var socket = io();
 
                      <textarea id ="live-stream-description-input"></textarea>
                      
-                     <button type = "button" class="btn btn-primary" id="start-stream-button">Start The Stream?</button>
+                     <button type = "button" class="btn btn-primary" id="start-stream-button"><i class="fas fa-check-square"></i></button>
 
                      <canvas id = "thumbnail" style = "display:none;"></canvas>
                      
@@ -1944,7 +1909,6 @@ var socket = io();
                         //This code puts the stream on your preview page
                         let myVideo = document.createElement('video')
                         myVideo.muted = true;
-                        myVideo.style = "width: 400px;"
                         myVideo.id = "video-play"
                         myVideo.srcObject = stream;
                         videoGrid.append(myVideo)
@@ -2266,19 +2230,10 @@ var socket = io();
           //Add Screenshare Function
           function addScreenShare(){
 
-              
+            let overlay = document.getElementById('overlay')
             console.log('Screenshare')
             overlay.innerHTML = `
-                   <div id="wrapper" style=" 
-                   width: 100%;
-                   height: 100%;
-                   border: 2px solid lightblue;
-                   display: flex;
-                   flex-direction: column;
-                   justify-content:center;
-                   align-items: center;
-                   justify-content: center;
-                   font-family: helvetica, sans-serif;">
+                   <div id="wrapper">
 
                    <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute; top: 20px; right: 20px; font-size: 20px;">
                    <i class="fas fa-times-circle" aria-hidden="true"></i>
@@ -2292,7 +2247,8 @@ var socket = io();
 
                    <textarea id ="live-stream-description-input"></textarea>
                    
-                   <button type = "button" class="btn btn-primary" id="start-stream-button">Start The Stream?</button>
+                   <button type = "button" class="btn btn-primary" id="start-stream-button">
+                   <i class="fas fa-check-square"></i></button>
 
                    <canvas id = "thumbnail" style = "display:none;"></canvas>
                    
@@ -2334,7 +2290,6 @@ var socket = io();
                       //This code puts the stream on your preview page
                       let myVideo = document.createElement('video')
                       myVideo.muted = true;
-                      myVideo.style = "width: 400px;"
                       myVideo.id = "video-play"
                       myVideo.srcObject = stream;
                       videoGrid.append(myVideo)

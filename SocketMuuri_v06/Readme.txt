@@ -2,6 +2,10 @@
 
 Styling! Styling the posts
 
+- Style Live Screen Submit
+
+- Why doesn't safari work??
+
 - Make note text unclickable in the grid
 
 - The person streaming cannot enter their stream

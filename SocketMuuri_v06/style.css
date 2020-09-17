@@ -232,6 +232,84 @@
         left: 230px;
       }
 
+      #post-loader{
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+        position: relative;
+        top:200px;
+        left: 230px;
+
+      }
+
+
+      /* Post Submission - Add Note */
+
+      #notes-content-preview{
+        width: 300px;
+        height: 300px;
+        margin: 10px;
+        color: white;
+        background: rgb(19 191 247);
+        /* text-shadow: 2px 2px 0px black; */
+        word-wrap: break-word;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        padding: 5px;
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+        top: 100px;
+        left: 160px;
+        display: flex;
+      }
+
+      #note-input-Box{
+        height: 100px;
+        width: 300px;
+        top: 100px;
+        left: 170px;
+        position: relative;
+      }
+
+      #add-bote-button-submit{
+        margin: 2%;
+        top: 140px;
+        position: relative;
+        left: -50px;
+        width: 100px;
+      }
+
+      /* Post Submission - Live Stream and Screen Share */
+
+      #video-grid{
+        position: relative;
+        top: 100px;
+        left: 130px;
+      }
+
+      #live-stream-description-input{
+        position: relative;
+        top: 100px;
+        left: 150px;
+        width: 350px;
+      }
+
+      #start-stream-button{
+        position: relative;
+        top: 130px;
+        left: -60px;
+        width: 100px;
+      }
+
+      #video-play{
+        width: 400px;
+      }
+
 
 
 
@@ -473,7 +551,195 @@
           font-family: helvetica;
           line-height: 5;}
 
+
+          /* Submission Overlay */
+          #overlay.overlay{
+            position: fixed;
+            right: 0px;
+            width: 100%;
+            height: 100%;
+            padding: 10px;
+            z-index: 20;
+            top: 0;
+            background-color: rgb(249,251,252);
+            transition: 1s;
+            box-shadow: 12px 1px 17px 0px black;
+            }
+      
+            #wrapper{
+              width: 100%;
+              height: 100%;
+              flex-direction: column;
+            }
+      
+            #add-link{
+              padding: 3%;
+              margin: 2%;
+              position: relative;
+              top: 200px;
+              left: 50px;
+              width: 115px;
+              font-size: 22px;
+              height: 100px;
+            }
+      
+            #add-note{
+              padding: 3%;
+              margin: 2%;
+              position: relative;
+              top: 200px;
+              left: 40px;
+              width: 115px;
+              font-size: 22px;
+              height: 100px;
+            }
+      
+            #live-stream{
+              position: relative;
+              position: relative;
+              top: 195px;
+              left: 50px;
+              width: 115px;
+              font-size: 22px;
+              height: 100px;
+            }
+      
+            #screen-share{
+              padding: 3%;
+              margin: 2%;
+              position: relative;
+              width: 115px;
+              top: 195px;
+              left: 40px;
+              height: 100px;
+            }
+      
+            /* Post Submission - Add Link */
+            #wrapper > div.new-post{
+              width: 350px;
+              margin: 5px;
+              color: white;
+              position: relative;
+              left: 0;
+              top: 8%;
+            }
+      
+            #link-URL-input-Box{
+              height: 9%;
+              width: 70%;
+              position: absolute;
+              top: 40%;
+              left: 15%;
+            }
+      
+            #link-description-input-Box{
+              height: 10%;
+              width: 350px;
+              position: relative;
+              top: 60px;
+              left: 5px;
+            }
+      
+            #submit-link{
+              width: 150px;
+              font-size: 20px;
+              position: relative;
+              top: 50px;
+              left: 90px;
+            }
+      
+            #post-loader{
+              border: 16px solid #f3f3f3; /* Light grey */
+              border-top: 16px solid #3498db; /* Blue */
+              border-radius: 50%;
+              width: 120px;
+              height: 120px;
+              animation: spin 2s linear infinite;
+              position: relative;
+              top:200px;
+              left: 150px;
+      
+            }
+
+
+            /* Post Submission - Add Note */
+
+            #notes-content-preview{
+              width: 300px;
+              height: 300px;
+              margin: 10px;
+              color: white;
+              background: rgb(19 191 247);
+              /* text-shadow: 2px 2px 0px black; */
+              word-wrap: break-word;
+              justify-content: center;
+              align-items: center;
+              font-weight: bold;
+              padding: 5px;
+              overflow: hidden;
+              text-align: center;
+              position: relative;
+              top: 100px;
+              left: 20px;
+              display: flex;
+            }
+
+            #note-input-Box{
+              height: 100px;
+              width: 300px;
+              top: 100px;
+              left: 30px;
+              position: relative;
+            }
+
+            #add-bote-button-submit{
+              margin: 2%;
+              position: relative;
+              left: 120px;
+              padding: 10px;
+              top: 100px;
+              width: 100px;
+
+            }
+
+            /* Post Submission - Live Stream and Screen Share */
+
+            #video-grid{
+              position: relative;
+              top: 100px;
+              left: 30px;
+            }
+
+            #video-play{
+              width: 300px;
+            }
+
+            #live-stream-description-input{
+              position: relative;
+              top: 100px;
+              left: 30px;
+              width: 300px;
+            }
+
+            #start-stream-button{
+              position: relative;
+              top: 110px;
+              left: 130px;
+              width: 100px;
+            }
+
+
+        
+
+
+
+
+
+
         }
+
+        /* Submit Posts */
+        
           
           
 
