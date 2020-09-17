@@ -5,6 +5,8 @@ Styling! Styling the posts
 - Style Live Screen Submit
 
 - Why doesn't safari work??
+    - Must use e.composedpath
+    - For checking platforms: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
 
 - Make note text unclickable in the grid
 
