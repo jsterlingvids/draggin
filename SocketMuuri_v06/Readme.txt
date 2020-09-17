@@ -8,6 +8,8 @@ Styling! Styling the posts
     - Must use e.composedpath
     - For checking platforms: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
 
+    asfsaf
+
 - Make note text unclickable in the grid
 
 - The person streaming cannot enter their stream
