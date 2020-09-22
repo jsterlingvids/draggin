@@ -440,6 +440,78 @@
         line-height: 4.5;
       }
 
+      /* View for the person LiveStreaming */
+      #my-streaming-video-div{
+        position: fixed;
+        bottom: 25px;
+        z-index: 3;
+        left: 30px;
+      }
+
+
+      #streaming-video-play{
+        width: 250px;
+      }
+
+
+      #stop-streaming{
+        width: 250px;
+        position: fixed;
+        bottom: 10px;
+        z-index: 3;
+        left: 30px;
+      }
+
+      #streaming-chat-holder{
+        position: fixed;
+        background: white;
+        z-index: 4;
+        width: 500px;
+        height: 20%;
+        left: 300px;
+        bottom: 30px;
+      }
+
+      .message-holder-livestream{
+        position: fixed;
+        left: 300px;
+        width: 500px;
+        bottom: 60px;
+        height: 130px;
+        background: whitesmoke;
+        overflow: hidden;
+        overflow-y: auto;
+      }
+
+      #streaming-chat-input{
+        position: fixed;
+        left: 360px;
+        bottom: 30px;
+        width: 440px;
+      }
+
+      #username-display-livestream {
+        position: fixed;
+        left: 305px;
+        bottom: 35px;
+      }
+
+      #number-of-clients-streaming{
+        position: fixed;
+        font-size: 16px;
+        color: white;
+        font-family: helvetica;
+        bottom: 5px;
+        left: 300px;
+        z-index: 15;
+        text-shadow: 0px 1px 5px #000000;
+      }
+
+      #streaming-video-mobile-background{
+        display:none;
+      }
+
+
 
 
       /* Cell Phone Size */
@@ -729,7 +801,93 @@
             }
 
 
-        
+             /* View for the person LiveStreaming */
+              #my-streaming-video-div{
+                position: fixed;
+                bottom: 300px;
+                z-index: 3;
+                left: 45px;
+                width: 400px;
+                z-index: 11;
+              }
+
+              #streaming-video-play{
+                width: 300px;
+                z-index: 11;
+              }
+
+              #stop-streaming{
+                width: 300px;
+                position: fixed;
+                bottom: 270px;
+                z-index: 3;
+                left: 45px;
+                z-index: 11;
+              }
+
+              #streaming-chat-holder{
+                position: fixed;
+                background: white;
+                z-index: 4;
+                width: 300px;
+                height: 20%;
+                left: 45px;
+                bottom: 120px;
+                z-index: 11;
+              }
+
+              .message-holder-livestream{
+                position: fixed;
+                left: 45px;
+                width: 300px;
+                bottom: 160px;
+                height: 100px;
+                background: whitesmoke;
+                overflow: hidden;
+                overflow-y: auto;
+                z-index: 11;
+              }
+
+              #streaming-chat-input{
+                position: fixed;
+                left: 100px;
+                width: 245px;
+                bottom: 125px;
+                z-index: 11;
+              }
+
+              #username-display-livestream {
+                position: fixed;
+                left: 46px;
+                bottom: 125px;
+                z-index: 11;
+              }
+
+              #number-of-clients-streaming{
+                position: fixed;
+                font-size: 16px;
+                color: white;
+                font-family: helvetica;
+                bottom: 540px;
+                left: 30px;
+                z-index: 15;
+                text-shadow: 0px 1px 5px #000000;
+              }
+
+              #streaming-video-mobile-background{
+                position: fixed;
+                background: #7b7a7a66;
+                width: 800px;
+                height: 900px;
+                z-index: 10;
+                bottom: 0px;
+                display: block;
+                overflow-x: hidden;
+              }
+
+
+
+                
 
 
 

@@ -2,7 +2,9 @@
 
 Styling! Styling the posts
 
-- Style Live Screen Submit
+- Make mobile background unscrollable once it's up
+- Style Chats look
+
 
 - Why doesn't safari work??
     - Must use e.composedpath

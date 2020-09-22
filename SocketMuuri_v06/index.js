@@ -1975,11 +1975,9 @@ var socket = io();
                           //This creates the little mini stream in the bottom left hand
                           let streamingVideoGrid = document.createElement('div')
                           streamingVideoGrid.id = "my-streaming-video-div"
-                          streamingVideoGrid.style = "position: fixed;bottom: 0; z-index: 3;"
                           let myStreamingVideo = document.createElement('video')
                           myStreamingVideo.muted = true;
                           myStreamingVideo.controls = true;
-                          myStreamingVideo.style = "width: 250px;"
                           myStreamingVideo.id = "streaming-video-play"
                           myStreamingVideo.srcObject = stream;
                           streamingVideoGrid.append(myStreamingVideo)
@@ -1987,11 +1985,14 @@ var socket = io();
 
                           document.getElementById('master-div').append(streamingVideoGrid)
 
+                          //Background (for mobile)
+                          let streamingVideoMobileBackground = document.createElement('div')
+                          streamingVideoMobileBackground.id = "streaming-video-mobile-background"
+                          document.getElementById('master-div').append(streamingVideoMobileBackground)
+
                           //Number of Clients
                           let streamingNumberofClients = document.createElement('div')
                           streamingNumberofClients.id = "number-of-clients-streaming"
-                          streamingNumberofClients.style = "position: absolute; top: 600px; left: 200px; font-size: 20px; color: white; font-family: helvetica;"
-
                                           //Joining the room and getting the number of users in it
                                           socket.on('a-user-connected-to-room', function(numClients){
                                             console.log(numClients)
@@ -2017,7 +2018,6 @@ var socket = io();
                           //Stop Stream button
                           let stopStreamingButton = document.createElement('button')
                           stopStreamingButton.innerHTML = `<i class="fas fa-arrow-alt-circle-left"></i>`
-                          stopStreamingButton.style = "width: 10%;position: fixed;bottom: 0;z-index: 3;height: 10%;left: 20%;"
                           stopStreamingButton.className = "btn btn-primary"
                           stopStreamingButton.id = "stop-streaming"
 
@@ -2035,15 +2035,6 @@ var socket = io();
                           //Chat in the bottom left for streaming guy
                           let streamingChatDiv = document.createElement('div');
                           streamingChatDiv.id = "streaming-chat-holder"
-                          streamingChatDiv.style = `
-                          position: fixed;
-                          background: purple;
-                          z-index: 4;
-                          width: 50%;
-                          height: 20%;
-                          left: 500px;
-                          bottom: 0px;
-                          ` 
                           streamingChatDiv.innerHTML = `
                           <div id = "post-buildout-chat" style = "               
                             top: 100px;
@@ -2053,20 +2044,13 @@ var socket = io();
                             /* height: 100%; */
                             ">
 
-                          <div id = "messages-holder" style ="
-                          position: fixed;
-                          left: 500px;
-                          width: 50%;
-                          bottom: 40px;
-                          height: 15%;
-                          background: turquoise;
-                          ">
+                          <div id = "messages-holder" class = "message-holder-livestream">
                           <ul class="messages" style ="
                           " id= "streaming-chat-messages"></ul>
 
                           </div>
 
-                          <div id = "username-display">${username}</div>
+                          <div id = "username-display-livestream">${username}</div>
 
           
 
@@ -2207,6 +2191,7 @@ var socket = io();
                             document.getElementById('streaming-chat-holder').remove()
                             document.getElementById('my-streaming-video-div').remove()
                             document.getElementById('number-of-clients-streaming').remove()
+                            document.getElementById('streaming-video-mobile-background').remove();
                             
                             socket.emit('stream-has-stopped', postID, postLink)
                             socket.emit('leave-room', postLink)
@@ -2356,11 +2341,9 @@ var socket = io();
                         //This creates the little mini stream in the bottom left hand
                         let streamingVideoGrid = document.createElement('div')
                         streamingVideoGrid.id = "my-streaming-video-div"
-                        streamingVideoGrid.style = "position: fixed;bottom: 0; z-index: 3;"
                         let myStreamingVideo = document.createElement('video')
                         myStreamingVideo.muted = true;
                         myStreamingVideo.controls = true;
-                        myStreamingVideo.style = "width: 250px;"
                         myStreamingVideo.id = "streaming-video-play"
                         myStreamingVideo.srcObject = stream;
                         streamingVideoGrid.append(myStreamingVideo)
@@ -2368,10 +2351,15 @@ var socket = io();
 
                         document.getElementById('master-div').append(streamingVideoGrid)
 
+                        //Background (for mobile)
+                        let streamingVideoMobileBackground = document.createElement('div')
+                        streamingVideoMobileBackground.id = "streaming-video-mobile-background"
+                        document.getElementById('master-div').append(streamingVideoMobileBackground)
+
                         //Number of Clients
                         let streamingNumberofClients = document.createElement('div')
                         streamingNumberofClients.id = "number-of-clients-streaming"
-                        streamingNumberofClients.style = "position: absolute; top: 600px; left: 200px; font-size: 20px; color: white; font-family: helvetica;"
+
 
                                         //Joining the room and getting the number of users in it
                                         socket.on('a-user-connected-to-room', function(numClients){
@@ -2395,7 +2383,6 @@ var socket = io();
                         //Stop Stream button
                         let stopStreamingButton = document.createElement('button')
                         stopStreamingButton.innerHTML = `<i class="fas fa-arrow-alt-circle-left"></i>`
-                        stopStreamingButton.style = "width: 10%;position: fixed;bottom: 0;z-index: 3;height: 10%;left: 20%;"
                         stopStreamingButton.className = "btn btn-primary"
                         stopStreamingButton.id = "stop-streaming"
 
@@ -2413,15 +2400,6 @@ var socket = io();
                         //Chat in the bottom left for streaming guy
                         let streamingChatDiv = document.createElement('div');
                         streamingChatDiv.id = "streaming-chat-holder"
-                        streamingChatDiv.style = `
-                        position: fixed;
-                        background: purple;
-                        z-index: 4;
-                        width: 50%;
-                        height: 20%;
-                        left: 500px;
-                        bottom: 0px;
-                        ` 
                         streamingChatDiv.innerHTML = `
                         <div id = "post-buildout-chat" style = "               
                           top: 100px;
@@ -2431,20 +2409,13 @@ var socket = io();
                           /* height: 100%; */
                           ">
 
-                        <div id = "messages-holder" style ="
-                        position: fixed;
-                        left: 500px;
-                        width: 50%;
-                        bottom: 40px;
-                        height: 15%;
-                        background: turquoise;
-                        ">
+                        <div id = "messages-holder" class ="message-holder-livestream">
                         <ul class="messages" style ="
                         " id= "streaming-chat-messages"></ul>
 
                         </div>
 
-                        <div id = "username-display">${username}</div>
+                        <div id = "username-display-livestream">${username}</div>
 
         
 
@@ -2587,6 +2558,7 @@ var socket = io();
                           document.getElementById('streaming-chat-holder').remove()
                           document.getElementById('my-streaming-video-div').remove()
                           document.getElementById('number-of-clients-streaming').remove()
+                          document.getElementById('streaming-video-mobile-background').remove();
                           
                           socket.emit('stream-has-stopped', postID, postLink)
                           socket.emit('leave-room', postLink)
