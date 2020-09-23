@@ -134,11 +134,9 @@ var socket = io();
               <div class="item-content" id="post" data-type="${newData[i]["Post Type"]}" style="opacity: 1; transform: scale(1);">
               <!-- Safe zone, enter your custom markup -->
               <div class="notes-content" id = "notes-content" style= "
-              width: 300px;
               height: 300px;
               color: white;
               background: rgb(19 191 247);
-              text-shadow: 2px 2px 0px black;
               word-wrap: break-word;
               display: flex;
               justify-content: center;
@@ -688,7 +686,7 @@ var socket = io();
 
         <div id = "post-content-container">
           <div id = "post-buildout-description" >
-          <span>${postDescription}</span>
+          ${postDescription}
           </div>
           <div id = "post-buildout-image" >
             <a href ="${postLink}">
@@ -717,6 +715,9 @@ var socket = io();
 
         // document.getElementById('master-div').appendChild(buildOutWrapper)
         document.body.appendChild(buildOutWrapper)
+
+        //TextFit for Post Description
+        textFit(document.getElementById('post-buildout-description'))
 
 
         
@@ -744,7 +745,7 @@ var socket = io();
 
         <div id = "post-content-container">
           <div id = "post-buildout-description" >
-          <span>${postDescription}</span>
+          ${postDescription}
           </div>
           <div id = "post-buildout-image" >
             <a href ="${postLink}">
@@ -773,6 +774,9 @@ var socket = io();
 
         // document.getElementById('master-div').appendChild(buildOutWrapper)
         document.body.appendChild(buildOutWrapper)
+
+        //TextFit for Post Description
+        textFit(document.getElementById('post-buildout-description'))
 
 
       }
@@ -828,6 +832,8 @@ var socket = io();
         document.getElementById('submission-start').style.filter = "blur(3px)"
 
         document.getElementById('exit-button').addEventListener('click', buildOutExit)
+
+        
 
 
         

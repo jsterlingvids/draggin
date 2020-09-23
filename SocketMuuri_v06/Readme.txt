@@ -3,8 +3,9 @@
 Styling! Styling the posts
 
 - Make mobile background unscrollable once it's up
-- Style Chats look
+    - Use logic in the javascript
 
+- Take a second look at livestream chat
 
 - Why doesn't safari work??
     - Must use e.composedpath
