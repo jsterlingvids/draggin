@@ -2,10 +2,11 @@
 
 Styling! Styling the posts
 
-- Make mobile background unscrollable once it's up
-    - Use logic in the javascript
 
 - Take a second look at livestream chat
+    - Mobile
+
+- Submission Titles
 
 - Why doesn't safari work??
     - Must use e.composedpath
