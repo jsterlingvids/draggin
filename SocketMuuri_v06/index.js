@@ -1992,9 +1992,15 @@ var socket = io();
                           document.getElementById('master-div').append(streamingVideoGrid)
 
                           //Background (for mobile)
+                          if(window.screen.width <= 575.98){
                           let streamingVideoMobileBackground = document.createElement('div')
                           streamingVideoMobileBackground.id = "streaming-video-mobile-background"
                           document.getElementById('master-div').append(streamingVideoMobileBackground)
+                          //Makes sure that the background is not scrollable
+                          document.getElementById('master-div').style.overflow = "hidden"
+                          console.log('user is most likely on a cell phone')
+                        }
+                          else {console.log('The screen is wide enough')}
 
                           //Number of Clients
                           let streamingNumberofClients = document.createElement('div')
@@ -2198,6 +2204,9 @@ var socket = io();
                             document.getElementById('my-streaming-video-div').remove()
                             document.getElementById('number-of-clients-streaming').remove()
                             document.getElementById('streaming-video-mobile-background').remove();
+
+                            //Put any change style elements back to normal
+                            document.getElementById('master-div').style.overflow = ""
                             
                             socket.emit('stream-has-stopped', postID, postLink)
                             socket.emit('leave-room', postLink)
@@ -2358,9 +2367,15 @@ var socket = io();
                         document.getElementById('master-div').append(streamingVideoGrid)
 
                         //Background (for mobile)
-                        let streamingVideoMobileBackground = document.createElement('div')
-                        streamingVideoMobileBackground.id = "streaming-video-mobile-background"
-                        document.getElementById('master-div').append(streamingVideoMobileBackground)
+                        if(window.screen.width <= 575.98){
+                          let streamingVideoMobileBackground = document.createElement('div')
+                          streamingVideoMobileBackground.id = "streaming-video-mobile-background"
+                          document.getElementById('master-div').append(streamingVideoMobileBackground)
+                          //Makes sure that the background is not scrollable
+                          document.getElementById('master-div').style.overflow = "hidden"
+                          console.log('user is most likely on a cell phone')
+                        }
+                          else {console.log('The screen is wide enough')}
 
                         //Number of Clients
                         let streamingNumberofClients = document.createElement('div')
@@ -2565,6 +2580,9 @@ var socket = io();
                           document.getElementById('my-streaming-video-div').remove()
                           document.getElementById('number-of-clients-streaming').remove()
                           document.getElementById('streaming-video-mobile-background').remove();
+
+                          //Put any change style elements back to normal
+                          document.getElementById('master-div').style.overflow = ""
                           
                           socket.emit('stream-has-stopped', postID, postLink)
                           socket.emit('leave-room', postLink)
