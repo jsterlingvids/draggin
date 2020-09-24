@@ -2,11 +2,8 @@
 
 Styling! Styling the posts
 
+- Change quality of livestream screenshots?
 
-- Take a second look at livestream chat
-    - Mobile
-
-- Submission Titles
 
 - Why doesn't safari work??
     - Must use e.composedpath

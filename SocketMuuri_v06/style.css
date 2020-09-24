@@ -4,6 +4,11 @@
         cursor: pointer;
       }
 
+      button {
+        background: #2846af;
+
+      }
+
       .grid {
         position: relative;
         margin-left: 40px;
@@ -132,10 +137,19 @@
         margin-bottom: 5px;
         margin-left: 5px;
         padding-right: 3px;
-        box-shadow: 3px -3px 0px 3px #00000052;
-        background-color: RGBA(170, 103, 211, .6)
-        /* background-color: #ff5c4ca3; */
+        background-color: rgba(65,84,150,.5);
       }
+
+            /* Post Description Text */
+            #post-description{
+              margin-left: 5px;
+              font-size: 14px;
+              font-size-adjust: inherit;
+              font-variant-caps: titling-caps;
+              font-weight: bold;
+              display: inline-block;
+            }
+
 
       /* Submission Overlay */
       #overlay.overlay{
@@ -411,6 +425,7 @@
         font-family: helvetica;
         color: white;
         font-weight: bold;
+        height: 25px;
       }
 
       #number-of-clients{
@@ -560,6 +575,8 @@
       #streaming-video-mobile-background{
         display:none;
       }
+
+
 
 
 
@@ -889,7 +906,6 @@
                 background: white;
                 z-index: 4;
                 width: 300px;
-                height: 20%;
                 left: 45px;
                 bottom: 120px;
                 z-index: 11;
@@ -909,16 +925,29 @@
 
               #streaming-chat-input{
                 position: fixed;
-                left: 100px;
-                width: 245px;
-                bottom: 125px;
+                left: 107px;
+                width: 235px;
+                bottom: 75px;
                 z-index: 11;
+              }
+
+              #streaming-chat-messages{
+                position: fixed;
+                left: 45px;
+                overflow: hidden;
+                overflow-y: auto;
+                list-style: none;
+                width: 300px;
+                height: 130px;
+                bottom: 110px;
+                background: white;
+                border-radius: 15px;
               }
 
               #username-display-livestream {
                 position: fixed;
                 left: 46px;
-                bottom: 125px;
+                bottom: 75px;
                 z-index: 11;
               }
 
