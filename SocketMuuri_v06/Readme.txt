@@ -2,20 +2,14 @@
 
 Styling! Styling the posts
 
+- The post buttons need to be restyled
+- Add livestream "now live" animation to grid
 - Change quality of livestream screenshots?
 
-
-- Why doesn't safari work??
-    - Must use e.composedpath
-    - For checking platforms: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
-
-    asfsaf
-
-- Make note text unclickable in the grid
+- Midsizings!
 
 - The person streaming cannot enter their stream
     - Add if statement to the buildout
-
 
 - Deleting Livestreams when they're done
     - Delete Stream on refresh (and back)!

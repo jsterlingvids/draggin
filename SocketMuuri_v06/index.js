@@ -503,6 +503,7 @@ var socket = io();
         e.preventDefault();
         // console.log('I`M CLICKING')
         console.log(e)
+        console.log(e.composedPath())
 
         document.body.style.overflow = 'hidden'
 
@@ -528,7 +529,7 @@ var socket = io();
         // let postDescriptionType = e.path[2].childNodes[3].childNodes[1].textContent
 
 
-        let postLink = e.path[1].href || e.path[0].lastElementChild.outerText
+        let postLink = e.composedPath()[1].href || e.composedPath()[0].lastElementChild.outerText
         console.log(postLink)
 
         //Retrive Previous Messages from the Server
@@ -540,14 +541,14 @@ var socket = io();
 
 
         //If post is livestream emit from socket to get info
-        if (e.path[3].attributes[2].nodeValue === "live-stream"){
+        if (e.composedPath()[3].attributes[2].nodeValue === "live-stream"){
           console.log('we got a livestream on our hands')
 
 
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
         buildOutWrapper.id = "post-buildout-wrapper"
-        console.log(e.path[2].childNodes[3].textContent)
+        console.log(e.composedPath()[2].childNodes[3].textContent)
         
 
         let postBuildOutHTML = `
@@ -567,7 +568,7 @@ var socket = io();
           top: 25px;
           position: absolute;
           left: 200px;
-          "><span>${e.path[2].childNodes[3].textContent}</span></div>
+          "><span>${e.composedPath()[2].childNodes[3].textContent}</span></div>
 
           <div id = "video-grid-stream" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
             
@@ -604,7 +605,7 @@ var socket = io();
           let visitorPeer = new Peer();
         
           //Seperate out Socket ID and Peer ID from Link
-          let IdsPath = e.path[1].href
+          let IdsPath = e.composedPath()[1].href
           let IdsPathSplitSlash = IdsPath.split('/')
           let IdsPathSplitComma = IdsPathSplitSlash[3].split(',')
           console.log(IdsPathSplitComma)
@@ -655,19 +656,19 @@ var socket = io();
 
           
           
-        }  else if (e.path[3].attributes[2].nodeValue === 'link-img') {
+        }  else if (e.composedPath()[3].attributes[2].nodeValue === 'link-img') {
 
         //Post Image
-        let postImage = e.path[2].childNodes[1].childNodes[1].src
+        let postImage = e.composedPath()[2].childNodes[1].childNodes[1].src
 
         //The Post Description
-        let postDescription = e.path[2].childNodes[3].childNodes[3].textContent
+        let postDescription = e.composedPath()[2].childNodes[3].childNodes[3].textContent
 
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
         buildOutWrapper.id = "post-buildout-wrapper"
 
-        let postLink = e.path[1].href
+        let postLink = e.composedPath()[1].href
 
                 //Retrive Previous Messages from the Server
                 socket.emit('retrieve-chat-messages', postLink)
@@ -721,15 +722,15 @@ var socket = io();
 
 
         
-      } else if (e.path[3].attributes[2].nodeValue  === 'link'){
+      } else if (e.composedPath()[3].attributes[2].nodeValue  === 'link'){
 
         console.log('just a link')
 
         //Post Image
-        let postImage = e.path[2].childNodes[1].childNodes[1].src
+        let postImage = e.composedPath()[2].childNodes[1].childNodes[1].src
 
         //The Post Description
-        let postDescription = e.path[2].childNodes[3].childNodes[3].textContent
+        let postDescription = e.composedPath()[2].childNodes[3].childNodes[3].textContent
 
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
@@ -780,11 +781,11 @@ var socket = io();
 
 
       }
-        else if (e.path[1].attributes[2].nodeValue === "note"){
+        else if (e.composedPath()[1].attributes[2].nodeValue === "note"){
         console.log('you just clicked a note')
         
         //Get the text of the note from the click event
-        let noteText = e.path[0].lastElementChild.outerText
+        let noteText = e.composedPath()[0].lastElementChild.outerText
 
         var buildOutWrapper = document.createElement('div');
         buildOutWrapper.id = "post-buildout-wrapper"
@@ -1469,7 +1470,7 @@ var socket = io();
                   console.log(e);
                   let paste = (event.clipboardData || window.clipboardData).getData('text');
                   console.log(paste);
-                  e.path[0].placeholder = paste;
+                  e.composedPath()[0].placeholder = paste;
 
                   //A loader runs on a timer just before sending the link
                   function loader(){
