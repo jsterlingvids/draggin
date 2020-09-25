@@ -99,10 +99,12 @@ var socket = io();
                     <div class="link-content" id="link-master" style="
                     position: relative;
                     display: inline-block;">
-    
+                    
                     <a href="${newData[i]["Post Link"]}">
                     <img src="${newData[i]["Post Image"]}">
+                    
                     </a>
+                    
                         <div class="post-description" id="post-description-master" style = "display: none;">
     
                             <span id="post-type" style="display: inline-block;margin-left: 5px;font-size: 18px;font-weight: bolder;"> <b>VIDEO</b></span>
@@ -179,7 +181,7 @@ var socket = io();
                     <div class="link-content" id="${newData[i]["Post Link"]}" data-type="${newData[i]["Post Link"]}" style="
                     position: relative;
                     display: inline-block;">
-    
+                    
                     <a href="${newData[i]["Post Link"]}">
                     <img src="${newData[i]["Post Image"]}">
                     </a>
@@ -189,7 +191,7 @@ var socket = io();
                         
                         </div>
 
-
+                        <div class="Rec"></div>
 
                     <!-- Safe zone ends -->
                         </div>
@@ -1078,7 +1080,8 @@ var socket = io();
                         <div class="link-content" id="${data[0]}" style="
                         position: relative;
                         display: inline-block;">
-        
+
+                        
                         <a href="${data[0]}">
                         <img src="${data[1]}">
                         </a>
@@ -1086,6 +1089,8 @@ var socket = io();
                         <span>${data[2]}</span>
                         </div>
                             </div>
+
+                            <div class="Rec"></div>
 
                         <!-- Safe zone ends -->
                             </div>
@@ -1946,7 +1951,7 @@ var socket = io();
                           let height = '200px'
                           var context = canvas.getContext('2d');
                           context.drawImage(video2, -50, 0);
-                          var screenShot = canvas.toDataURL('image/jpg');
+                          var screenShot = canvas.toDataURL('image/jpeg', 0.5);
                           console.log(screenShot)
                          
                           //Create unique post id
@@ -1958,6 +1963,7 @@ var socket = io();
                           <div class="item">
                           <div class="item-content" id="${postID}" data-type="live-stream" style="opacity: 1; transform: scale(1);">
                                 <!-- Safe zone, enter your custom markup -->
+                                
                                 <div id= "video-grid" data-type="${postID}">
                                 <a href = "${postID}">
                                 <img src="${screenShot}" style = "position: relative;
@@ -1968,6 +1974,7 @@ var socket = io();
                                 <span>${liveStreamDescription}</span>
                                 </div>
                                 </div>
+                                <div class="Rec"></div>
 
                                   <!-- Safe zone ends -->
                                       </div>
@@ -2046,7 +2053,7 @@ var socket = io();
                           //Create canvas element for Thumbnails
                           let thumbnailCanvas = document.createElement('canvas')
                           thumbnailCanvas.id = "thumbnail-update-canvas"
-                          // thumbnailCanvas.style = "width:300px; height: 300px;position: fixed; bottom: 0px; display: none;"
+                          thumbnailCanvas.style = "display: none;"
                           thumbnailCanvas.width = 500
                           thumbnailCanvas.height = 400
 
@@ -2173,7 +2180,7 @@ var socket = io();
                           // let height = '200px'
                           var contextUpdate = videoThumbUpdateCanvas.getContext('2d');
                           contextUpdate.drawImage(videoThumbUpdate, -50, 0);
-                          var screenShot = videoThumbUpdateCanvas.toDataURL('image/jpg');
+                          var screenShot = videoThumbUpdateCanvas.toDataURL('image/jpeg', 0.5);
                           // console.log(screenShot)
 
                          
@@ -2327,7 +2334,7 @@ var socket = io();
                         let height = '200px'
                         var context = canvas.getContext('2d');
                         context.drawImage(video2, -50, 0);
-                        var screenShot = canvas.toDataURL('image/jpg');
+                        var screenShot = canvas.toDataURL('image/jpeg', 0.5);
                         console.log(screenShot)
                        
                         //Create unique post id
@@ -2339,6 +2346,7 @@ var socket = io();
                         <div class="item">
                         <div class="item-content" id="${postID}" data-type="live-stream" style="opacity: 1; transform: scale(1);">
                               <!-- Safe zone, enter your custom markup -->
+                              
                               <div id= "video-grid" data-type="${postID}">
                               <a href = "${postID}">
                               <img src="${screenShot}" style = "position: relative;
@@ -2349,6 +2357,7 @@ var socket = io();
                               <span>${liveStreamDescription}</span>
                               </div>
                               </div>
+                              <div class="Rec"></div>
 
                                 <!-- Safe zone ends -->
                                     </div>
@@ -2426,7 +2435,7 @@ var socket = io();
                         //Create canvas element for Thumbnails
                         let thumbnailCanvas = document.createElement('canvas')
                         thumbnailCanvas.id = "thumbnail-update-canvas"
-                        // thumbnailCanvas.style = "width:300px; height: 300px;position: fixed; bottom: 0px; display: none;"
+                        thumbnailCanvas.style = "display: none;"
                         thumbnailCanvas.width = 1200
                         thumbnailCanvas.height = 900
 
@@ -2555,7 +2564,7 @@ var socket = io();
                         // let height = '200px'
                         var contextUpdate = videoThumbUpdateCanvas.getContext('2d');
                         contextUpdate.drawImage(videoThumbUpdate, -50, 0);
-                        var screenShot = videoThumbUpdateCanvas.toDataURL('image/jpg');
+                        var screenShot = videoThumbUpdateCanvas.toDataURL('image/jpeg', 0.5);
                         // console.log(screenShot)
 
                        

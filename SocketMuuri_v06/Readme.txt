@@ -2,11 +2,15 @@
 
 Styling! Styling the posts
 
-- The post buttons need to be restyled
-- Add livestream "now live" animation to grid
-- Change quality of livestream screenshots?
+- The post buttons need to be restyled (still a little messed up on mid-size)
+
+- Livestream buildout
+    - Styling
+    - When someone exits, make sure the overflow does not stay "hidden"
 
 - Midsizings!
+
+- Update the number of people in the room text
 
 - The person streaming cannot enter their stream
     - Add if statement to the buildout
