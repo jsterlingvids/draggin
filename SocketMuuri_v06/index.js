@@ -546,6 +546,42 @@ var socket = io();
         if (e.composedPath()[3].attributes[2].nodeValue === "live-stream"){
           console.log('we got a livestream on our hands')
 
+        //The Post Description
+        let postDescription = e.composedPath()[2].children[1].innerText
+
+        let postBuildOutHTML = `
+        <div id = "post-buildout-background">
+
+        <button type="button" class="btn btn-primary" id="exit-button" >
+        <i class="fas fa-times-circle" aria-hidden="true"></i>
+        </button>
+
+
+        <div id = "post-content-container">
+          <div id = "post-buildout-description" >
+          ${postDescription}
+          </div>
+          <div id = "post-buildout-image" >
+
+          </div>
+
+          <div id = "number-of-clients">
+
+          </div>
+
+          
+          <div id = "messages-holder">
+          <ul class="messages" id= "chat-messages"></ul>
+          </div>
+          <div id = "username-display">${username}</div>
+          <input class="inputMessage" id = "chat-input"  placeholder="says...."></input>
+          </div>
+
+          </div>
+          
+        </div>
+        `
+
 
         //Build Out Wrapper HTML
         var buildOutWrapper = document.createElement('div');
@@ -553,47 +589,13 @@ var socket = io();
         console.log(e.composedPath()[2].childNodes[3].textContent)
         
 
-        let postBuildOutHTML = `
-        <div id = "post-buildout-background">
 
-        <button type="button" class="btn btn-primary" id="exit-button" style="position: absolute;top: 90px;right: 200px;font-size: 25px;">
-        <i class="fas fa-times-circle" aria-hidden="true"></i>
-        </button>
-        
-        <div id = "number-of-clients">
-
-        </div>
-
-          <div id ="live-stream-buildout-description" style= "
-          background: white;
-          width: 20%;
-          top: 25px;
-          position: absolute;
-          left: 200px;
-          "><span>${e.composedPath()[2].childNodes[3].textContent}</span></div>
-
-          <div id = "video-grid-stream" style = "background: white; width: 30%;position: absolute;top: 100px;left: 200px;">
-            
-          </div>
-
-          
-
-          <div id = "post-buildout-chat" style = "background: white;width: 30%;position: relative;top: 100px;left: 625px;height: 15%;">
-          <div id = "messages-holder">
-          <ul class="messages" id= "chat-messages"></ul>
-          </div>
-          <div id = "username-display">${username}</div>
-          <input class="inputMessage" id = "chat-input" placeholder="says....">
-          </div>
-          
-        </div>
-        `
 
         buildOutWrapper.innerHTML = postBuildOutHTML
 
         document.getElementById('master-div').appendChild(buildOutWrapper)
 
-        let videoGrid = document.getElementById('video-grid-stream')
+        let videoGrid = document.getElementById('post-buildout-image')
 
 
         //Description
@@ -632,7 +634,7 @@ var socket = io();
             const video = document.createElement('video')
             video.id = "video-play"
             video.controls = true;
-            video.style = "width:100%; height:100%;"
+            // video.style = "width:100%; height:100%;"
             call.on('stream', function(stream){
               console.log(stream)
               video.srcObject = stream
@@ -649,7 +651,7 @@ var socket = io();
             console.log('hey - did my buddy stop streaming?')
             console.log(data)
             // visitorPeer.disconnect();
-            document.getElementById('video-grid-stream').innerHTML =`
+            document.getElementById('post-buildout-image').innerHTML =`
             <div id = "user-has-stopped-streaming">
             <span id = "user-has-stopped-span">The Stream has stopped</span>
             </div> 
@@ -1924,7 +1926,7 @@ var socket = io();
                         //This code puts the stream on your preview page
                         let myVideo = document.createElement('video')
                         myVideo.muted = true;
-                        myVideo.id = "video-play"
+                        myVideo.id = "video-preview-play"
                         myVideo.srcObject = stream;
                         videoGrid.append(myVideo)
                         myVideo.play()
@@ -1945,7 +1947,7 @@ var socket = io();
                           exitButton()
 
                           //Taking screenshot of Stream
-                          let video2 = document.getElementById("video-play");
+                          let video2 = document.getElementById("video-preview-play");
                           let canvas = document.getElementById('thumbnail')
                           let width = '200px'
                           let height = '200px'
@@ -2307,7 +2309,7 @@ var socket = io();
                       //This code puts the stream on your preview page
                       let myVideo = document.createElement('video')
                       myVideo.muted = true;
-                      myVideo.id = "video-play"
+                      myVideo.id = "video-preview-play"
                       myVideo.srcObject = stream;
                       videoGrid.append(myVideo)
                       myVideo.play()
@@ -2328,7 +2330,7 @@ var socket = io();
                         exitButton()
 
                         //Taking screenshot of Stream
-                        let video2 = document.getElementById("video-play");
+                        let video2 = document.getElementById("video-preview-play");
                         let canvas = document.getElementById('thumbnail')
                         let width = '200px'
                         let height = '200px'

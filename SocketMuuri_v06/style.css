@@ -311,6 +311,7 @@
         top: 100px;
         left: 150px;
         width: 350px;
+        z-index: 99;
       }
 
       #start-stream-button{
@@ -322,7 +323,13 @@
       }
 
       #video-play{
-        width: 400px;
+        width: inherit;
+        height: inherit;
+        object-fit: inherit;
+      }
+
+      #video-preview-play{
+        width: 400px
       }
 
 
@@ -861,7 +868,13 @@
             }
 
             #video-play{
-              width: 300px;
+              width: inherit;
+              height: inherit;
+              object-fit: inherit;
+            }
+
+            #video-preview-play{
+              width: 300px
             }
 
             #live-stream-description-input{
@@ -869,6 +882,7 @@
               top: 100px;
               left: 30px;
               width: 300px;
+              z-index: 99;
             }
 
             #start-stream-button{

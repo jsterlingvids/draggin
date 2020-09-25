@@ -17,6 +17,7 @@ Styling! Styling the posts
 
 - Deleting Livestreams when they're done
     - Delete Stream on refresh (and back)!
+    - Stop stream if streamer exits browser or hits back button in browser (if logic — if a stream is going, exit stream, otherwise...)
 
 - Loading icon when selecting screenshare?
 
