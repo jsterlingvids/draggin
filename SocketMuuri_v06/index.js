@@ -506,6 +506,7 @@ var socket = io();
         // console.log('I`M CLICKING')
         console.log(e)
         console.log(e.composedPath())
+        console.log(socket.id)
 
         document.body.style.overflow = 'hidden'
 
@@ -545,6 +546,22 @@ var socket = io();
         //If post is livestream emit from socket to get info
         if (e.composedPath()[3].attributes[2].nodeValue === "live-stream"){
           console.log('we got a livestream on our hands')
+
+                    //Seperate out Socket ID and Peer ID from Link
+                    let IdsPath = e.composedPath()[1].href
+                    let IdsPathSplitSlash = IdsPath.split('/')
+                    let IdsPathSplitComma = IdsPathSplitSlash[3].split(',')
+                    console.log(IdsPathSplitComma)
+          
+                    //I need the socketID to emit directly to the person livestreaming
+                    let OtherPeerId = IdsPathSplitComma[0]
+                    let OtherSocketId = IdsPathSplitComma[1]
+
+                    //This blocks the streamer from being able to enter into his own stream
+                    if(OtherSocketId === socket.id){
+                      console.log('hey! That is your own stream!')
+                      return
+                    } else {
 
         //The Post Description
         let postDescription = e.composedPath()[2].children[1].innerText
@@ -607,16 +624,6 @@ var socket = io();
 
 
           let visitorPeer = new Peer();
-        
-          //Seperate out Socket ID and Peer ID from Link
-          let IdsPath = e.composedPath()[1].href
-          let IdsPathSplitSlash = IdsPath.split('/')
-          let IdsPathSplitComma = IdsPathSplitSlash[3].split(',')
-          console.log(IdsPathSplitComma)
-
-          //I need the socketID to emit directly to the person livestreaming
-          let OtherPeerId = IdsPathSplitComma[0]
-          let OtherSocketId = IdsPathSplitComma[1]
 
           //Once the page is open, it generates a PeerId for the person who wants to get the stream
           visitorPeer.on('open', function(id) {
@@ -657,6 +664,8 @@ var socket = io();
             </div> 
             `
           })
+
+        }
 
           
           
@@ -1254,7 +1263,7 @@ var socket = io();
       //Back Button
       function backButton(e){
         console.log('back button')
-        e.preventDefault();
+        // e.preventDefault();
 
         let overlayHTML = `
         
@@ -1898,12 +1907,7 @@ var socket = io();
 
                      `;
 
-                     //Exit Button Clicked
-                     document.getElementById('exit-button').addEventListener('click', exitButton)
-
-                     //Back Button Clicked
-                     document.getElementById('back-button').addEventListener('click', backButton)
-
+                     
                      //Getting Video
                      let videoGrid = document.getElementById('video-grid')
                      let startStreamButton = document.getElementById('start-stream-button')
@@ -1934,6 +1938,23 @@ var socket = io();
                         console.log(videoGrid)
                         
                         console.log(stream)
+
+                       //Exit Button Clicked
+                       document.getElementById('exit-button').addEventListener('click', function(){
+                         exitButton()
+                         stream.getTracks().forEach(track => track.stop());
+                         peer.disconnect();
+                         peer.destroy();
+                       })
+
+                       //Back Button Clicked
+                        document.getElementById('back-button').addEventListener('click', function(){
+                          console.log('back button stop that stream!')
+                          backButton()
+                          stream.getTracks().forEach(track => track.stop());
+                          peer.disconnect();
+                          peer.destroy();
+                        })
 
                         //Posting the Stream
                         startStreamButton.addEventListener('click', function(){
@@ -2220,7 +2241,12 @@ var socket = io();
                             document.getElementById('streaming-chat-holder').remove()
                             document.getElementById('my-streaming-video-div').remove()
                             document.getElementById('number-of-clients-streaming').remove()
-                            document.getElementById('streaming-video-mobile-background').remove();
+
+                            //If a mobile element is there, it'll get deleted because of this:
+                            if(document.getElementById('streaming-video-mobile-background')){
+                              document.getElementById('streaming-video-mobile-background').remove();
+                            }
+                            
 
                             //Put any change style elements back to normal
                             document.getElementById('master-div').style.overflow = ""
@@ -2276,12 +2302,6 @@ var socket = io();
                    </div>
 
                    `;
-
-                   //Exit Button Clicked
-                   document.getElementById('exit-button').addEventListener('click', exitButton)
-
-                   //Back Button Clicked
-                   document.getElementById('back-button').addEventListener('click', backButton)
                    
                    //Getting Video
                    let videoGrid = document.getElementById('video-grid')
@@ -2317,6 +2337,23 @@ var socket = io();
                       console.log(videoGrid)
                       
                       console.log(stream)
+
+                      //Exit Button Clicked
+                      document.getElementById('exit-button').addEventListener('click', function(){
+                        exitButton()
+                        stream.getTracks().forEach(track => track.stop());
+                        peer.disconnect();
+                        peer.destroy();
+                      })
+
+                      //Back Button Clicked
+                       document.getElementById('back-button').addEventListener('click', function(){
+                         console.log('back button stop that stream!')
+                         backButton()
+                         stream.getTracks().forEach(track => track.stop());
+                         peer.disconnect();
+                         peer.destroy();
+                       })
 
                       //Posting the Stream
                       startStreamButton.addEventListener('click', function(){
@@ -2578,6 +2615,13 @@ var socket = io();
 
                         //Function is run on an interval
                         let screenshotUpdateInterval = setInterval(canvasUpdate, 5000)
+
+                        //Back Button for Streams
+                        function backButtonStream(){
+                          console.log('back button stream')
+
+                        }
+
 
                         //Stop the stream
                         document.getElementById('stop-streaming').addEventListener('click', function(){

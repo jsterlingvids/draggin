@@ -4,6 +4,8 @@ Styling! Styling the posts
 
 - The post buttons need to be restyled (still a little messed up on mid-size)
 
+- Change button color in general
+
 - Livestream buildout
     - Styling
     - When someone exits, make sure the overflow does not stay "hidden"
@@ -12,12 +14,9 @@ Styling! Styling the posts
 
 - Update the number of people in the room text
 
-- The person streaming cannot enter their stream
-    - Add if statement to the buildout
-
 - Deleting Livestreams when they're done
     - Delete Stream on refresh (and back)!
-    - Stop stream if streamer exits browser or hits back button in browser (if logic — if a stream is going, exit stream, otherwise...)
+    
 
 - Loading icon when selecting screenshare?
 
