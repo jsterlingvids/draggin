@@ -288,6 +288,7 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
       console.log('here')
       // console.log(res)
       let databaseEntries = res;
+      console.log(res.length)
 
       //Map current Database entries to new array to easily add new link info
       let updateDatabaseArray = databaseEntries.map(item => [item["Post Link"], item["Post Image"], item["Post Description"], item["Post Type"]]);
@@ -307,6 +308,14 @@ MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mo
               }
       // console.log("--AFTER THE NUMBERS ARE ADDED----")
       // console.log(updateDatabaseArray);
+         console.log(updateDatabaseArray.length)
+         if(updateDatabaseArray.length > 150){
+          //  console.log(updateDatabaseArray.pop()[1])
+           updateDatabaseArray.pop();
+           //In the future I need to delete the corresponding chat links
+          //  chatMessages.deleteOne({"room_id": postLink})
+          // console.log(updateDatabaseArray)
+         }
       
       
       //Update database with new links 

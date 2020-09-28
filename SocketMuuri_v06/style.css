@@ -4,10 +4,17 @@
         cursor: pointer;
       } */
 
-      button {
-        background: #2846af;
-
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
       }
+
+      .btn-primary:hover{
+        color: #fff;
+        background-color: #0069d9;
+        border-color: #0062cc;
+      }
+
 
       .grid {
         position: relative;
@@ -614,7 +621,7 @@
           #chat-messages.messages {
             width: 300px;
             left: 90px;
-            top: 110px;
+            /* top: 110px; */
             height: 150px;
             position: relative;
             list-style: none;
@@ -630,9 +637,10 @@
 
           #exit-button{
             position: relative;
-            top: 15px;
+            top: 5px;
             font-size: 25px;
             left: 300px;
+            margin: 5px;
           }
 
           #post-buildout-description{
@@ -652,7 +660,7 @@
             position: relative;
             color: white;
             font-family: helvetica;
-            top: 370px;
+            top: 350px;
             width: 350px;
             font-size: 20px;
             left: 330px;
@@ -665,29 +673,30 @@
             border-radius: 20px;
             padding: 5px;
             border: 2px solid #999;
-            top: 39px;
+            top: 30px;
             left: 162px;
             height: 60px;
           }
 
           #username-display{
             position: relative;
-            top: 100px;
+            top: 90px;
             background: white;
             padding-top: 20px;
-            padding-left: 15px;
-            font-size: 14px;
+            padding-left: 5px;
+            font-size: 12px;
             border-radius: 20px;
             border: 2px solid #999;
             left: 85px;
-            padding-right: 2px;
+            padding-right: 5px;
             width: 75px;
+            text-align: center;
           }
 
           #post-content-container{
             position: relative;
             left: -55px;
-            top: -100px;
+            top: -120px;
           }
 
           #post-buildout-background{
@@ -701,19 +710,19 @@
           /* Notes Buildout */
 
           #post-buildout-note-content{
-          width: 300px;
-          position: relative;
-          top: 125px;
-          left: 90px;
-          height: 300px;
-          padding: 10px;
-          text-align: center;
-          text-justify: auto;
-          background: deepskyblue;
-          color: white;
-          font-family: helvetica;
-          font-weight: bold;
-          /* line-height: 5; */
+            width: 300px;
+            position: relative;
+            top: 125px;
+            left: 90px;
+            height: 300px;
+            padding: 10px;
+            text-align: center;
+            text-justify: auto;
+            background: deepskyblue;
+            color: white;
+            font-family: helvetica;
+            font-weight: bold;
+            /* line-height: 5; */
         }
 
 
@@ -760,20 +769,26 @@
             }
       
             #live-stream{
+              background-color: gray;
+              border-color: gray;
               position: absolute;
-    width: 115px;
-    font-size: 22px;
-    height: 100px;
-    left: 60px;
-    top: 317px;
+              width: 115px;
+              font-size: 22px;
+              height: 100px;
+              left: 60px;
+              top: 317px;
+              pointer-events: none;
             }
       
             #screen-share{
+              background-color: gray;
+              border-color: gray;
               position: relative;
               width: 115px;
               top: 193px;
               left: 175px;
               height: 100px;
+              pointer-events: none;
             }
       
             /* Post Submission - Add Link */
