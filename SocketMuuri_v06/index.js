@@ -12,12 +12,33 @@ var socket = io();
 
       var grid = new Muuri('.grid', {
       dragEnabled: true,
-      layout: {
-        },
-        dragStartPredicate: {
-          distance: 15,
-          delay: 0,
-        },
+      layout: {},
+      dragHammerSettings: {
+        touchAction: 'pan-y'
+      },
+      dragContainer: document.body,
+      dragStartPredicate: (item, hammerEvent) => {
+
+        // console.log(hammerEvent.pointerType);
+        // console.log(hammerEvent.distance)
+
+        // For mouse interactions dragging starts at a distance greater than .001
+        if (hammerEvent.pointerType === 'mouse' && hammerEvent.distance > .001) {
+          this.isResolved = true;
+          return true;
+        }
+        // For other type of interactions (touch) let's wait 500ms before dragging starts.
+        else {
+          if (hammerEvent.deltaTime >= 500) {
+            this.isResolved = true;
+            return true;
+          }
+        }
+
+       
+    
+      }
+
       });
 
 
@@ -259,7 +280,7 @@ var socket = io();
       }
 
       //Runs on timeout because it only properly resorts once all data has been loaded
-      setTimeout(respaceItems, 500);
+      setTimeout(respaceItems, 700);
 
       
       //Generate Gif Content
@@ -857,7 +878,7 @@ var socket = io();
                 socket.on('a-user-connected-to-room', function(numClients){
                   console.log(numClients)
                   //Change the HTML of the span to numClients
-                  let span = `<span>There is currently ${numClients} other person in this room</span>`
+                  let span = `<span>${numClients} <i class="fas fa-user"></i></span>`
                   document.getElementById('number-of-clients').innerHTML = span
                 })
 
@@ -865,7 +886,7 @@ var socket = io();
                 socket.on('a-user-left-the-room', function(numClients){
                   console.log(numClients)
                   //Change the HTML of the span to numClients
-                  let span = `<span>There is currently ${numClients} other person in this room</span>`
+                  let span = `<span>${numClients} <i class="fas fa-user"></i> </span>`
                   document.getElementById('number-of-clients').innerHTML = span
                   
                 })
@@ -891,7 +912,7 @@ var socket = io();
 
 
         // Chat Input
-        document.getElementById('chat-input').focus()
+        // document.getElementById('chat-input').focus()
 
         document.getElementById('chat-input').addEventListener('keyup', function(){
 
@@ -2045,7 +2066,7 @@ var socket = io();
                                           socket.on('a-user-connected-to-room', function(numClients){
                                             console.log(numClients)
                                             //Change the HTML of the span to numClients
-                                            let span = `<span>There is currently ${numClients} other person in this room</span>`
+                                            let span = `<span>${numClients} <i class="fas fa-user"></i></span>`
                                             document.getElementById('number-of-clients-streaming').innerHTML = span
                                           })
 
@@ -2053,7 +2074,7 @@ var socket = io();
                                           socket.on('a-user-left-the-room', function(numClients){
                                             console.log(numClients)
                                             //Change the HTML of the span to numClients
-                                            let span = `<span>There is currently ${numClients} other person in this room</span>`
+                                            let span = `<span>${numClients} <i class="fas fa-user"></i></span>`
                                             document.getElementById('number-of-clients-streaming').innerHTML = span
                                             
                                           })
@@ -2215,6 +2236,46 @@ var socket = io();
 
                           //Function is run on an interval
                           let screenshotUpdateInterval = setInterval(canvasUpdate, 5000)
+
+
+                          //If user refreshes or clicks back while streaming — STOP THE STREAM
+                          window.addEventListener("beforeunload", function(e) {
+                            console.log('HEYYYYYY YOURE OUNLOADING THE SOITE')
+
+                            stream.getTracks().forEach(track => track.stop());
+
+                            peer.disconnect();
+                            peer.destroy();
+                            
+
+                            //Stop the stream from sending screenshots
+                            clearInterval(screenshotUpdateInterval)
+
+                            // Send info to server so HTML can be changed
+                            postIDJoined = postID.join()
+                            let postLink = 'http://localhost:3000/' + postIDJoined
+                            // console.log(postLink)
+
+                            //Destroy DOM Elements
+                            document.getElementById('thumbnail-update-canvas').remove()
+                            document.getElementById('stop-streaming').remove()
+                            document.getElementById('streaming-chat-holder').remove()
+                            document.getElementById('my-streaming-video-div').remove()
+                            document.getElementById('number-of-clients-streaming').remove()
+
+                            //If a mobile element is there, it'll get deleted because of this:
+                            if(document.getElementById('streaming-video-mobile-background')){
+                              document.getElementById('streaming-video-mobile-background').remove();
+                            }
+                            
+
+                            //Put any change style elements back to normal
+                            document.getElementById('master-div').style.overflow = ""
+                            
+                            socket.emit('stream-has-stopped', postID, postLink)
+                            socket.emit('leave-room', postLink)
+
+                           });
 
                           //Stop the stream
                           document.getElementById('stop-streaming').addEventListener('click', function(){
@@ -2446,7 +2507,7 @@ var socket = io();
                                         socket.on('a-user-connected-to-room', function(numClients){
                                           console.log(numClients)
                                           //Change the HTML of the span to numClients
-                                          let span = `<span>There is currently ${numClients} other person in this room</span>`
+                                          let span = `<span>${numClients} <i class="fas fa-user"></i></span>`
                                           document.getElementById('number-of-clients-streaming').innerHTML = span
                                         })
 
@@ -2454,7 +2515,7 @@ var socket = io();
                                         socket.on('a-user-left-the-room', function(numClients){
                                           console.log(numClients)
                                           //Change the HTML of the span to numClients
-                                          let span = `<span>There is currently ${numClients} other person in this room</span>`
+                                          let span = `<span>${numClients} <i class="fas fa-user"></i></span>`
                                           document.getElementById('number-of-clients-streaming').innerHTML = span
                                           
                                         })
@@ -2616,11 +2677,44 @@ var socket = io();
                         //Function is run on an interval
                         let screenshotUpdateInterval = setInterval(canvasUpdate, 5000)
 
-                        //Back Button for Streams
-                        function backButtonStream(){
-                          console.log('back button stream')
+                          //If user refreshes or clicks back while streaming — STOP THE STREAM
+                          window.addEventListener("beforeunload", function(e) {
+                            console.log('HEYYYYYY YOURE OUNLOADING THE SOITE')
 
-                        }
+                            stream.getTracks().forEach(track => track.stop());
+
+                            peer.disconnect();
+                            peer.destroy();
+                            
+
+                            //Stop the stream from sending screenshots
+                            clearInterval(screenshotUpdateInterval)
+
+                            // Send info to server so HTML can be changed
+                            postIDJoined = postID.join()
+                            let postLink = 'http://localhost:3000/' + postIDJoined
+                            // console.log(postLink)
+
+                            //Destroy DOM Elements
+                            document.getElementById('thumbnail-update-canvas').remove()
+                            document.getElementById('stop-streaming').remove()
+                            document.getElementById('streaming-chat-holder').remove()
+                            document.getElementById('my-streaming-video-div').remove()
+                            document.getElementById('number-of-clients-streaming').remove()
+
+                            //If a mobile element is there, it'll get deleted because of this:
+                            if(document.getElementById('streaming-video-mobile-background')){
+                              document.getElementById('streaming-video-mobile-background').remove();
+                            }
+                            
+
+                            //Put any change style elements back to normal
+                            document.getElementById('master-div').style.overflow = ""
+                            
+                            socket.emit('stream-has-stopped', postID, postLink)
+                            socket.emit('leave-room', postLink)
+
+                           });
 
 
                         //Stop the stream
@@ -2649,6 +2743,12 @@ var socket = io();
                           document.getElementById('my-streaming-video-div').remove()
                           document.getElementById('number-of-clients-streaming').remove()
                           document.getElementById('streaming-video-mobile-background').remove();
+
+
+                          //If a mobile element is there, it'll get deleted because of this:
+                          if(document.getElementById('streaming-video-mobile-background')){
+                            document.getElementById('streaming-video-mobile-background').remove();
+                          }
 
                           //Put any change style elements back to normal
                           document.getElementById('master-div').style.overflow = ""
@@ -2726,6 +2826,9 @@ var socket = io();
             
             // grid.remove(grid.getItem(elementToRemove.parentNode)._element)
           })
+
+
+
 
           
           

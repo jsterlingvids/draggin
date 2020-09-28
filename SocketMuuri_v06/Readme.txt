@@ -2,7 +2,12 @@
 
 Styling! Styling the posts
 
+- Make streaming unavailable on cell phone
+- Mobile Resizing a hair
 - The post buttons need to be restyled (still a little messed up on mid-size)
+
+- Make sure you can't clip behind mobile background when streaming
+- Mobile Screenshots are doing weird things
 
 - Change button color in general
 
@@ -11,16 +16,11 @@ Styling! Styling the posts
     - When someone exits, make sure the overflow does not stay "hidden"
 
 - Midsizings!
-
-- Update the number of people in the room text
-
-- Deleting Livestreams when they're done
-    - Delete Stream on refresh (and back)!
     
-
 - Loading icon when selecting screenshare?
 
 - Adding the nude.js protection
+- Redo the app.js code (make a new version for this)
 - Google Analytics API
 
 - Deleting posts once there are more than 150
