@@ -4,6 +4,12 @@
         cursor: pointer;
       } */
 
+      body > canvas{
+        display: none;
+        width: 400px;
+        height: 300px;
+      }
+
       .btn-primary {
         background-color: #007bff;
         border-color: #007bff;

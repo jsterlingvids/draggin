@@ -21,6 +21,7 @@ const metascraper = require('metascraper')([
   require('metascraper-title')(),
   require('metascraper-url')()
 ])
+var sightengine = require('sightengine')('997395864','rFdYmt9wgCwwmQ8YhmgZ');
 
 
 
@@ -59,9 +60,60 @@ io.on('connection', (socket) => {
       const metadata = await metascraper({ html, url })
       console.log('metadata below')
       console.log(metadata)
+      
+      
+
+      if (metadata.image === null){
+          let imageToCheck = metadata.url
+          // console.log('this is it')
+          // console.log(imageToCheck)
+
+
+          sightengine.check(['nudity','offensive','text-content','face-attributes']).set_url(imageToCheck).then(function(result) {
+            // The API response (result)
+            console.log(result)
+            console.log(result.nudity.raw);
+            if(result.nudity.raw > 0.5){
+              console.log('dat some NUDITY')
+            } else {
+              console.log('dat not some NUDITY')
+            }
+          }).catch(function(err) {
+              // Handle error
+          });
+
+
+        } else {
+          let imageToCheck = metadata.image
+          // console.log(imageToCheck)
+          let NSFW;
+
+          sightengine.check(['nudity','offensive','text-content','face-attributes']).set_url(imageToCheck).then(function(result) {
+            // The API response (result)
+            console.log(result)
+            console.log(result.nudity.raw);
+            if(result.nudity.raw > 0.5){
+              console.log('dat some NUDITY')
+              let NSFW = "NSFW"
+              socket.emit('newPostData', metadata, NSFW);
+            } else {
+              console.log('dat not some NUDITY')
+              let NSFW = "no"
+              socket.emit('newPostData', metadata, NSFW);
+            }
+          }).catch(function(err) {
+              // Handle error
+          });
+
+        }
+
+        
+
+
+ 
 
       //Sends new post metadata back to original client
-      socket.emit('newPostData', metadata);
+      // socket.emit('newPostData', metadata, NSFW);
 
       //Sends new post metadata to everyone connected to update immediately
       // socket.broadcast.emit('someoneElseAddedNewPost', metadata);

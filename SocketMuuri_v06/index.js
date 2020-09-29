@@ -4,6 +4,7 @@
 
 // const { link } = require("fs");
 
+
 const videoURL = "youtube.com" || "youtu.be";
 const imgURL = ".gif"
 
@@ -85,7 +86,7 @@ var socket = io();
                   display: inline-block;">
 
                   <a href="${newData[i]["Post Link"]}">
-                  <img src="${newData[i]["Post Image"]}">
+                  <img src="${newData[i]["Post Image"]}" id="${[i]}">
                   </a>
                       <div class="post-description" id="post-description-master">
 
@@ -122,7 +123,7 @@ var socket = io();
                     display: inline-block;">
                     
                     <a href="${newData[i]["Post Link"]}">
-                    <img src="${newData[i]["Post Image"]}">
+                    <img src="${newData[i]["Post Image"]}" id="${[i]}">
                     
                     </a>
                     
@@ -204,7 +205,7 @@ var socket = io();
                     display: inline-block;">
                     
                     <a href="${newData[i]["Post Link"]}">
-                    <img src="${newData[i]["Post Image"]}">
+                    <img src="${newData[i]["Post Image"]}" id="${[i]}">
                     </a>
 
                     <div id = "live-stream-description" style= "display:none;">${newData[i]["Post Description"]}</div>
@@ -240,7 +241,7 @@ var socket = io();
                     display: inline-block;">
 
                     <a href="${newData[i]["Post Link"]}">
-                    <img src="${newData[i]["Post Image"]}">
+                    <img src="${newData[i]["Post Image"]}" id="${[i]}">
                     </a>
                         <div class="post-description" id="post-description-master">
 
@@ -265,6 +266,11 @@ var socket = io();
             var columnElem = wrapper.children[0]; 
             grid.add([columnElem]);
 
+          }
+
+          if(newData[i]["Post Type"].includes("-nsfw")){
+            console.log('I SEE SOMETHING NSFW!')
+            document.getElementById([i]).style = "filter: blur(8px);"
           }
         } 
     })
@@ -363,7 +369,7 @@ var socket = io();
               let postingType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue
               console.log(postingType)
 
-              if(postingType === 'link'){
+              if(postingType === 'link' || 'link-nsfw'){
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
                 let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
@@ -372,7 +378,7 @@ var socket = io();
 
                 gridItemSnapShotBeforeDrag.push([i, postLink , postImage, postDescription, postType])
 
-              } else if (postingType === 'link-img'){
+              } else if (postingType === 'link-img' || 'link-img-nsfw'){
                 console.log('not this guyyyy')
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
@@ -383,7 +389,7 @@ var socket = io();
                 gridItemSnapShotBeforeDrag.push([i, postLink , postImage, postDescription, postType])
 
 
-              } else if(postingType === 'link-video'){
+              } else if(postingType === 'link-video' || 'link-video-nsfw'){
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
                 let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
@@ -438,7 +444,7 @@ var socket = io();
               let postingType = gridItems[i]._element.childNodes[1].attributes[2].nodeValue
               console.log(postingType)
 
-              if(postingType === 'link'){
+              if(postingType === 'link' || 'link-nsfw'){
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
                 let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
@@ -447,7 +453,7 @@ var socket = io();
 
                 gridItemSnapShotAfterDrag.push([i, postLink , postImage, postDescription, postType])
 
-              } else if (postingType === 'link-img'){
+              } else if (postingType === 'link-img' || 'link-img-nsfw'){
                 console.log('not this guyyyy')
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
@@ -458,7 +464,7 @@ var socket = io();
                 gridItemSnapShotAfterDrag.push([i, postLink , postImage, postDescription, postType])
 
 
-              } else if(postingType === 'link-video'){
+              } else if(postingType === 'link-video' || 'link-video-nsfw'){
 
                 let postDescription = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[1].children[1].innerText
                 let postLink = gridItems[i]._element.childNodes[1].children[0].lastChild.parentElement.children[0].href
@@ -1018,7 +1024,7 @@ var socket = io();
                     display: inline-block;">
 
                     <a href="${data[0]}">
-                    <img src="${data[1]}">
+                    <img src="${data[1]}" id="new-post-image">
                     </a>
                         <div class="post-description" id="post-description-master">
 
@@ -1051,7 +1057,7 @@ var socket = io();
                                       display: inline-block;">
   
                                       <a href="${data[0]}">
-                                      <img src="${data[1]}">
+                                      <img src="${data[1]}" id="new-post-image">
                                       </a>
                                           <div class="post-description" id="post-description-master" style = "display: none;">
   
@@ -1115,7 +1121,7 @@ var socket = io();
 
                         
                         <a href="${data[0]}">
-                        <img src="${data[1]}">
+                        <img src="${data[1]}" id="new-post-image">
                         </a>
                         <div id = "live-stream-description" style = "display:none;">
                         <span>${data[2]}</span>
@@ -1141,7 +1147,7 @@ var socket = io();
                     display: inline-block;">
 
                     <a href="${data[0]}">
-                    <img src="${data[1]}">
+                    <img src="${data[1]}" id="new-post-image">
                     </a>
                     <div class="post-description" id="post-description-master">
 
@@ -1162,14 +1168,25 @@ var socket = io();
                 </div>
             `
 
-              } 
+              }
+              
+
+            
                            
               
           //Grid.add function to properly add to grid
           wrapper.innerHTML = columnHTML;
+          
           var columnElem = wrapper.children[0]; 
+          
+          //If the added image is NSFW, then make the image style blurred
+          if(data[3].includes('-nsfw')){
+            columnElem.childNodes[1].children[0].children[0].children[0].style = "filter: blur(8px)"
+          }
           // console.log(columnElem.children[0].innerHTML);
           grid.add([columnElem], {index: 0});
+
+
 
           //Refresh the layout once page is loaded
           function respaceItems(){
@@ -1544,9 +1561,10 @@ var socket = io();
 
 
                 // This is the Post Preview
-                socket.on('newPostData', function(metadata){
+                socket.on('newPostData', function(metadata, NSFW){
                   let linkType;
                   console.log(metadata)
+                  console.log(NSFW)
 
                   //These are the different preview builds
                   if(metadata === 'no dice'){ console.log('not gonna happen!')
@@ -1702,7 +1720,7 @@ var socket = io();
                      display: inline-block;">
 
                      <a href="${metadata.url}">
-                     <img src="${metadata.image}">
+                     <img src="${metadata.image}" id="post-preview-image">
                      </a>
                          <div class="post-description" id="post-description-master">
 
@@ -1742,8 +1760,19 @@ var socket = io();
                        
                       document.getElementById('post-description-preview').textContent = document.getElementById('link-description-input-Box').value;
 
+
+
+
+
                      })
-                     
+
+                     //If a post comes in NSFW, change the style properties of the image
+                     if(NSFW === 'NSFW'){
+                      let NSFWStyle = "filter: blur(8px);"
+                      document.getElementById('post-preview-image').style = NSFWStyle
+                     } else {
+                       let NSFWStyle = ""
+                     }
 
                      //Clicking "Submit Link" and submitting link
                      document.getElementById('submit-link').addEventListener('click', function(e){
@@ -1757,6 +1786,15 @@ var socket = io();
                       } else {
                         linkType = "link"
                       }
+                      
+
+                      //If NSFW is active, add a -nsfw to the end of the link type
+                      if(NSFW === "NSFW"){
+                        linkType += "-nsfw"
+                      } else {
+                        linkType
+                      }
+
                       console.log(linkType)
 
                            //Create html element
