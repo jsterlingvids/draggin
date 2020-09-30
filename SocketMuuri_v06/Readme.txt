@@ -19,11 +19,9 @@ Styling! Styling the posts
     
 - Loading icon when selecting screenshare?
 
-- Stop initial load if posts are already on page
-
-- Continue the anti-nudity push
+- Continue the NSFW push
+    - Due to limited API access, I'll have to come back to this
     - LiveStream image checking
-
 
 
 - Redo the app.js code (make a new version for this)

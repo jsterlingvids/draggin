@@ -165,6 +165,17 @@
 
 
       /* Submission Overlay */
+
+      #error-text{
+        color: black;
+        font-family: Helvetica;
+        position: absolute;
+        top: 300px;
+        left: 150px;
+        font-weight: bold;
+      }
+
+
       #overlay.overlay{
       position: fixed;
       right: 0px;
@@ -241,14 +252,19 @@
         position: absolute;
         top: 40%;
         left: 25%;
+        border-radius: 5px;
+        border-color: #415496;
       }
 
       #link-description-input-Box{
-        height: 10%;
+        height: 60px;
         width: 350px;
         position: relative;
         top: 110px;
         left: 155px;
+        border-radius: 5px;
+        border-color: #415496;
+        resize: none;
       }
 
       #submit-link{
@@ -301,6 +317,9 @@
         top: 100px;
         left: 170px;
         position: relative;
+        border-radius: 5px;
+        border-color: #415496;
+        resize: none;
       }
 
       #add-bote-button-submit{
@@ -325,6 +344,9 @@
         left: 150px;
         width: 350px;
         z-index: 99;
+        border-radius: 5px;
+        border-color: #415496;
+        resize: none;
       }
 
       #start-stream-button{
@@ -733,6 +755,17 @@
 
 
           /* Submission Overlay */
+
+          #error-text{
+            color: black;
+            font-family: Helvetica;
+            position: absolute;
+            top: 300px;
+            left: 25px;
+            font-weight: bold;
+            font-size: 15px;
+          }
+
           #overlay.overlay{
             position: fixed;
             right: 0px;

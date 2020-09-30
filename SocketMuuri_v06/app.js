@@ -64,60 +64,73 @@ io.on('connection', (socket) => {
       const metadata = await metascraper({ html, url })
       console.log('metadata below')
       console.log(metadata)
+
+      //Define some outlier cases (like when only image links are copied and pasted)
+      if(metadata.image === null){
+        metadata.image = metadata.url
+        console.log(metadata)
+      }
+
+      if(metadata.description === null){
+        metadata.description = ''
+      }
+
+      if (metadata.title === null){
+        metadata.title = ''
+      }
       
       
 
-      if (metadata.image === null){
-          let imageToCheck = metadata.url
-          // console.log('this is it')
-          // console.log(imageToCheck)
+      //NSFW Filters COME BACK TO THIS LATER
+
+      // if (metadata.image === null){
+      //     let imageToCheck = metadata.url
+      //     // console.log('this is it')
+      //     // console.log(imageToCheck)
 
 
-          sightengine.check(['nudity','offensive','text-content','face-attributes']).set_url(imageToCheck).then(function(result) {
-            // The API response (result)
-            console.log(result)
-            console.log(result.nudity.raw);
-            if(result.nudity.raw > 0.5){
-              console.log('dat some NUDITY')
-            } else {
-              console.log('dat not some NUDITY')
-            }
-          }).catch(function(err) {
-              // Handle error
-          });
+      //     sightengine.check(['nudity','offensive','text-content','face-attributes']).set_url(imageToCheck).then(function(result) {
+      //       // The API response (result)
+      //       console.log(result)
+      //       console.log(result.nudity.raw);
+      //       if(result.nudity.raw > 0.5){
+      //         console.log('dat some NUDITY')
+      //       } else {
+      //         console.log('dat not some NUDITY')
+      //       }
+      //     }).catch(function(err) {
+      //         // Handle error
+      //     });
 
 
-        } else {
-          let imageToCheck = metadata.image
-          // console.log(imageToCheck)
-          let NSFW;
+      //   } else {
+      //     let imageToCheck = metadata.image
+      //     // console.log(imageToCheck)
+      //     let NSFW;
 
-          sightengine.check(['nudity','offensive','text-content','face-attributes']).set_url(imageToCheck).then(function(result) {
-            // The API response (result)
-            console.log(result)
-            console.log(result.nudity.raw);
-            if(result.nudity.raw > 0.5){
-              console.log('dat some NUDITY')
-              let NSFW = "NSFW"
-              socket.emit('newPostData', metadata, NSFW);
-            } else {
-              console.log('dat not some NUDITY')
-              let NSFW = "no"
-              socket.emit('newPostData', metadata, NSFW);
-            }
-          }).catch(function(err) {
-              // Handle error
-          });
+      //     sightengine.check(['nudity','offensive','text-content','face-attributes']).set_url(imageToCheck).then(function(result) {
+      //       // The API response (result)
+      //       console.log(result)
+      //       console.log(result.nudity.raw);
+      //       if(result.nudity.raw > 0.5){
+      //         console.log('dat some NUDITY')
+      //         let NSFW = "NSFW"
+      //         socket.emit('newPostData', metadata, NSFW);
+      //       } else {
+      //         console.log('dat not some NUDITY')
+      //         let NSFW = "no"
+      //         socket.emit('newPostData', metadata, NSFW);
+      //       }
+      //     }).catch(function(err) {
+      //         // Handle error
+      //     });
 
-        }
+      //   }
 
         
 
-
- 
-
       //Sends new post metadata back to original client
-      // socket.emit('newPostData', metadata, NSFW);
+      socket.emit('newPostData', metadata);
 
       //Sends new post metadata to everyone connected to update immediately
       // socket.broadcast.emit('someoneElseAddedNewPost', metadata);
@@ -155,10 +168,6 @@ app.use(cors())
 app.get('/products/:id', function (req, res, next) {
   res.json({msg: 'This is CORS-enabled for all origins!'})
 })
-
-// app.post('/quotes', (req, res) => {
-//   console.log(req.body)
-// })
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -436,32 +445,27 @@ io.on('connection',(socket) => {
     socket.on('update-stream-screenshot', function(data1, data2){
       //data1 = the screenshot, data2 = PostID
       //data1 must be converted into a base64 string in order to be interpreted
-      var base64 = data1.split(',')[1]
-      console.log(isBase64(base64))
+      // var base64 = data1.split(',')[1]
+      // console.log(isBase64(base64))
 
-      sightengine.check(['nudity','offensive','text-content','face-attributes']).set_bytes(base64, 'image.png').then(function(result) {
-        // The API response (result)
-        console.log(result)
-        console.log(result.nudity.raw);
-        if(result.nudity.raw > 0.5){
-          console.log('dat some NUDITY')
-        } else {
-          console.log('dat not some NUDITY')
-          Jimp.read(data1, (err, lenna) => {
-            if (err) throw err;
-            
-            // lenna
-            //   // .resize(256, 256) // resize
-            //   // .quality(60) // set JPEG quality
-            //   .greyscale() // set greyscale
-            //  console.log(lenna.getBase64(mime, cb))  // save
-          });
-        }
-      }).catch(function(err) {
-          // Handle error
-      });
+      // sightengine.check(['nudity','offensive','text-content','face-attributes']).set_bytes(base64, 'image.png').then(function(result) {
+      //   // The API response (result)
+      //   console.log(result)
+      //   console.log(result.nudity.raw);
+      //   if(result.nudity.raw > 0.5){
+      //     console.log('dat some NUDITY')
+      //   } else {
+      //     console.log('dat not some NUDITY')
+      //     let NSFW = 'Y'
+      //     io.emit('new-stream-screenshot', data1, data2, NSFW)
+      //   }
+      // }).catch(function(err) {
+      //     // Handle error
+      // });
 
       io.emit('new-stream-screenshot', data1, data2)
+
+      
     })
   })
 

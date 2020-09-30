@@ -65,7 +65,13 @@ var socket = io();
 
       // let initialGifs = Array.from(newData);
       // // console.log(initialGifs)
+       
+      //This if statement makes sure that content won't be re-loaded if there is already content on the page
+      if(document.getElementById('main-grid').innerhtml === undefined){
 
+        
+        
+  
       //Loop through array from database adding gif content on each iteration
       let i;
       for(i = 0; i < newData.length; i++){
@@ -273,7 +279,10 @@ var socket = io();
             console.log('I SEE SOMETHING NSFW!')
             document.getElementById([i]).style = "filter: blur(8px);"
           }
-        } 
+        }
+      } else if(document.getElementById('main-grid').innerhtml !== undefined) {
+        console.log('things are already here')
+      } 
     })
 
     //Refresh the layout once page is loaded
@@ -2814,10 +2823,11 @@ var socket = io();
         }
 
           //When a new screenshot comes in
-          socket.on('new-stream-screenshot', function(screenshot, pageID){
+          socket.on('new-stream-screenshot', function(screenshot, pageID, NSFW){
             console.log('guess a screenshot is coming in!')
             // console.log(screenshot)
             console.log(pageID)
+            console.log(NSFW)
 
             //Convert to the right pageID
             // let pageIDString = pageID.join()
@@ -2826,11 +2836,20 @@ var socket = io();
             //Grab the page ID
             screenshotChange = document.getElementById(pageID)
             // console.log(screenshotChange.childNodes[1].children[0].src)
+            console.log(screenshotChange.childNodes)
+
+            // if(NSFW === 'Y'){
+            //   screenshotChange.style = "filter: blur(8px)"
+            //   console.log('this is NSFW mate')
+            //   screenshotChange[3].childNodes[1].children[0].style =
+            // }
 
             //Update the Screenshot
             if(socket.id === pageID[1]){
               // console.log('I`m taking a screen of myself')
-            screenshotChange.children[0].children[0].childNodes[1].src = screenshot}
+            screenshotChange.children[0].children[0].childNodes[1].src = screenshot
+            // screenshotChange.children[0].children[0].childNodes[1].style = "position: relative; filter: blur(8px)"
+            }
             else if (socket.id !== pageID[1]){
               // console.log('screen coming from elsewhere')
             screenshotChange.childNodes[1].children[0].src = screenshot}
