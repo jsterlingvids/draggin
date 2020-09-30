@@ -19,8 +19,9 @@ Styling! Styling the posts
     
 - Loading icon when selecting screenshare?
 
+- Stop initial load if posts are already on page
+
 - Continue the anti-nudity push
-    - Add for when posts are added on your own page
     - LiveStream image checking
 
 

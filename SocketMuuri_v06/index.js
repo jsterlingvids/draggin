@@ -268,6 +268,7 @@ var socket = io();
 
           }
 
+          //If NSFW - add the blur feature
           if(newData[i]["Post Type"].includes("-nsfw")){
             console.log('I SEE SOMETHING NSFW!')
             document.getElementById([i]).style = "filter: blur(8px);"
@@ -1897,6 +1898,12 @@ var socket = io();
                             //Grid.add function to properly add to grid
                             wrapper.innerHTML = columnHTML;
                             var columnElem = wrapper.children[0]; 
+
+                            //If the added image is NSFW, then make the image style blurred
+                            if(linkType.includes('-nsfw')){
+                              columnElem.childNodes[1].children[0].children[0].children[0].style = "filter: blur(8px)"
+                            }
+
                             //  console.log(columnElem.innerHTML);
                             grid.add([columnElem], {index: 0});
 

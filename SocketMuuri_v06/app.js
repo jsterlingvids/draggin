@@ -2,10 +2,14 @@
 var express = require('express');
 var cors = require('cors')
 // var app = require('express')();
+var Jimp = require('jimp');
 var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
+var Buffer = require('buffer/').Buffer
+var isBase64 = require('is-base64');
+var path = require('path');
 const { json } = require('express');
 const bodyParser = require("body-parser");
 const router = express.Router();
@@ -430,6 +434,33 @@ io.on('connection',(socket) => {
 
     //Update Stream Screenshot
     socket.on('update-stream-screenshot', function(data1, data2){
+      //data1 = the screenshot, data2 = PostID
+      //data1 must be converted into a base64 string in order to be interpreted
+      var base64 = data1.split(',')[1]
+      console.log(isBase64(base64))
+
+      sightengine.check(['nudity','offensive','text-content','face-attributes']).set_bytes(base64, 'image.png').then(function(result) {
+        // The API response (result)
+        console.log(result)
+        console.log(result.nudity.raw);
+        if(result.nudity.raw > 0.5){
+          console.log('dat some NUDITY')
+        } else {
+          console.log('dat not some NUDITY')
+          Jimp.read(data1, (err, lenna) => {
+            if (err) throw err;
+            
+            // lenna
+            //   // .resize(256, 256) // resize
+            //   // .quality(60) // set JPEG quality
+            //   .greyscale() // set greyscale
+            //  console.log(lenna.getBase64(mime, cb))  // save
+          });
+        }
+      }).catch(function(err) {
+          // Handle error
+      });
+
       io.emit('new-stream-screenshot', data1, data2)
     })
   })
