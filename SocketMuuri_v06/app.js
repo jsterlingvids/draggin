@@ -2,12 +2,12 @@
 var express = require('express');
 var cors = require('cors')
 // var app = require('express')();
-var Jimp = require('jimp');
+var Jimp = require('../SocketMuuri_v07/node_modules/jimp');
 var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
-var Buffer = require('buffer/').Buffer
+var Buffer = require('../SocketMuuri_v07/node_modules/buffer').Buffer
 var isBase64 = require('is-base64');
 var path = require('path');
 const { json } = require('express');
@@ -25,7 +25,7 @@ const metascraper = require('metascraper')([
   require('metascraper-title')(),
   require('metascraper-url')()
 ])
-var sightengine = require('sightengine')('997395864','rFdYmt9wgCwwmQ8YhmgZ');
+var sightengine = require('../SocketMuuri_v07/node_modules/sightengine')('997395864','rFdYmt9wgCwwmQ8YhmgZ');
 
 
 

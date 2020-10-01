@@ -1,0 +1,493 @@
+//Initialize
+var express = require('express');
+var cors = require('cors')
+// var app = require('express')();
+var Jimp = require('jimp');
+var app = express();
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
+var fs = require('fs');
+var Buffer = require('buffer/').Buffer
+var isBase64 = require('is-base64');
+var path = require('path');
+const { json } = require('express');
+const bodyParser = require("body-parser");
+const router = express.Router();
+const MongoClient = require('mongodb').MongoClient
+const metascraper = require('metascraper')([
+  require('metascraper-author')(),
+  require('metascraper-date')(),
+  require('metascraper-description')(),
+  require('metascraper-image')(),
+  require('metascraper-logo')(),
+  require('metascraper-clearbit')(),
+  require('metascraper-publisher')(),
+  require('metascraper-title')(),
+  require('metascraper-url')()
+])
+var sightengine = require('sightengine')('997395864','rFdYmt9wgCwwmQ8YhmgZ');
+
+
+// Listen on a specific host via the HOST environment variable
+var host = process.env.HOST || '0.0.0.0';
+// Listen on a specific port via the PORT environment variable
+var port = process.env.PORT || 8080;
+ 
+//Various App and Server stuff
+
+app.use(bodyParser.json())
+
+app.use(express.static(__dirname))
+
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(cors())
+
+app.get('/products/:id', function (req, res, next) {
+  res.json({msg: 'This is CORS-enabled for all origins!'})
+})
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+
+//Mongo DB Stuff
+MongoClient.connect("mongodb+srv://jsvids:6ybfQtBE4HQWcmZZ@cluster0-elfsq.gcp.mongodb.net/test?retryWrites=true&w=majority", {useUnifiedTopology: true}) 
+  .then(client => {
+  console.log('Connected to Database')
+
+  //Database Names and Variables
+  const collection = client.db("test").collection("test");
+  const chatMessages = client.db("test").collection("chat-messages");
+
+// Booting Up
+
+  io.on('connection', (socket) => {
+
+
+    console.log('a user connected');
+     // On load get gif data
+    console.log('Grabbing Initial Gif Data...');
+    //Sort the database based on position
+    collection.find().toArray().then(res => {
+      // console.log(res)
+      let newData = res;
+      socket.emit('initial', newData);
+    })
+      .catch(err => console.log(err))
+
+
+// Move a box logic
+
+      //Receives data when a box has been moved
+      socket.on('thisIsTheMoveData', function(data){
+        // console.log(data);
+        socket.broadcast.emit('dataHasBeenMoved', data);
+      })
+
+      //Saving new positions in the server
+      socket.on('moveDataToSavetoServer', function(data){
+        //[index to update, new Post Content, Post Type]
+        // console.log(data)
+  
+        //For each item in data, search based on index, and update the link, image, description and type based on what's in the array
+        data.forEach(item => {
+          // console.log(item[0])
+          collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Link": item[1], "Post Image": item[2], "Post Description": item[3], "Post Type": item[4]}}).then(res=> console.log("Locations Updated on Database")).catch(err => console.log(err))
+        })
+      })
+
+
+//Adding new Post to Database logic
+
+          //Deleting Livestream from Database on End
+          socket.on('stream-has-stopped', function(data, postLink){
+            console.log('yahhhoooo')
+            console.log(data)
+            console.log(postLink)
+
+            //First an Async Function to properly delete from Database and return an array of the new Database
+            async function deleteDatabase(){
+              
+
+              //Delete post from database
+              let databaseDelete = await collection.deleteOne({"Post Link": data})
+
+              let databaseRecompile = await collection.find().toArray()
+
+              let databaseReUpload = await databaseRecompile.map(item => [item["Post Link"], item["Post Image"], item["Post Description"], item["Post Type"]])
+
+
+              return databaseReUpload
+            }
+
+            //After the Async function is run, the database is numerated and reuploaded (just like posting)
+
+            deleteDatabase().then(res => {
+
+              //Adds a number to the array
+              let i;
+              for(i = 0; i < res.length; i++){
+                // console.log(updateDatabaseArray[i])
+                res[i].splice(0,0,i)
+              }
+
+              // console.log(res)
+
+              //Then goes through each item and updates based on the link content (for some reason the index number would not work)
+              res.forEach(item => {
+                // console.log(item)
+                collection.findOneAndUpdate({"Post Link": item[1]}, {$set: {"index": item[0], "Post Link": item[1], "Post Image": item[2], "Post Description": item[3], "Post Type": item[4]}}).then(res=> console.log("These posts are updated")).catch(err => console.log(err))
+              })
+
+            })
+            
+            //Delete the corresponding chat messages
+            chatMessages.deleteOne({"room_id": postLink})
+
+            //Emit to everyone that the live stream is gone
+            io.emit('someone-has-stopped-livestreaming', data)
+            //Need to send this to room to change visuals once stream has stopped
+            io.to(postLink).emit('the-stream-has-stopped', data)
+
+          })
+          
+          
+          
+          
+          socket.on('postAddedUpdateDatabase', function(newPostInfo){
+
+          //Sends new post metadata to everyone connected to update immediately
+          socket.broadcast.emit('someoneElseAddedNewPost', newPostInfo);
+          //New Post Data [Post HTML content]
+          // console.log('----CHECK IT OUT-----')
+          // console.log(newPostInfo)
+
+          //Get current database
+          collection.find().toArray().then(res => {
+            console.log('here')
+            // console.log(res)
+            let databaseEntries = res;
+            console.log(res.length)
+
+            //Map current Database entries to new array to easily add new link info
+            let updateDatabaseArray = databaseEntries.map(item => [item["Post Link"], item["Post Image"], item["Post Description"], item["Post Type"]]);
+            // console.log("--SEE WHAT ADDING A NEW POST LOOKS LIKE HERE----")
+            // console.log(updateDatabaseArray);
+
+            //Add new link to the front of the database array
+            updateDatabaseArray.unshift(newPostInfo);
+            // console.log("--AFTER THE NEW URL IS ADDED TO THE TOP")
+            // console.log(updateDatabaseArray);
+
+            //Add index number to newly updated array
+            let i;
+                    for(i = 0; i < updateDatabaseArray.length; i++){
+                      // console.log(updateDatabaseArray[i])
+                      updateDatabaseArray[i].splice(0,0,i)
+                    }
+            // console.log("--AFTER THE NUMBERS ARE ADDED----")
+            // console.log(updateDatabaseArray);
+              console.log(updateDatabaseArray.length)
+              if(updateDatabaseArray.length > 150){
+                //  console.log(updateDatabaseArray.pop()[1])
+                updateDatabaseArray.pop();
+                //In the future I need to delete the corresponding chat links
+                //  chatMessages.deleteOne({"room_id": postLink})
+                // console.log(updateDatabaseArray)
+              }
+            
+            
+            //Update database with new links 
+            updateDatabaseArray.forEach(item => {
+              // console.log('item')
+              collection.findOneAndUpdate({"index": item[0]}, {$set: {"Post Link": item[1], "Post Image": item[2], "Post Description": item[3], "Post Type": item[4]}}, {upsert: true}).then(res=> console.log("New Post added to Database")).catch(err => console.log(err))
+            })
+
+          
+        })
+          .catch(err => console.log(err)) 
+      })
+
+//Post Buildout Server Logic
+
+      //Getting and loading chat messages
+
+        // console.log('Grabbing chat messages...');
+
+        //When a user connects to a page, chat messages are retrieved
+        socket.on('retrieve-chat-messages', function(data){
+          chatMessages.find({'room_id': data}).toArray()
+          .then(res => {
+          socket.emit('archived-chat-messages-from-server', res)
+          console.log(res)})
+          .catch(err => console.log(err))
+        })
+
+
+        //When a user sends a message, the server is updated with the messages
+        socket.on('chat-message-to-server', function(data){
+          console.log(data[0].username)
+          chatMessages.findOneAndUpdate(
+            {"room_id": data[0].room },
+            { $push:  {'message_and_username':[{'message': data[0].message, 'username': data[0].username}]}}, {upsert: true}).then(res => console.log(res)).catch(err => console.log(err))
+        })
+
+
+
+        let numClients = {};
+        socket.on('join-room', function(room, username){
+      
+          socket.join(room);
+      
+          //This produces an object with the client IDs
+          clients = io.sockets.adapter.rooms[room].sockets
+          // console.log(clients)
+      
+          //To get the number of clients
+          var numClients = Object.keys(clients).length
+          console.log(numClients)
+      
+          io.to(room).emit('a-user-connected-to-room', numClients)
+          // return numClients[room]
+      
+        })
+
+        //Chat Message Handling
+
+        //When users leave the room
+        socket.on('leave-room', function(room){
+          socket.leave(room);
+      
+      
+              //When there are no clients, this produces an error, so we need an if statement to handle an undefined 0 user situation
+              if (io.sockets.adapter.rooms[room] === undefined){
+                console.log('there is nothing here')
+              } else {
+                clients = io.sockets.adapter.rooms[room].sockets
+                // console.log(clients)
+                var numClients = Object.keys(clients).length
+                console.log(numClients)
+              }
+              
+      
+              io.to(room).emit('a-user-left-the-room', numClients)
+      
+        })
+      
+        socket.on('chat-message-sent', function(username, message, room){
+          // console.log(room);
+          // console.log(username);
+          // console.log(message);
+          // socket.join(room)
+      
+          socket.broadcast.to(room).emit('send-message-to-all', username, message)
+        })
+
+
+//Livestream
+
+
+        //Requesting a LiveStream
+        socket.on('i-want-to-watch-livestream', function(myVisitorPeerId, OthersocketId){
+          //myVisitorPeerId is the Peer ID of the person who wants the stream
+          console.log(myVisitorPeerId)
+          
+          //OthersocketId is the Socket ID of the person streaming, so this event goes directly to them
+          console.log(OthersocketId)
+
+          socket.to(OthersocketId).emit('someoneWantsMyStream', myVisitorPeerId)
+          })
+
+          //Update Stream Screenshot
+          socket.on('update-stream-screenshot', function(data1, data2){
+            //data1 = the screenshot, data2 = PostID
+            //data1 must be converted into a base64 string in order to be interpreted
+            // var base64 = data1.split(',')[1]
+            // console.log(isBase64(base64))
+
+            // sightengine.check(['nudity','offensive','text-content','face-attributes']).set_bytes(base64, 'image.png').then(function(result) {
+            //   // The API response (result)
+            //   console.log(result)
+            //   console.log(result.nudity.raw);
+            //   if(result.nudity.raw > 0.5){
+            //     console.log('dat some NUDITY')
+            //   } else {
+            //     console.log('dat not some NUDITY')
+            //     let NSFW = 'Y'
+            //     io.emit('new-stream-screenshot', data1, data2, NSFW)
+            //   }
+            // }).catch(function(err) {
+            //     // Handle error
+            // });
+
+            io.emit('new-stream-screenshot', data1, data2)
+            
+          })
+
+
+//Adding a Post
+      
+      // Get metadata from post url after new link is submitted    
+      socket.on('linkSubmit', function(data){
+        //The data is the URL received
+        console.log(data)
+        const got = require('got')
+        const targetUrl = data;
+
+        //Scrapes the data for the Metadata
+        async function run() { 
+          
+          //Successful MetaData
+          try {
+
+          const { body: html, url } = await got(targetUrl)
+          const metadata = await metascraper({ html, url })
+          console.log('metadata below')
+          console.log(metadata)
+
+          //Define some outlier cases (like when only image links are copied and pasted)
+          if(metadata.image === null){
+            metadata.image = metadata.url
+            console.log(metadata)
+          }
+
+          if(metadata.description === null){
+            metadata.description = ''
+          }
+
+          if (metadata.title === null){
+            metadata.title = ''
+          }
+          
+          
+
+          //NSFW Filters COME BACK TO THIS LATER
+
+          // if (metadata.image === null){
+          //     let imageToCheck = metadata.url
+          //     // console.log('this is it')
+          //     // console.log(imageToCheck)
+
+
+          //     sightengine.check(['nudity','offensive','text-content','face-attributes']).set_url(imageToCheck).then(function(result) {
+          //       // The API response (result)
+          //       console.log(result)
+          //       console.log(result.nudity.raw);
+          //       if(result.nudity.raw > 0.5){
+          //         console.log('dat some NUDITY')
+          //       } else {
+          //         console.log('dat not some NUDITY')
+          //       }
+          //     }).catch(function(err) {
+          //         // Handle error
+          //     });
+
+
+          //   } else {
+          //     let imageToCheck = metadata.image
+          //     // console.log(imageToCheck)
+          //     let NSFW;
+
+          //     sightengine.check(['nudity','offensive','text-content','face-attributes']).set_url(imageToCheck).then(function(result) {
+          //       // The API response (result)
+          //       console.log(result)
+          //       console.log(result.nudity.raw);
+          //       if(result.nudity.raw > 0.5){
+          //         console.log('dat some NUDITY')
+          //         let NSFW = "NSFW"
+          //         socket.emit('newPostData', metadata, NSFW);
+          //       } else {
+          //         console.log('dat not some NUDITY')
+          //         let NSFW = "no"
+          //         socket.emit('newPostData', metadata, NSFW);
+          //       }
+          //     }).catch(function(err) {
+          //         // Handle error
+          //     });
+
+          //   }
+
+            
+
+          //Sends new post metadata back to original client
+          socket.emit('newPostData', metadata);
+
+          //Sends new post metadata to everyone connected to update immediately
+          // socket.broadcast.emit('someoneElseAddedNewPost', metadata);
+
+          }
+          //No MetaData found
+          catch(e){
+            metadata = "no dice"
+            socket.emit('newPostData', metadata);
+            // console.log(e)
+          }
+          finally {
+            console.log('The MetaData has been sent back')
+          }
+
+        }
+
+        run()
+
+
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  });
+
+
+  
+
+
+
+
+
+}).catch(error => console.error(error))
+
+
+
+
+
+http.listen(3000, () => {
+  console.log('listening on *:3000');
+});
+
+
+
+
+
+
+
+
+
+  
+
+
+
+ 
+
+
+
+
