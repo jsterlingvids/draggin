@@ -41,7 +41,7 @@
     "mongodb": "^3.5.9",
     "muuri": "^0.9.0",
     "nodemon": "^2.0.4",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.5.0",
     "web-animations-js": "^2.3.2"
   }
 }
